@@ -1,0 +1,16 @@
+!Orderfile Header       - 16846060
+!SOF Ref0: Reference    - European Customisation and Distribution Center
+!SOF Ref1: Request Date - 13 Mar 2025
+!SOF Ref2: Requested By - FANUC\90500876
+!SOF Ref3: Customer     - MEDIA CZ S.R.O.
+!SOF Ref4: Ship to      - MEDIA CZ S.R.O.
+!SOF Ref5: Deliver Ver  - V9.40P-70
+!SOF Ref6: Robot F/E No - F703273
+!SOF Ref7: SOF Filename - 16846060_F703273_MEDIA CZ S.R.O.
+!Sof Ref8: Mem Detail   -  
+!Orderfile Starts
+1A05B-2600-J931 ! ProfiNET Safety
+1A05B-2600-R834 ! PROFINET MOLEX DUAL CHANNEL
+!Option Selection Ends
+!STARTING CONFIGURATION : IND.ROBOT P40IA
+!Orderfile Ends

@@ -1,0 +1,12 @@
+
+example in dash
+
+go to path with program first: CD C:/...
+
+pyinstaller --onefile --windowed --icon="icon.ico" ваш_скрипт.py
+
+
+
+for dashboard
+cd C:\Users\94500062\OneDrive - FANUC Corporation\projects\Dashboard
+pyinstaller --onefile --windowed dashboard.py
