@@ -5,9 +5,9 @@ from src.controllers.timer_component import TimerComponent
 spot_style: dict = {
     "main": {
         "expand": True,
-        "bgcolor": ft.colors.WHITE60,
+        "bgcolor": ft.Colors.WHITE60,  # Исходный цвет по умолчанию
         "border_radius": 10,
-        "border": ft.border.all(width=0.5, color=ft.colors.GREY_300),
+        "border": ft.border.all(width=0.5, color=ft.Colors.GREY_300),
         "ink": True
     },
 }
@@ -20,7 +20,7 @@ class Spot:
         self.page = page
         self.controller = controller
         self.timer = TimerComponent(page, station_id, spot_id, controller)
-        self.label = f"Спот {self.spot_id % 100}"
+        self.label = f"Spot {self.spot_id % 100}"
         self.content = ft.Column(
             horizontal_alignment="center",
             controls=[
@@ -42,6 +42,17 @@ class Spot:
             actions_alignment=ft.MainAxisAlignment.END,
         )
 
+        # Контейнер спота
+        self.container = ft.Container(
+            content=self.content,
+            **spot_style["main"],
+            on_click=self.on_click
+        )
+        self.update_color()  # Устанавливаем начальный цвет
+
+        # Подписываем таймер на обновление цвета при изменении состояния
+        self.timer.on_state_change = self.update_color
+
     def open_dialog(self, e):
         if not self.dlg_modal.open:
             if self.dlg_modal not in self.page.overlay:
@@ -53,29 +64,53 @@ class Spot:
         if self.dlg_modal.open:
             self.dlg_modal.open = False
             self.page.update()
-    
+
+    def update_color(self):
+        """Обновляет цвет спота в зависимости от состояния таймера"""
+        spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
+        elapsed_time = self.controller.get_timer_value(int(self.station_id), self.spot_id)
+        
+        if spot and spot["running"]:  # Запущен
+            self.container.bgcolor = ft.Colors.GREEN_200
+        elif elapsed_time > 0:  # На паузе (время > 0, но не запущен)
+            self.container.bgcolor = ft.Colors.ORANGE_200
+        else:  # Остановлен (время = 0 или не начинался)
+            self.container.bgcolor = ft.Colors.WHITE60
+        
+        if self.container.page:  # Проверяем, добавлен ли контейнер на страницу
+            self.container.update()
+
     def build(self):
-        return ft.Container(
-            content=self.content,
-            **spot_style["main"],
-            on_click=self.open_dialog,
-            opacity=0.0,  # Начальная непрозрачность
-            animate_opacity=300
-        )
+        return self.container
 
 class StationView:
-    def __init__(self, page: ft.Page, controller, config: Config, selected_station_id: int):
+    def __init__(self, page: ft.Page, controller, config: Config, selected_station_id: int, module_container: ft.Container):
         self.page = page
         self.controller = controller
         self.config = config
         self.selected_station_id = selected_station_id
+        self.module_container = module_container
         self.station_container = None
-        self.build()
 
     def build(self):
         app_settings = self.config.get_app_settings()
         spots_count = app_settings["spots"]
         columns_count = app_settings["columns"]
+
+        # Dropdown для выбора станции
+        station_dropdown = ft.Dropdown(
+            label="Station",
+            value=f"Station {self.selected_station_id}",
+            options=[
+                ft.dropdown.Option(f"Station {station_id}") for station_id in self.controller.get_stations()
+            ],
+            on_change=self.on_station_change,
+            width=150,
+            text_size=14,
+            content_padding=ft.padding.symmetric(horizontal=12, vertical=6),
+            border_radius=8,
+            tooltip="Change Station"
+        )
 
         if self.selected_station_id is not None:
             selected_station = self.controller.get_station_by_id(self.selected_station_id)
@@ -109,13 +144,25 @@ class StationView:
             )
 
             if not self.station_container:
-                self.station_container = ft.Column(expand=True)
-                self.page.add(self.station_container)
+                self.station_container = ft.Column(
+                    controls=[
+                        ft.Container(
+                            content=station_dropdown,
+                            alignment=ft.alignment.center_left,
+                            padding=ft.padding.only(top=0, left=10)
+                        ),
+                        row
+                    ],
+                    expand=True,
+                    spacing=10
+                )
 
-            self.station_container.controls = [row]
-            self.station_container.update()
+            return self.station_container
 
-            # Запускаем анимацию появления спотов
-            for spot in spots:
-                spot.opacity = 1.0
-                spot.update()
+    def on_station_change(self, e):
+        new_station_id = int(e.control.value.split()[-1])
+        if new_station_id != self.selected_station_id:
+            self.selected_station_id = new_station_id
+            new_view = StationView(self.page, self.controller, self.config, self.selected_station_id, self.module_container)
+            self.module_container.content = new_view.build()
+            self.module_container.update()
