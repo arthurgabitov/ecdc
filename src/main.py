@@ -6,33 +6,25 @@ import flet as ft
 from controllers.station_controller import StationController
 from views.station_view import StationView
 from views.welcome_view import WelcomeView
-from views.settings_view import SettingsView
 from config import Config
 
 def main(page: ft.Page):
     config = Config()
     app_settings = config.get_app_settings()
     controller = StationController(config)
+    config.set_controller(controller)
 
     page.title = app_settings["title"]
     page.theme_mode = "light"
-    page.padding = 0
     page.window.height = 1000
     page.window.width = 800
-    page.window.title_bar_hidden = False
-    page.window.title_bar_buttons_hidden = True
-
-    content_container = ft.Container(expand=True)
-
+    page.padding = 0
     
 
-    header = ft.Container(
-
-
-    )
-
+    
     
 
+    # Navigation Rail (слева)
     nav_rail = ft.NavigationRail(
         selected_index=0,
         label_type=ft.NavigationRailLabelType.ALL,
@@ -40,6 +32,7 @@ def main(page: ft.Page):
         min_extended_width=200,
         width=100,
         bgcolor=ft.colors.ON_PRIMARY_CONTAINER,
+        indicator_color=ft.colors.WHITE10,
     
         destinations=[
             ft.NavigationRailDestination(
@@ -59,22 +52,31 @@ def main(page: ft.Page):
         on_change=lambda e: update_module(e.control.selected_index),
     )
 
+    # Контейнер для модуля (справа) с управляемой шириной
     module_container = ft.Container(
         expand=True,
-        padding=ft.padding.all(15)
+        width=500,  # Начальная ширина
+        alignment=ft.alignment.center
     )
 
-    main_layout = ft.Row(
+    # Основной интерфейс (шапка + rail + модуль)
+    main_layout = ft.Column(
         [
-            nav_rail,
             
-            ft.Column(
+            ft.Row(
                 [
-                    header,
-                    module_container
+                    nav_rail,
+                    ft.Container(
+                        content=module_container,
+                        alignment=ft.alignment.center,
+                        expand=True,
+                        padding=ft.padding.all(15)
+                    )
                 ],
+                expand=True,
                 spacing=0,
-                expand=True
+                alignment=ft.MainAxisAlignment.START,
+                vertical_alignment=ft.CrossAxisAlignment.STRETCH
             )
         ],
         spacing=0,
@@ -82,35 +84,43 @@ def main(page: ft.Page):
     )
 
     def update_module(selected_index):
+        """Обновляет содержимое модуля в зависимости от выбранного пункта в Navigation Rail."""
         module_container.content = None
         if selected_index == 0:
             station_view = StationView(page, controller, config, current_station_id, module_container)
             module_container.content = station_view.build()
         elif selected_index == 1:
-            settings_view = SettingsView(page)
-            module_container.content = settings_view.build()
+            module_container.content = ft.Text("Settings Module (Coming Soon)", size=20)
         module_container.update()
 
+    # Храним текущий выбранный station_id
     current_station_id = None
 
+    def adjust_module_width(e=None):
+        """Динамически подстраивает ширину module_container."""
+        available_width = page.window.width - nav_rail.min_width  # Учитываем ширину rail
+        if available_width < 500:
+            module_container.width = 500  # Минимальная ширина
+        elif available_width > 1000:
+            module_container.width = 1000  # Максимальная ширина
+        else:
+            module_container.width = available_width  # Промежуточное значение
+        page.update()
+
     def show_main_interface(selected_station_id):
+        """Переключает интерфейс на основной после выбора станции."""
         nonlocal current_station_id
         current_station_id = selected_station_id
         page.controls.clear()
         page.add(main_layout)
         update_module(nav_rail.selected_index)
+        adjust_module_width()  # Устанавливаем начальную ширину
         page.update()
 
-    def handle_station_change(new_station_id):
-        if new_station_id != current_station_id:
-            show_main_interface(new_station_id)
+    # Обработчик изменения размера окна
+    page.on_resized = adjust_module_width
 
-    def show_welcome_view():
-        page.controls.clear()
-        welcome_view = WelcomeView(page, controller, show_main_interface)
-        page.add(welcome_view.build())
-        page.update()
-
+    # Инициализируем приветственный экран
     welcome_view = WelcomeView(page, controller, show_main_interface)
     page.add(welcome_view.build())
     page.update()

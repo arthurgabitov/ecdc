@@ -7,7 +7,7 @@ spot_style: dict = {
         "expand": True,
         "bgcolor": ft.Colors.WHITE60,  # Исходный цвет по умолчанию
         "border_radius": 10,
-        "border": ft.border.all(width=0.5, color=ft.Colors.GREY_300),
+        "border": ft.border.all(width=0.5, color=ft.Colors.GREY_500),
         "ink": True
     },
 }
@@ -21,13 +21,25 @@ class Spot:
         self.controller = controller
         self.timer = TimerComponent(page, station_id, spot_id, controller)
         self.label = f"Spot {self.spot_id % 100}"
+
+        # Создаём Column с тремя частями: верх, середина, низ
         self.content = ft.Column(
-            horizontal_alignment="center",
             controls=[
-                ft.Text(self.label, size=18),
-                self.timer.build(),
-            ]
+                ft.Divider(height=20, color="transparent"),
+                ft.Text(self.label, size=18, text_align=ft.TextAlign.CENTER),
+                ft.Container(expand=1),  
+                  
+                ft.Container(
+                    content=self.timer.build(),
+                    expand=1,  
+                    alignment=ft.alignment.bottom_center  # Таймер внизу
+                ),
+            ],
+            expand=True,
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            spacing=0  
         )
+
         self.on_click = self.open_dialog
 
         self.dlg_modal = ft.AlertDialog(
@@ -42,13 +54,12 @@ class Spot:
             actions_alignment=ft.MainAxisAlignment.END,
         )
 
-        # Контейнер спота
         self.container = ft.Container(
             content=self.content,
             **spot_style["main"],
             on_click=self.on_click
         )
-        self.update_color()  # Устанавливаем начальный цвет
+        self.update_color()
 
         # Подписываем таймер на обновление цвета при изменении состояния
         self.timer.on_state_change = self.update_color
@@ -71,9 +82,9 @@ class Spot:
         elapsed_time = self.controller.get_timer_value(int(self.station_id), self.spot_id)
         
         if spot and spot["running"]:  # Запущен
-            self.container.bgcolor = ft.Colors.GREEN_200
+            self.container.bgcolor = ft.Colors.WHITE60
         elif elapsed_time > 0:  # На паузе (время > 0, но не запущен)
-            self.container.bgcolor = ft.Colors.ORANGE_200
+            self.container.bgcolor = ft.Colors.WHITE60
         else:  # Остановлен (время = 0 или не начинался)
             self.container.bgcolor = ft.Colors.WHITE60
         
