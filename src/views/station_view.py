@@ -5,7 +5,7 @@ from src.controllers.timer_component import TimerComponent
 spot_style: dict = {
     "main": {
         "expand": True,
-        "bgcolor": ft.Colors.WHITE60,  # Исходный цвет по умолчанию
+        "bgcolor": ft.Colors.WHITE60,  
         "border_radius": 10,
         "border": ft.border.all(width=0.5, color=ft.Colors.GREY_500),
         "ink": True
@@ -22,7 +22,7 @@ class Spot:
         self.timer = TimerComponent(page, station_id, spot_id, controller)
         self.label = f"Spot {self.spot_id % 100}"
 
-        # Создаём Column с тремя частями: верх, середина, низ
+        
         self.content = ft.Column(
             controls=[
                 ft.Divider(height=20, color="transparent"),
@@ -32,7 +32,7 @@ class Spot:
                 ft.Container(
                     content=self.timer.build(),
                     expand=1,  
-                    alignment=ft.alignment.bottom_center  # Таймер внизу
+                    alignment=ft.alignment.bottom_center  
                 ),
             ],
             expand=True,
@@ -61,7 +61,7 @@ class Spot:
         )
         self.update_color()
 
-        # Подписываем таймер на обновление цвета при изменении состояния
+        
         self.timer.on_state_change = self.update_color
 
     def open_dialog(self, e):
@@ -77,18 +77,18 @@ class Spot:
             self.page.update()
 
     def update_color(self):
-        """Обновляет цвет спота в зависимости от состояния таймера"""
+       
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         elapsed_time = self.controller.get_timer_value(int(self.station_id), self.spot_id)
         
-        if spot and spot["running"]:  # Запущен
+        if spot and spot["running"]: 
             self.container.bgcolor = ft.Colors.WHITE60
-        elif elapsed_time > 0:  # На паузе (время > 0, но не запущен)
+        elif elapsed_time > 0:  
             self.container.bgcolor = ft.Colors.WHITE60
-        else:  # Остановлен (время = 0 или не начинался)
+        else:  
             self.container.bgcolor = ft.Colors.WHITE60
         
-        if self.container.page:  # Проверяем, добавлен ли контейнер на страницу
+        if self.container.page:  
             self.container.update()
 
     def build(self):
@@ -108,7 +108,7 @@ class StationView:
         spots_count = app_settings["spots"]
         columns_count = app_settings["columns"]
 
-        # Dropdown для выбора станции
+        
         station_dropdown = ft.Dropdown(
             label="Station",
             value=f"Station {self.selected_station_id}",

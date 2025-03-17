@@ -6,7 +6,7 @@ class SettingsView:
         self.page = page
 
     def get_version(self):
-        """Читает версию из файла version.txt"""
+        
         version_file_path = os.path.join(os.path.dirname(__file__), '..', '..', 'version.txt')
         try:
             with open(version_file_path, 'r') as f:
@@ -21,7 +21,7 @@ class SettingsView:
         version = self.get_version()
         return ft.Column(
             [
-                ft.Text("Settings Module (Coming Soon)", size=20),
+                ft.Text("Settings Module", size=20),
                 ft.Text(f"Current Version: {version}", size=16)
             ],
             spacing=10,

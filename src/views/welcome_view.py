@@ -8,7 +8,7 @@ class WelcomeView:
         self.on_complete = on_complete
 
         self.welcome_text = ft.Text(
-            "Welcome to ECDC Dashboard",
+            "Welcome to Station App",
             size=40,
             text_align=ft.TextAlign.CENTER,
             weight=ft.FontWeight.BOLD
@@ -23,7 +23,13 @@ class WelcomeView:
         )
 
         self.content = ft.Column(
-            [
+            [   
+            ft.Rive(
+            "src/robot_looping_test.riv",
+            placeholder=ft.ProgressBar(),
+            width=300,
+            height=200,
+            ),
                 self.welcome_text,
                 self.station_selector
             ],
@@ -35,7 +41,7 @@ class WelcomeView:
         self.page_container = ft.Container(
             content=self.content,
             alignment=ft.alignment.center,
-            expand=True,  # Растягиваем на всё пространство
+            expand=True,  
             bgcolor=ft.colors.WHITE
         )
 
