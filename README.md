@@ -1,12 +1,13 @@
 
-Current version: 
+## Current version: 
 
-0.0.4 Update: Minor UI updates. Overview screen added
+- 0.0.4 Update: Minor UI updates. Overview screen added
 
-Updates history: 
-0.0.3 Navigation Rail added. Time Counter function added.
-0.0.3 Modular restructurisation. Welcome screen added. UI update.
-0.0.2 Initial commit.
+## Updates history: 
+
+- 0.0.3 Navigation Rail added. Time Counter function added.
+- 0.0.3 Modular restructurisation. Welcome screen added. UI update.
+- 0.0.2 Initial commit.
 
 
 
