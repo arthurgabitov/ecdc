@@ -1,5 +1,7 @@
 
-### 📌 Project structure descriptions:
+Current version 0.0.4
+
+### 📌 Project structure description:
 
 - **`config/`** — Contains project settings.
      - `config.ini` — Config file
@@ -13,6 +15,7 @@
      - 'setting_view.py' - UI for settings module
      - 'station_view.py' - UI for station modules with spots generation. 
      - 'welcome_view.py' - UI for initial screen module
+     - 'overview_view.py' - UI for Dashboard overview
     
 - **`.venv/`** — Python virtual environment.
 - **`requirements.txt`** — Project dependencies.
