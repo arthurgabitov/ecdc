@@ -1,20 +1,18 @@
 
 ## Current version: 
 
-- 0.0.4 Update: Minor UI updates. Overview screen added
+- 0.0.5 Update: Minor UI updates. Dashboard configuration file config.JSON added
 
 ## Updates history: 
 
-- 0.0.3 Navigation Rail added. Time Counter function added.
-- 0.0.3 Modular restructurisation. Welcome screen added. UI update.
+- 0.0.4 Navigation Rail added. Time Counter function added.
+- 0.0.3 Modular restructuring. Welcome screen added. UI update.
 - 0.0.2 Initial commit.
 
 
 
 ### 📌 Project structure description:
 
-- **`config/`** — Contains project settings.
-     - `config.ini` — Config file
 - **`src/`** — Main application code:
   - `main.py` — Runs the application. 
   - `config.py` — Loads configuration settings.
@@ -29,7 +27,7 @@
     
 - **`.venv/`** — Python virtual environment.
 - **`requirements.txt`** — Project dependencies.
-- **`config.json`**  — File for storing of all stations info
+- **`config.json`**  — Dashboard configuration 
 - **`README.md`** — Project documentation.
 - **`version.txt`** — Current project version.
 

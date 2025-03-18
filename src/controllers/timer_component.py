@@ -11,7 +11,7 @@ class TimerComponent:
         self.timer_text = ft.Text("00:00", size=28)
         self.on_state_change = None  
 
-        # Кнопка Start (зелёная)
+        
         self.start_button = ft.FilledButton(
             content=ft.Row([
                 ft.Icon(ft.Icons.PLAY_ARROW, color=ft.colors.WHITE),
@@ -21,7 +21,7 @@ class TimerComponent:
             bgcolor=ft.colors.GREEN_400,
         )
 
-        # Кнопка Stop (красная)
+        
         self.stop_button = ft.FilledButton(
             content=ft.Row([
                 ft.Icon(ft.Icons.STOP, color=ft.colors.WHITE),
@@ -31,7 +31,7 @@ class TimerComponent:
             bgcolor=ft.colors.RED_400,
         )
 
-        # Проверка начального состояния
+        
         spot = self.controller.get_spot_data(int(station_id), spot_id)
         if spot and spot["running"]:
             self.start_button.content = ft.Row([
@@ -61,7 +61,7 @@ class TimerComponent:
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         if spot and not spot["running"]:
             self.controller.start_timer(int(self.station_id), self.spot_id)
-            # Переключение на Pause (оранжевая)
+            
             self.start_button.content = ft.Row([
                 ft.Icon(ft.Icons.PAUSE, color=ft.colors.WHITE),
                 ft.Text("Pause  ", color=ft.colors.WHITE)
@@ -70,7 +70,7 @@ class TimerComponent:
             self.page.run_task(self.update_timer)
         elif spot:
             self.controller.pause_timer(int(self.station_id), self.spot_id)
-            # Возврат к Start (зелёная)
+            
             self.start_button.content = ft.Row([
                 ft.Icon(ft.Icons.PLAY_ARROW, color=ft.colors.WHITE),
                 ft.Text("Start  ", color=ft.colors.WHITE)
@@ -78,7 +78,7 @@ class TimerComponent:
             self.start_button.bgcolor = ft.colors.GREEN_400
             elapsed_time = self.controller.get_timer_value(int(self.station_id), self.spot_id)
             self.update_display(elapsed_time)
-        self.start_button.update()  # Обновляем кнопку
+        self.start_button.update()  
         if self.on_state_change:
             self.on_state_change()
 
@@ -89,7 +89,7 @@ class TimerComponent:
             labor_time = round(elapsed_time / 3600, 2)
             self.timer_text.value = f"Labor time: {labor_time} h"
             self.controller.stop_timer(int(self.station_id), self.spot_id)
-            # Возврат к Start (зелёная)
+            
             self.start_button.content = ft.Row([
                 ft.Icon(ft.Icons.PLAY_ARROW, color=ft.colors.WHITE),
                 ft.Text("Start  ", color=ft.colors.WHITE)
@@ -103,7 +103,7 @@ class TimerComponent:
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         if spot and spot["running"]:
             self.controller.pause_timer(int(self.station_id), self.spot_id)
-            # Возврат к Start (зелёная)
+           
             self.start_button.content = ft.Row([
                 ft.Icon(ft.Icons.PLAY_ARROW, color=ft.colors.WHITE),
                 ft.Text("Start  ", color=ft.colors.WHITE)

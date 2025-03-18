@@ -14,14 +14,19 @@ class Config:
                 "app_settings": {
                     "title": "ECDC Station Dashboard",
                     "spots": 6,
-                    "columns": 2
+                    "columns": 2,
+                    "stations": 10  # Added default stations value
                 }
             }
         self.controller = None
 
     def set_controller(self, controller):
-        """Устанавливаем контроллер после создания."""
         self.controller = controller
 
     def get_app_settings(self):
-        return self.config_data.get("app_settings", {"title": "ECDC Station Dashboard", "spots": 6, "columns": 2})
+        return self.config_data.get("app_settings", {
+            "title": "ECDC Station Dashboard",
+            "spots": 6,
+            "columns": 2,
+            "stations": 10  # Added default stations value here too
+        })

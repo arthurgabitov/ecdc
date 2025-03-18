@@ -9,7 +9,12 @@ class StationController:
         self.timers = {}
 
     def load_stations(self):
-        return [1, 2, 3]
+        # Get the app settings from config
+        settings = self.config.get_app_settings()
+        # Get the number of stations from settings
+        num_stations = settings["stations"]
+        # Create a list of station IDs from 1 to num_stations
+        return list(range(1, num_stations + 1))
 
     def get_stations(self):
         return self.stations

@@ -22,33 +22,31 @@ def main(page: ft.Page):
     page.window.width = 800
     page.padding = 0
 
-    # Navigation Rail (слева)
     nav_rail = ft.NavigationRail(
         selected_index=0,
         label_type=ft.NavigationRailLabelType.ALL,
         min_width=100,
         min_extended_width=200,
         width=100,
-        bgcolor=ft.colors.ON_PRIMARY_CONTAINER,
-        indicator_color=ft.colors.WHITE10,
-    
+        bgcolor=ft.Colors.ON_PRIMARY_CONTAINER,  
+        indicator_color=ft.Colors.WHITE10,       
         destinations=[
             ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.Icons.HOME, color=ft.colors.WHITE), 
-                selected_icon_content=ft.Icon(ft.Icons.HOME_FILLED, color=ft.colors.WHITE),  
-                label_content=ft.Text("RO Station", color=ft.colors.WHITE),  
+                icon_content=ft.Icon(ft.Icons.HOME, color=ft.Colors.WHITE),                  
+                selected_icon_content=ft.Icon(ft.Icons.HOME_FILLED, color=ft.Colors.WHITE),  
+                label_content=ft.Text("RO Station", color=ft.Colors.WHITE),                  
                 label="RO Station"
             ),
             ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.Icons.DASHBOARD, color=ft.colors.WHITE),  
-                selected_icon_content=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE, color=ft.colors.WHITE),
-                label_content=ft.Text("Overview", color=ft.colors.WHITE),
+                icon_content=ft.Icon(ft.Icons.DASHBOARD, color=ft.Colors.WHITE),                  
+                selected_icon_content=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE, color=ft.Colors.WHITE),  
+                label_content=ft.Text("Overview", color=ft.Colors.WHITE),                         
                 label="Overview"
             ),
             ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.Icons.SETTINGS, color=ft.colors.WHITE),
-                selected_icon_content=ft.Icon(ft.Icons.SETTINGS_APPLICATIONS, color=ft.colors.WHITE),
-                label_content=ft.Text("Settings", color=ft.colors.WHITE),
+                icon_content=ft.Icon(ft.Icons.SETTINGS, color=ft.Colors.WHITE),                  
+                selected_icon_content=ft.Icon(ft.Icons.SETTINGS_APPLICATIONS, color=ft.Colors.WHITE),  
+                label_content=ft.Text("Settings", color=ft.Colors.WHITE),                       
                 label="Settings"
             ),
         ],
@@ -89,11 +87,11 @@ def main(page: ft.Page):
             station_view = StationView(page, controller, config, current_station_id, module_container)
             module_container.content = station_view.build()
         elif selected_index == 1:
-            overview_view = OverviewView(page, controller, config) 
+            overview_view = OverviewView(page, controller, config, module_container) 
             module_container.content = overview_view.build()
         elif selected_index == 2:
-            settings_view = SettingsView(page) 
-            module_container.content = settings_view.build() 
+            settings_view = SettingsView(page)  
+            module_container.content = settings_view.build()
         module_container.update()
 
     current_station_id = None
@@ -114,7 +112,7 @@ def main(page: ft.Page):
         page.controls.clear()
         page.add(main_layout)
         update_module(nav_rail.selected_index)
-        adjust_module_width() 
+        adjust_module_width()
         page.update()
 
     page.on_resized = adjust_module_width
