@@ -24,7 +24,7 @@ class OverviewView:
                 "id": station_id
             })
 
-        def on_pan_update(self, e: ft.DragUpdateEvent, detector):  # Made this a class method
+        def on_pan_update(self, e: ft.DragUpdateEvent, detector):  
             detector.left = max(0, min(self.page.window.width - detector.content.width, detector.left + e.delta_x))
             detector.top = max(0, min(self.page.window.height - detector.content.height, detector.top + e.delta_y))
             self.page.update()

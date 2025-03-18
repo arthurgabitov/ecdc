@@ -15,7 +15,7 @@ class Config:
                     "title": "ECDC Station Dashboard",
                     "spots": 6,
                     "columns": 2,
-                    "stations": 10  # Added default stations value
+                    "stations": 10  
                 }
             }
         self.controller = None
@@ -28,5 +28,5 @@ class Config:
             "title": "ECDC Station Dashboard",
             "spots": 6,
             "columns": 2,
-            "stations": 10  # Added default stations value here too
+            "stations": 10  
         })
