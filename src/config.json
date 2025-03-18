@@ -1,8 +1,15 @@
 {
     "app_settings": {
-        "title": "ECDC Station Dashboard",
-        "spots": 6,
-        "columns": 2,
-        "stations": 4
-    }
-}
+      "title": "ECDC Station Dashboard",
+      "spots": 6,
+      "columns": 2,
+      "stations": 8
+    },
+    "spot_statuses": [
+      {"name": "Unblocked", "color": "WHITE60"},
+      {"name": "Delievery request", "color": "YELLOW_300"},
+      {"name": "In Progress", "color": "GREEN_100"},
+      {"name": "Packing", "color": "RED_200"},
+      {"name": "Pickup request", "color": "RED"}
+    ]
+  }

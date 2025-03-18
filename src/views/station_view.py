@@ -5,50 +5,59 @@ from src.controllers.timer_component import TimerComponent
 spot_style: dict = {
     "main": {
         "expand": True,
-        "bgcolor": ft.Colors.WHITE60,  
+        "bgcolor": ft.colors.WHITE60,
         "border_radius": 10,
-        "border": ft.border.all(width=0.5, color=ft.Colors.GREY_500),
+        "border": ft.border.all(width=0.5, color=ft.colors.GREY_500),
         "ink": True
     },
 }
 
 class Spot:
-    def __init__(self, name: str, station_id: str, spot_id: int, page: ft.Page, controller):
+    def __init__(self, name: str, station_id: str, spot_id: str, page: ft.Page, controller):
         self.name = name
         self.station_id = station_id
         self.spot_id = spot_id
         self.page = page
         self.controller = controller
         self.timer = TimerComponent(page, station_id, spot_id, controller)
-        self.label = f"Spot {self.spot_id % 100}"
+        self.label = f"Spot {self.spot_id}"
+        spot_data = self.controller.get_spot_data(int(station_id), spot_id)
+        self.status_dropdown = ft.Dropdown(
+            label="Status",
+            value=spot_data["status"],
+            options=[ft.dropdown.Option(status) for status in controller.config.get_status_names()],
+            on_change=self.update_status,
+            width=150
+        )
 
-        
         self.content = ft.Column(
             controls=[
                 ft.Divider(height=20, color="transparent"),
                 ft.Text(self.label, size=18, text_align=ft.TextAlign.CENTER),
-                ft.Container(expand=1),  
-                  
+                
+                ft.Container(expand=1),
                 ft.Container(
                     content=self.timer.build(),
-                    expand=1,  
-                    alignment=ft.alignment.bottom_center  
+                    expand=1,
+                    alignment=ft.alignment.bottom_center
                 ),
             ],
             expand=True,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=0  
+            spacing=0
         )
 
         self.on_click = self.open_dialog
-
         self.dlg_modal = ft.AlertDialog(
             modal=False,
-            title=ft.Text("Example"),
-            content=ft.Text("Here something with WO and SW"),
+            title=ft.Text("Spot Details"),
+            content=ft.Text("Enter WO number"),
             actions=[
-                ft.TextField(label="Enter WO number"),
-                ft.Divider(height=15, color="transparent"),
+                ft.TextField(label="WO Number", value=spot_data["wo_number"], on_change=self.update_wo_number),
+                ft.Divider(height=20, color="transparent"),
+                self.status_dropdown,
+                ft.Divider(height=20, color="transparent"),
+
                 ft.TextButton("Exit", on_click=self.handle_close),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
@@ -60,9 +69,18 @@ class Spot:
             on_click=self.on_click
         )
         self.update_color()
+        self.timer.on_state_change = self.update_spot_state
 
-        
-        self.timer.on_state_change = self.update_color
+    def update_wo_number(self, e):
+        spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
+        spot["wo_number"] = e.control.value
+        self.controller.save_timers_state()
+
+    def update_status(self, e):
+        new_status = e.control.value
+        self.controller.set_spot_status(int(self.station_id), self.spot_id, new_status)
+        self.update_color()
+        print(f"Updated status for {self.spot_id} to {new_status}")
 
     def open_dialog(self, e):
         if not self.dlg_modal.open:
@@ -76,19 +94,18 @@ class Spot:
             self.dlg_modal.open = False
             self.page.update()
 
+    def update_spot_state(self):
+        self.update_color()
+        self.page.update()
+
     def update_color(self):
-       
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
-        elapsed_time = self.controller.get_timer_value(int(self.station_id), self.spot_id)
-        
-        if spot and spot["running"]: 
-            self.container.bgcolor = ft.Colors.WHITE60
-        elif elapsed_time > 0:  
-            self.container.bgcolor = ft.Colors.WHITE60
-        else:  
-            self.container.bgcolor = ft.Colors.WHITE60
-        
-        if self.container.page:  
+        status = spot["status"]
+        statuses = self.controller.config.get_spot_statuses()
+        new_color = next((s["color"] for s in statuses if s["name"] == status), ft.colors.WHITE60)
+        print(f"Spot {self.spot_id} - Status: {status}, Color: {new_color}")
+        self.container.bgcolor = new_color
+        if self.container.page:
             self.container.update()
 
     def build(self):
@@ -108,13 +125,10 @@ class StationView:
         spots_count = app_settings["spots"]
         columns_count = app_settings["columns"]
 
-        
         station_dropdown = ft.Dropdown(
             label="Station",
             value=f"Station {self.selected_station_id}",
-            options=[
-                ft.dropdown.Option(f"Station {station_id}") for station_id in self.controller.get_stations()
-            ],
+            options=[ft.dropdown.Option(f"Station {station_id}") for station_id in self.controller.get_stations()],
             on_change=self.on_station_change,
             width=150,
             text_size=14,
@@ -125,9 +139,8 @@ class StationView:
 
         if self.selected_station_id is not None:
             selected_station = self.controller.get_station_by_id(self.selected_station_id)
-
             spots = [
-                Spot(f"Spot {i + 1}", str(self.selected_station_id), (self.selected_station_id * 100 + i + 1), self.page, self.controller).build()
+                Spot(f"Spot {i + 1}", str(self.selected_station_id), f"{self.selected_station_id}_{i + 1}", self.page, self.controller).build()
                 for i in range(spots_count)
             ]
 
@@ -140,28 +153,15 @@ class StationView:
                 current_column_spots = spots_per_column + (1 if i < extra_spots else 0)
                 column_spots = spots[spot_index:spot_index + current_column_spots]
                 spot_index += current_column_spots
-
-                column = ft.Column(
-                    controls=column_spots,
-                    expand=True,
-                    spacing=10,
-                )
+                column = ft.Column(controls=column_spots, expand=True, spacing=10)
                 columns.append(column)
 
-            row = ft.Row(
-                controls=columns,
-                expand=True,
-                spacing=10,
-            )
+            row = ft.Row(controls=columns, expand=True, spacing=10)
 
             if not self.station_container:
                 self.station_container = ft.Column(
                     controls=[
-                        ft.Container(
-                            content=station_dropdown,
-                            alignment=ft.alignment.center_left,
-                            padding=ft.padding.only(top=0, left=10)
-                        ),
+                        ft.Container(content=station_dropdown, alignment=ft.alignment.center_left, padding=ft.padding.only(top=0, left=10)),
                         row
                     ],
                     expand=True,
