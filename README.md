@@ -1,15 +1,17 @@
 
 ## Current version: 
-- 0.0.7 Single Station Mode added. (to Activate put "stations": 1 in config.json)
+- 0.0.8 Performance updates. Dashboard test mode in settings page added
 
 
 ## Updates history: 
 
+
+- 0.0.7 Single Station Mode added. (to Activate put "stations": 1 in config.json)
 - 0.0.6 Dashboard overview added. + spot status update
 - 0.0.5 Update: Minor UI updates. Dashboard configuration file config.JSON added
 - 0.0.4 Navigation Rail added. Time Counter function added.
 - 0.0.3 Modular restructuring. Welcome screen added. UI update.
-- 0.0.2 Initial commit.
+
 
 
 
