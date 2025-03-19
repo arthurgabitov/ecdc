@@ -22,24 +22,30 @@ class Spot:
         self.timer = TimerComponent(page, station_id, spot_id, controller)
         self.label = f"Spot {self.spot_id[-1]}"
         spot_data = self.controller.get_spot_data(int(station_id), spot_id)
+        
         self.status_dropdown = ft.Dropdown(
             label="Status",
             value=spot_data["status"],
             options=[ft.dropdown.Option(status) for status in controller.config.get_status_names()],
             on_change=self.update_status,
-            width=250
+            width=250,
+            visible=self.page.config.is_dashboard_test_mode_enabled()
         )
-
+        
         self.content = ft.Column(
             controls=[
                 ft.Divider(height=20, color="transparent"),
                 ft.Text(self.label, size=18, text_align=ft.TextAlign.CENTER),
-                
                 ft.Container(expand=1),
                 ft.Container(
                     content=self.timer.build(),
                     expand=1,
                     alignment=ft.alignment.bottom_center
+                ),
+                ft.Container(
+                    content=ft.TextButton("Reset", on_click=self.reset_spot),
+                    alignment=ft.alignment.center,
+                    padding=ft.padding.only(bottom=10)
                 ),
             ],
             expand=True,
@@ -81,12 +87,12 @@ class Spot:
         new_status = e.control.value
         self.controller.set_spot_status(int(self.station_id), self.spot_id, new_status)
         self.update_color()
-        
 
     def open_dialog(self, e):
         if not self.dlg_modal.open:
             if self.dlg_modal not in self.page.overlay:
                 self.page.overlay.append(self.dlg_modal)
+            self.status_dropdown.visible = self.page.config.is_dashboard_test_mode_enabled()
             self.dlg_modal.open = True
             self.page.update()
 
@@ -104,13 +110,31 @@ class Spot:
         status = spot["status"]
         statuses = self.controller.config.get_spot_statuses()
         new_color = next((s["color"] for s in statuses if s["name"] == status), ft.colors.WHITE60)
-        
         self.container.bgcolor = new_color
         if self.container.page:
             self.container.update()
 
+    def reset_spot(self, e):
+        
+        default_status = self.controller.config.get_status_names()[0]  
+        self.controller.set_spot_status(int(self.station_id), self.spot_id, default_status)
+        
+       
+        spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
+        spot["wo_number"] = ""
+        self.controller.save_timers_state()
+
+     
+        self.timer.reset()
+
+       
+        self.status_dropdown.value = default_status 
+        self.update_color()
+        self.page.update()
+
     def build(self):
         return self.container
+    
 
 class StationView:
     def __init__(self, page: ft.Page, controller, config: Config, selected_station_id: int, module_container: ft.Container, stations_count: int):

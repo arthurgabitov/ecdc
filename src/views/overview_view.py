@@ -2,11 +2,12 @@ import flet as ft
 from views.station_view import StationView
 
 class OverviewView:
-    def __init__(self, page, controller, config, module_container):
+    def __init__(self, page, controller, config, module_container, update_module):
         self.page = page
         self.controller = controller
         self.config = config
         self.module_container = module_container
+        self.update_module = update_module  # Сохраняем функцию update_module
 
     def build(self):
         settings = self.config.get_app_settings()
@@ -39,12 +40,20 @@ class OverviewView:
             station_id = detector.content.data["id"]
             station_key = f"station_{station_id}"
             self.controller.set_spot_coordinates(station_key, detector.left, detector.top)
-            self.page.update()
+            detector.update()
+
+        def on_pan_end(self, e: ft.DragEndEvent, station_id):
+            station_key = f"station_{station_id}"
+            if station_key in self.controller._pending_coordinates:
+                x, y = self.controller._pending_coordinates[station_key]
+                spot = self.controller.get_spot_data(0, station_key)
+                spot["place"] = {"x": x, "y": y}
+                self.controller._pending_coordinates.pop(station_key, None)
+                self.controller._save_timers_state_immediate()
 
         def open_station_view(self, e, station_id):
-            station_view = StationView(self.page, self.controller, self.config, station_id, self.module_container)
-            self.module_container.content = station_view.build()
-            self.module_container.update()
+            # Переключаем на StationView с индексом 0 (RO Station) и передаём station_id
+            self.update_module(0, station_id=station_id)
 
         station_controls = []
         statuses = self.config.get_spot_statuses()
@@ -56,7 +65,6 @@ class OverviewView:
                 spot_data = self.controller.get_spot_data(station_id, spot_id)
                 status = spot_data["status"]
                 spot_color = next((s["color"] for s in statuses if s["name"] == status), ft.colors.WHITE60)
-                print(f"Overview - Spot {spot_id} - Status: {status}, Color: {spot_color}")  # Отладка
                 spot_controls.append(
                     ft.Container(
                         width=20,
@@ -87,6 +95,7 @@ class OverviewView:
                 left=station_data["x"],
                 top=station_data["y"],
                 on_pan_update=lambda e, d=detector_ref: on_pan_update(self, e, d.current),
+                on_pan_end=lambda e, sid=station_data["id"]: on_pan_end(self, e, sid),
                 on_tap=lambda e, sid=station_data["id"]: open_station_view(self, e, sid),
             )
             station_controls.append(draggable_container)

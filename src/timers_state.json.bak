@@ -34,9 +34,9 @@
     },
     "1_4": {
         "status": "Unblocked",
-        "start_time": 1742415877.092323,
+        "start_time": 1742389276.1983597,
         "elapsed_time": 0,
-        "running": true,
+        "running": false,
         "wo_number": "",
         "place": {
             "x": 125,

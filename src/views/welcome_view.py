@@ -10,7 +10,7 @@ class WelcomeView:
 
         
         self.welcome_text = ft.Text(
-            "Welcome to Station App",
+            "Station App",
             size=40,
             text_align=ft.TextAlign.CENTER,
             weight=ft.FontWeight.BOLD
@@ -59,7 +59,7 @@ class WelcomeView:
     def handle_station_select(self, e):
         if isinstance(self.station_selector, ft.Dropdown):
             selected_station_id = int(e.control.value.split()[-1])
-            print(f"Selected station {selected_station_id} from dropdown")  # Отладка
+            
             self.on_complete(selected_station_id)
 
     def build(self):
