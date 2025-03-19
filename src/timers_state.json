@@ -1,8 +1,8 @@
 {
     "1_1": {
         "status": "Unblocked",
-        "start_time": 0.0,
-        "elapsed_time": 0.0,
+        "start_time": 1742377797.4993405,
+        "elapsed_time": 19.629560708999634,
         "running": false,
         "wo_number": "",
         "place": {
@@ -12,8 +12,8 @@
     },
     "1_2": {
         "status": "Unblocked",
-        "start_time": 1742328078.0652263,
-        "elapsed_time": 385.46631717681885,
+        "start_time": 1742388172.7103784,
+        "elapsed_time": 390.47674465179443,
         "running": false,
         "wo_number": "",
         "place": {
@@ -33,10 +33,10 @@
         }
     },
     "1_4": {
-        "status": "In Progress",
-        "start_time": 1742369533.2191315,
-        "elapsed_time": 17.070895433425903,
-        "running": true,
+        "status": "Unblocked",
+        "start_time": 1742389276.1983597,
+        "elapsed_time": 5731.580546140671,
+        "running": false,
         "wo_number": "",
         "place": {
             "x": 125,
@@ -133,9 +133,9 @@
     },
     "3_1": {
         "status": "Unblocked",
-        "start_time": 0.0,
-        "elapsed_time": 0.0,
-        "running": false,
+        "start_time": 1742387482.9732275,
+        "elapsed_time": 9690.964743852615,
+        "running": true,
         "wo_number": "",
         "place": {
             "x": 350,
@@ -270,8 +270,8 @@
         "running": false,
         "wo_number": "",
         "place": {
-            "x": 0,
-            "y": 55.0
+            "x": 137.3333333333333,
+            "y": 82.99999999999996
         }
     },
     "station_2": {
@@ -281,8 +281,8 @@
         "running": false,
         "wo_number": "",
         "place": {
-            "x": 158.0,
-            "y": 54.0
+            "x": 136.66666666666666,
+            "y": 165.33333333333334
         }
     },
     "station_3": {
@@ -292,8 +292,8 @@
         "running": false,
         "wo_number": "",
         "place": {
-            "x": 2.0,
-            "y": 145.0
+            "x": 136.00000000000023,
+            "y": 248.0
         }
     },
     "station_4": {
@@ -303,8 +303,8 @@
         "running": false,
         "wo_number": "",
         "place": {
-            "x": 159.0,
-            "y": 145.0
+            "x": 138.0,
+            "y": 0
         }
     },
     "station_5": {

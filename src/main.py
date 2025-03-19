@@ -10,11 +10,13 @@ from views.settings_view import SettingsView
 from views.overview_view import OverviewView  
 from config import Config
 
-def main(page: ft.Page):
+async def main(page: ft.Page):
     config = Config()
     app_settings = config.get_app_settings()
     controller = StationController(config)
     config.set_controller(controller)
+
+    
 
     page.title = app_settings["title"]
     page.theme_mode = "light"
@@ -22,34 +24,46 @@ def main(page: ft.Page):
     page.window.width = 800
     page.padding = 0
 
+    stations_count = len(controller.get_stations())
+    
+
+    destinations = [
+        ft.NavigationRailDestination(
+            icon_content=ft.Icon(ft.Icons.HOME, color=ft.Colors.WHITE),
+            selected_icon_content=ft.Icon(ft.Icons.HOME_FILLED, color=ft.Colors.WHITE),
+            label_content=ft.Text("RO Station", color=ft.Colors.WHITE),
+            label="RO Station"
+        )
+    ]
+    
+    if stations_count > 1:
+        destinations.append(
+            ft.NavigationRailDestination(
+                icon_content=ft.Icon(ft.Icons.DASHBOARD, color=ft.Colors.WHITE),
+                selected_icon_content=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE, color=ft.Colors.WHITE),
+                label_content=ft.Text("Overview", color=ft.Colors.WHITE),
+                label="Overview"
+            )
+        )
+    
+    destinations.append(
+        ft.NavigationRailDestination(
+            icon_content=ft.Icon(ft.Icons.SETTINGS, color=ft.Colors.WHITE),
+            selected_icon_content=ft.Icon(ft.Icons.SETTINGS_APPLICATIONS, color=ft.Colors.WHITE),
+            label_content=ft.Text("Settings", color=ft.Colors.WHITE),
+            label="Settings"
+        )
+    )
+
     nav_rail = ft.NavigationRail(
         selected_index=0,
         label_type=ft.NavigationRailLabelType.ALL,
         min_width=100,
         min_extended_width=200,
         width=100,
-        bgcolor=ft.Colors.ON_PRIMARY_CONTAINER,  
-        indicator_color=ft.Colors.WHITE10,       
-        destinations=[
-            ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.Icons.HOME, color=ft.Colors.WHITE),                  
-                selected_icon_content=ft.Icon(ft.Icons.HOME_FILLED, color=ft.Colors.WHITE),  
-                label_content=ft.Text("RO Station", color=ft.Colors.WHITE),                  
-                label="RO Station"
-            ),
-            ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.Icons.DASHBOARD, color=ft.Colors.WHITE),                  
-                selected_icon_content=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE, color=ft.Colors.WHITE),  
-                label_content=ft.Text("Overview", color=ft.Colors.WHITE),                         
-                label="Overview"
-            ),
-            ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.Icons.SETTINGS, color=ft.Colors.WHITE),                  
-                selected_icon_content=ft.Icon(ft.Icons.SETTINGS_APPLICATIONS, color=ft.Colors.WHITE),  
-                label_content=ft.Text("Settings", color=ft.Colors.WHITE),                       
-                label="Settings"
-            ),
-        ],
+        bgcolor=ft.Colors.ON_PRIMARY_CONTAINER,
+        indicator_color=ft.Colors.WHITE10,
+        destinations=destinations,
         on_change=lambda e: update_module(e.control.selected_index),
     )
 
@@ -81,45 +95,54 @@ def main(page: ft.Page):
         expand=True
     )
 
+    current_station_id = [None]
+
     def update_module(selected_index):
+        
         module_container.content = None
         if selected_index == 0:
-            station_view = StationView(page, controller, config, current_station_id, module_container)
+            station_view = StationView(page, controller, config, current_station_id[0], module_container, stations_count)
             module_container.content = station_view.build()
-        elif selected_index == 1:
-            overview_view = OverviewView(page, controller, config, module_container) 
+        elif selected_index == 1 and stations_count > 1:
+            overview_view = OverviewView(page, controller, config, module_container)
             module_container.content = overview_view.build()
-        elif selected_index == 2:
-            settings_view = SettingsView(page)  
+        elif (stations_count > 1 and selected_index == 2) or (stations_count == 1 and selected_index == 1):
+            settings_view = SettingsView(page)
             module_container.content = settings_view.build()
         module_container.update()
 
-    current_station_id = None
-
     def adjust_module_width(e=None):
-        available_width = page.window.width - nav_rail.min_width  
+        available_width = page.window.width - nav_rail.min_width
         if available_width < 500:
-            module_container.width = 500  
+            module_container.width = 500
         elif available_width > 1000:
-            module_container.width = 1000  
+            module_container.width = 1000
         else:
-            module_container.width = available_width  
+            module_container.width = available_width
         page.update()
 
     def show_main_interface(selected_station_id):
-        nonlocal current_station_id
-        current_station_id = selected_station_id
+        
+        current_station_id[0] = selected_station_id
         page.controls.clear()
+        
         page.add(main_layout)
+        
         update_module(nav_rail.selected_index)
-        adjust_module_width()
+        
         page.update()
+        
 
     page.on_resized = adjust_module_width
 
     welcome_view = WelcomeView(page, controller, show_main_interface)
+    
     page.add(welcome_view.build())
     page.update()
 
+    
+    if welcome_view.auto_transition_needed:
+        await welcome_view.run_auto_transition()
+
 if __name__ == "__main__":
-    ft.app(target=main)
+    ft.app(main)  

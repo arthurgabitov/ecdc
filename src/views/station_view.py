@@ -20,7 +20,7 @@ class Spot:
         self.page = page
         self.controller = controller
         self.timer = TimerComponent(page, station_id, spot_id, controller)
-        self.label = f"Spot {self.spot_id}"
+        self.label = f"Spot {self.spot_id[-1]}"
         spot_data = self.controller.get_spot_data(int(station_id), spot_id)
         self.status_dropdown = ft.Dropdown(
             label="Status",
@@ -56,8 +56,9 @@ class Spot:
                 ft.TextField(label="WO Number", value=spot_data["wo_number"], on_change=self.update_wo_number),
                 ft.Divider(height=20, color="transparent"),
                 self.status_dropdown,
-                ft.Divider(height=20, color="transparent"),
-
+                ft.Divider(height=40, color="transparent"),
+                ft.Text("Notifications"),
+                ft.Divider(height=40, color="transparent"),
                 ft.TextButton("Exit", on_click=self.handle_close),
             ],
             actions_alignment=ft.MainAxisAlignment.END,
@@ -80,7 +81,7 @@ class Spot:
         new_status = e.control.value
         self.controller.set_spot_status(int(self.station_id), self.spot_id, new_status)
         self.update_color()
-        print(f"Updated status for {self.spot_id} to {new_status}")
+        
 
     def open_dialog(self, e):
         if not self.dlg_modal.open:
@@ -103,7 +104,7 @@ class Spot:
         status = spot["status"]
         statuses = self.controller.config.get_spot_statuses()
         new_color = next((s["color"] for s in statuses if s["name"] == status), ft.colors.WHITE60)
-        print(f"Spot {self.spot_id} - Status: {status}, Color: {new_color}")
+        
         self.container.bgcolor = new_color
         if self.container.page:
             self.container.update()
@@ -112,30 +113,35 @@ class Spot:
         return self.container
 
 class StationView:
-    def __init__(self, page: ft.Page, controller, config: Config, selected_station_id: int, module_container: ft.Container):
+    def __init__(self, page: ft.Page, controller, config: Config, selected_station_id: int, module_container: ft.Container, stations_count: int):
         self.page = page
         self.controller = controller
         self.config = config
         self.selected_station_id = selected_station_id
         self.module_container = module_container
         self.station_container = None
+        self.stations_count = stations_count
 
     def build(self):
         app_settings = self.config.get_app_settings()
         spots_count = app_settings["spots"]
         columns_count = app_settings["columns"]
 
-        station_dropdown = ft.Dropdown(
-            label="Station",
-            value=f"Station {self.selected_station_id}",
-            options=[ft.dropdown.Option(f"Station {station_id}") for station_id in self.controller.get_stations()],
-            on_change=self.on_station_change,
-            width=150,
-            text_size=14,
-            content_padding=ft.padding.symmetric(horizontal=12, vertical=6),
-            border_radius=8,
-            tooltip="Change Station"
-        )
+       
+        if self.stations_count > 1:
+            station_dropdown = ft.Dropdown(
+                label="Station",
+                value=f"Station {self.selected_station_id}",
+                options=[ft.dropdown.Option(f"Station {station_id}") for station_id in self.controller.get_stations()],
+                on_change=self.on_station_change,
+                width=150,
+                text_size=14,
+                content_padding=ft.padding.symmetric(horizontal=12, vertical=6),
+                border_radius=8,
+                tooltip="Change Station"
+            )
+        else:
+            station_dropdown = ft.Text(f"Station {self.selected_station_id}", size=14)
 
         if self.selected_station_id is not None:
             selected_station = self.controller.get_station_by_id(self.selected_station_id)
@@ -171,9 +177,10 @@ class StationView:
             return self.station_container
 
     def on_station_change(self, e):
-        new_station_id = int(e.control.value.split()[-1])
-        if new_station_id != self.selected_station_id:
-            self.selected_station_id = new_station_id
-            new_view = StationView(self.page, self.controller, self.config, self.selected_station_id, self.module_container)
-            self.module_container.content = new_view.build()
-            self.module_container.update()
+        if self.stations_count > 1: 
+            new_station_id = int(e.control.value.split()[-1])
+            if new_station_id != self.selected_station_id:
+                self.selected_station_id = new_station_id
+                new_view = StationView(self.page, self.controller, self.config, self.selected_station_id, self.module_container, self.stations_count)
+                self.module_container.content = new_view.build()
+                self.module_container.update()
