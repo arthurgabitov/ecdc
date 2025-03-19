@@ -1,10 +1,11 @@
 
 ## Current version: 
+- 0.0.6 Dashboard overview added. + spot status update
 
-- 0.0.5 Update: Minor UI updates. Dashboard configuration file config.JSON added
 
 ## Updates history: 
 
+- 0.0.5 Update: Minor UI updates. Dashboard configuration file config.JSON added
 - 0.0.4 Navigation Rail added. Time Counter function added.
 - 0.0.3 Modular restructuring. Welcome screen added. UI update.
 - 0.0.2 Initial commit.

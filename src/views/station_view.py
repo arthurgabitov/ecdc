@@ -27,7 +27,7 @@ class Spot:
             value=spot_data["status"],
             options=[ft.dropdown.Option(status) for status in controller.config.get_status_names()],
             on_change=self.update_status,
-            width=150
+            width=250
         )
 
         self.content = ft.Column(

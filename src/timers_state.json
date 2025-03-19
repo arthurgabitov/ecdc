@@ -33,10 +33,10 @@
         }
     },
     "1_4": {
-        "status": "Delievery request",
-        "start_time": 0.0,
-        "elapsed_time": 0.0,
-        "running": false,
+        "status": "In Progress",
+        "start_time": 1742369533.2191315,
+        "elapsed_time": 17.070895433425903,
+        "running": true,
         "wo_number": "",
         "place": {
             "x": 125,
@@ -209,7 +209,7 @@
         }
     },
     "4_2": {
-        "status": "Delievery request",
+        "status": "Unblocked",
         "start_time": 0.0,
         "elapsed_time": 0.0,
         "running": false,
@@ -220,7 +220,7 @@
         }
     },
     "4_3": {
-        "status": "Delievery request",
+        "status": "Unblocked",
         "start_time": 0.0,
         "elapsed_time": 0.0,
         "running": false,
@@ -231,7 +231,7 @@
         }
     },
     "4_4": {
-        "status": "Delievery request",
+        "status": "Unblocked",
         "start_time": 0.0,
         "elapsed_time": 0.0,
         "running": false,
@@ -253,7 +253,7 @@
         }
     },
     "4_6": {
-        "status": "Delievery request",
+        "status": "Unblocked",
         "start_time": 0.0,
         "elapsed_time": 0.0,
         "running": false,
