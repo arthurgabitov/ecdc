@@ -201,10 +201,7 @@ class StationView:
             return self.station_container
 
     def on_station_change(self, e):
-        if self.stations_count > 1: 
+        if self.stations_count > 1:
             new_station_id = int(e.control.value.split()[-1])
             if new_station_id != self.selected_station_id:
-                self.selected_station_id = new_station_id
-                new_view = StationView(self.page, self.controller, self.config, self.selected_station_id, self.module_container, self.stations_count)
-                self.module_container.content = new_view.build()
-                self.module_container.update()
+                self.update_module(0, station_id=new_station_id)  # Просто вызываем update_module

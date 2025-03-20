@@ -12,8 +12,8 @@
     },
     "1_2": {
         "status": "Unblocked",
-        "start_time": 1742415860.5260556,
-        "elapsed_time": 0,
+        "start_time": 1742453735.3529625,
+        "elapsed_time": 54.402048110961914,
         "running": false,
         "wo_number": "",
         "place": {
@@ -34,7 +34,7 @@
     },
     "1_4": {
         "status": "Unblocked",
-        "start_time": 1742389276.1983597,
+        "start_time": 1742453597.5468125,
         "elapsed_time": 0,
         "running": false,
         "wo_number": "",
@@ -67,9 +67,9 @@
     },
     "2_1": {
         "status": "Unblocked",
-        "start_time": 0.0,
+        "start_time": 1742470492.7752817,
         "elapsed_time": 0.0,
-        "running": false,
+        "running": true,
         "wo_number": "",
         "place": {
             "x": 200,
@@ -270,8 +270,8 @@
         "running": false,
         "wo_number": "",
         "place": {
-            "x": 99.33333333333326,
-            "y": 85.99999999999994
+            "x": 224.66666666666652,
+            "y": 45.33333333333333
         }
     },
     "station_2": {
@@ -281,8 +281,8 @@
         "running": false,
         "wo_number": "",
         "place": {
-            "x": 367.0,
-            "y": 89.33333333333337
+            "x": 224.9999999999999,
+            "y": 136.0000000000001
         }
     },
     "station_3": {
@@ -292,8 +292,8 @@
         "running": false,
         "wo_number": "",
         "place": {
-            "x": 21.0,
-            "y": 183.0
+            "x": 50.33333333333323,
+            "y": 46.99999999999994
         }
     },
     "station_4": {
@@ -303,8 +303,8 @@
         "running": false,
         "wo_number": "",
         "place": {
-            "x": 138.0,
-            "y": 0
+            "x": 48.66666666666674,
+            "y": 137.3333333333333
         }
     },
     "station_5": {

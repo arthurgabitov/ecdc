@@ -1,0 +1,17 @@
+--Pull updates from GitHub--
+git pull origin main
+
+--Push updates to GitHub--
+git add .
+git commit -m "comment"
+git push origin main
+
+
+--.venv Activation--
+
+cd project_dir_path
+python -m venv .venv
+.venv\Scripts\activate
+
+
+---

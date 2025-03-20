@@ -115,17 +115,20 @@ async def main(page: ft.Page):
 
     def update_module(selected_index, station_id=None):
         nav_rail.selected_index = selected_index
+    
+        new_content = ft.Container()  
         if selected_index == 0:
             new_content = create_station_view(station_id)
         elif selected_index == 1 and stations_count > 1:
             new_content = create_overview_view()
         elif (stations_count > 1 and selected_index == 2) or (stations_count == 1 and selected_index == 1):
             new_content = create_settings_view()
-        else:
-            new_content = ft.Container()
-        module_container.content.content = new_content
-        nav_rail.update()
-        module_container.update()
+    
+    
+        if module_container.content.content != new_content:
+            module_container.content.content = new_content
+            nav_rail.update()
+            module_container.update()
 
     def adjust_module_width(e=None):
         available_width = page.window.width - nav_rail.min_width
