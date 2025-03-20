@@ -11,9 +11,7 @@ class Config:
         try:
             with open(config_path, 'r') as config_file:
                 self.config_data = json.load(config_file)
-                
         except (FileNotFoundError, json.JSONDecodeError) as e:
-            
             self.config_data = {
                 "app_settings": {
                     "title": "ECDC Station Dashboard",
@@ -27,11 +25,14 @@ class Config:
                     {"name": "In Progress", "color": "GREEN_100"},
                     {"name": "Packing", "color": "RED_200"},
                     {"name": "Pickup request", "color": "RED"}
-                ]
+                ],
+                "customization_settings": {
+                    "search_directory": "\\\\LUECHFS101\\Shared\\European_Customisation\\ECDC-Customised Robot SW Order File"
+                }
             }
         self.controller = None
         self._cached_statuses = None
-        self._dashboard_test_mode = False  # Инициализация тестового режима
+        self._dashboard_test_mode = False
 
     def set_controller(self, controller):
         self.controller = controller
@@ -68,3 +69,8 @@ class Config:
 
     def is_dashboard_test_mode_enabled(self):
         return self._dashboard_test_mode
+
+    def get_customization_settings(self):
+        return self.config_data.get("customization_settings", {
+            "search_directory": "\\\\LUECHFS101\\Shared\\European_Customisation\\ECDC-Customised Robot SW Order File"
+        })

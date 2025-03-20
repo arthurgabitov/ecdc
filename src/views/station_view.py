@@ -13,12 +13,13 @@ spot_style: dict = {
 }
 
 class Spot:
-    def __init__(self, name: str, station_id: str, spot_id: str, page: ft.Page, controller):
+    def __init__(self, name: str, station_id: str, spot_id: str, page: ft.Page, controller, ro_customization_controller):
         self.name = name
         self.station_id = station_id
         self.spot_id = spot_id
         self.page = page
         self.controller = controller
+        self.ro_customization_controller = ro_customization_controller
         self.timer = TimerComponent(page, station_id, spot_id, controller)
         self.label = f"Spot {self.spot_id[-1]}"
         spot_data = self.controller.get_spot_data(int(station_id), spot_id)
@@ -31,7 +32,18 @@ class Spot:
             width=250,
             visible=self.page.config.is_dashboard_test_mode_enabled()
         )
+
+        self.wo_number_field = ft.TextField(
+            label="WO Number",
+            value=spot_data["wo_number"],
+            on_change=self.update_wo_number,
+            on_submit=self.search_order_file,
+            width=300,
+            keyboard_type=ft.KeyboardType.NUMBER
+        )
         
+        self.snack_bar = ft.SnackBar(content=ft.Text(""), open=False)  
+
         self.content = ft.Column(
             controls=[
                 ft.Divider(height=20, color="transparent"),
@@ -45,7 +57,7 @@ class Spot:
                 ft.Container(
                     content=ft.TextButton("Reset", on_click=self.reset_spot),
                     alignment=ft.alignment.center,
-                    padding=ft.padding.only(bottom=10)
+                    padding=ft.padding.all(10) 
                 ),
             ],
             expand=True,
@@ -54,21 +66,26 @@ class Spot:
         )
 
         self.on_click = self.open_dialog
+
+
         self.dlg_modal = ft.AlertDialog(
             modal=False,
+            barrier_color = ft.colors.BLACK26,
             title=ft.Text("Spot Details"),
-            content=ft.Text("Enter WO number"),
-            actions=[
-                ft.TextField(label="WO Number", value=spot_data["wo_number"], on_change=self.update_wo_number),
-                ft.Divider(height=20, color="transparent"),
-                self.status_dropdown,
-                ft.Divider(height=40, color="transparent"),
-                ft.Text("Notifications"),
-                ft.Divider(height=40, color="transparent"),
-                ft.TextButton("Exit", on_click=self.handle_close),
-            ],
-            actions_alignment=ft.MainAxisAlignment.END,
+            
+            content=ft.Column(
+                controls=[
+                    ft.Container(content=self.wo_number_field, expand=1, alignment=ft.alignment.center),
+                    ft.Container(content=self.status_dropdown, expand=1, alignment=ft.alignment.center),
+                    ft.Container(content=self.snack_bar, expand=1, alignment=ft.alignment.center),
+                    
+                    ],
+                height=500,  # Ограничиваем высоту контента
+                width=400,
+                alignment=ft.MainAxisAlignment.START,
+            ),
         )
+
 
         self.container = ft.Container(
             content=self.content,
@@ -78,15 +95,25 @@ class Spot:
         self.update_color()
         self.timer.on_state_change = self.update_spot_state
 
-    def update_wo_number(self, e):
-        spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
-        spot["wo_number"] = e.control.value
-        self.controller.save_timers_state()
-
     def update_status(self, e):
         new_status = e.control.value
         self.controller.set_spot_status(int(self.station_id), self.spot_id, new_status)
         self.update_color()
+
+    def search_order_file(self, e):
+        print(f"search_order_file called with value: {self.wo_number_field.value}")
+        wo_number = self.wo_number_field.value
+        self.page.run_task(self.ro_customization_controller.search_and_copy_order_file, wo_number, self.page, self.show_dialog_snack_bar)
+
+    def show_dialog_snack_bar(self, message):
+        self.snack_bar.content = ft.Text(message)
+        self.snack_bar.open = True
+        self.page.update()
+
+    def update_wo_number(self, e):
+        spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
+        spot["wo_number"] = e.control.value
+        self.controller.save_timers_state()
 
     def open_dialog(self, e):
         if not self.dlg_modal.open:
@@ -115,43 +142,37 @@ class Spot:
             self.container.update()
 
     def reset_spot(self, e):
-        
-        default_status = self.controller.config.get_status_names()[0]  
+        default_status = self.controller.config.get_status_names()[0]
         self.controller.set_spot_status(int(self.station_id), self.spot_id, default_status)
-        
-       
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
-        spot["wo_number"] = ""
+        spot["wo_number"] = ""  # Сбрасываем WO Number в данных
+        self.wo_number_field.value = ""  # Очищаем поле ввода в интерфейсе
         self.controller.save_timers_state()
-
-     
         self.timer.reset()
-
-       
-        self.status_dropdown.value = default_status 
+        self.status_dropdown.value = default_status
         self.update_color()
         self.page.update()
 
     def build(self):
         return self.container
-    
 
 class StationView:
-    def __init__(self, page: ft.Page, controller, config: Config, selected_station_id: int, module_container: ft.Container, stations_count: int):
+    def __init__(self, page: ft.Page, controller, config: Config, selected_station_id: int, module_container: ft.Container, stations_count: int, update_module, ro_customization_controller):
         self.page = page
         self.controller = controller
         self.config = config
         self.selected_station_id = selected_station_id
         self.module_container = module_container
-        self.station_container = None
         self.stations_count = stations_count
+        self.update_module = update_module
+        self.ro_customization_controller = ro_customization_controller  # Добавляем новый контроллер
+        self.station_container = None
 
     def build(self):
         app_settings = self.config.get_app_settings()
         spots_count = app_settings["spots"]
         columns_count = app_settings["columns"]
 
-       
         if self.stations_count > 1:
             station_dropdown = ft.Dropdown(
                 label="Station",
@@ -170,7 +191,7 @@ class StationView:
         if self.selected_station_id is not None:
             selected_station = self.controller.get_station_by_id(self.selected_station_id)
             spots = [
-                Spot(f"Spot {i + 1}", str(self.selected_station_id), f"{self.selected_station_id}_{i + 1}", self.page, self.controller).build()
+                Spot(f"Spot {i + 1}", str(self.selected_station_id), f"{self.selected_station_id}_{i + 1}", self.page, self.controller, self.ro_customization_controller).build()
                 for i in range(spots_count)
             ]
 
@@ -204,4 +225,4 @@ class StationView:
         if self.stations_count > 1:
             new_station_id = int(e.control.value.split()[-1])
             if new_station_id != self.selected_station_id:
-                self.update_module(0, station_id=new_station_id)  # Просто вызываем update_module
+                self.update_module(0, station_id=new_station_id)  

@@ -7,7 +7,7 @@ class OverviewView:
         self.controller = controller
         self.config = config
         self.module_container = module_container
-        self.update_module = update_module  # Сохраняем функцию update_module
+        self.update_module = update_module  
 
     def build(self):
         settings = self.config.get_app_settings()
@@ -52,7 +52,7 @@ class OverviewView:
                 self.controller._save_timers_state_immediate()
 
         def open_station_view(self, e, station_id):
-            # Переключаем на StationView с индексом 0 (RO Station) и передаём station_id
+            
             self.update_module(0, station_id=station_id)
 
         station_controls = []
