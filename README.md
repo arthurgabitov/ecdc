@@ -1,6 +1,6 @@
 
 ## Current version: 
-- 0.0.9 Bug fix
+- 0.0.9 Bug fixing
 
 
 ## Updates history: 
