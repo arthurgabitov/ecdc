@@ -39,7 +39,7 @@ class SettingsView:
         )
     
     def on_test_mode_change(self, e):
-        # Обновляем состояние в Config
+        
         config = self.page.config
         config.set_dashboard_test_mode(e.control.value)
         self.page.update()

@@ -4,6 +4,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import flet as ft
 from controllers.station_controller import StationController
+from controllers.ro_customization_tools import ROCustomizationController
 from views.station_view import StationView
 from views.welcome_view import WelcomeView
 from views.settings_view import SettingsView
@@ -15,9 +16,10 @@ async def main(page: ft.Page):
     app_settings = config.get_app_settings()
     controller = StationController(config)
     config.set_controller(controller)
+    ro_customization_controller = ROCustomizationController(config)
 
-    
     page.config = config
+    page.snack_bar = ft.SnackBar(content=ft.Text(""))  
 
     page.title = app_settings["title"]
     page.theme_mode = "light"
@@ -105,7 +107,7 @@ async def main(page: ft.Page):
     def create_station_view(station_id=None):
         if station_id is not None:
             current_station_id[0] = station_id
-        return StationView(page, controller, config, current_station_id[0], module_container, stations_count).build()
+        return StationView(page, controller, config, current_station_id[0], module_container, stations_count, update_module, ro_customization_controller).build()
 
     def create_overview_view():
         return OverviewView(page, controller, config, module_container, update_module).build()
@@ -115,21 +117,23 @@ async def main(page: ft.Page):
 
     def update_module(selected_index, station_id=None):
         nav_rail.selected_index = selected_index
+        
+        new_content = ft.Container()
         if selected_index == 0:
             new_content = create_station_view(station_id)
         elif selected_index == 1 and stations_count > 1:
             new_content = create_overview_view()
         elif (stations_count > 1 and selected_index == 2) or (stations_count == 1 and selected_index == 1):
             new_content = create_settings_view()
-        else:
-            new_content = ft.Container()
-        module_container.content.content = new_content
-        nav_rail.update()
-        module_container.update()
+        
+        if module_container.content.content != new_content:
+            module_container.content.content = new_content
+            nav_rail.update()
+            module_container.update()
 
     def adjust_module_width(e=None):
         available_width = page.window.width - nav_rail.min_width
-        module_container.width = max(300, min(available_width, page.window.width * 0.9))
+        module_container.width = max(300, min(available_width, page.window.width * 0.75))
         page.update()
 
     def show_main_interface(selected_station_id):
@@ -144,7 +148,7 @@ async def main(page: ft.Page):
             for spot_idx in range(1, app_settings["spots"] + 1):
                 spot_id = f"{station_id}_{spot_idx}"
                 timer = TimerComponent(page, str(station_id), spot_id, controller)
-                timer.pause_on_close()
+                timer.pause_on_close()  
         page.window_close()
 
     page.on_resized = adjust_module_width

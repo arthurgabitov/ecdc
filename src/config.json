@@ -1,15 +1,21 @@
 {
-    "app_settings": {
+  "app_settings": {
       "title": "ECDC Station Dashboard",
       "spots": 6,
       "columns": 2,
-      "stations": 1
-    },
-    "spot_statuses": [
+      "stations": 4
+  },
+  "spot_statuses": [
       {"name": "Unblocked", "color": "WHITE60"},
       {"name": "Delievery request", "color": "YELLOW_300"},
       {"name": "In Progress", "color": "GREEN_100"},
       {"name": "Packing", "color": "RED_200"},
       {"name": "Pickup request", "color": "RED"}
-    ]
+  ],
+  "customization_settings": {
+      "search_directory": "\\\\LUECHFS101\\Shared\\European_Customisation\\ECDC-Customised Robot SW Order File"
+  },
+  "station_overview_grid": {
+      "columns": 2 
   }
+}

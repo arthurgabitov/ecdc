@@ -7,12 +7,14 @@ class OverviewView:
         self.controller = controller
         self.config = config
         self.module_container = module_container
-        self.update_module = update_module  # Сохраняем функцию update_module
+        self.update_module = update_module
 
     def build(self):
         settings = self.config.get_app_settings()
         num_stations = settings["stations"]
         spots_per_station = settings["spots"]
+        grid_settings = self.config.get_station_overview_grid()
+        columns = max(1, min(spots_per_station, grid_settings["columns"])) 
         station_ids = self.controller.get_stations()
 
         stations = []
@@ -44,15 +46,10 @@ class OverviewView:
 
         def on_pan_end(self, e: ft.DragEndEvent, station_id):
             station_key = f"station_{station_id}"
-            if station_key in self.controller._pending_coordinates:
-                x, y = self.controller._pending_coordinates[station_key]
-                spot = self.controller.get_spot_data(0, station_key)
-                spot["place"] = {"x": x, "y": y}
-                self.controller._pending_coordinates.pop(station_key, None)
-                self.controller._save_timers_state_immediate()
+            self.controller.save_spots_state()
+            print(f"Saved position for {station_key} after drag end")
 
         def open_station_view(self, e, station_id):
-            # Переключаем на StationView с индексом 0 (RO Station) и передаём station_id
             self.update_module(0, station_id=station_id)
 
         station_controls = []
@@ -75,13 +72,45 @@ class OverviewView:
                     )
                 )
 
+           
+            rows = (spots_per_station + columns - 1) // columns  
+            grid_rows = []
+            for row in range(rows):
+                start_idx = row * columns
+                end_idx = min(start_idx + columns, spots_per_station)
+                row_spots = spot_controls[start_idx:end_idx]
+                grid_rows.append(
+                    ft.Row(
+                        controls=row_spots,
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        spacing=5
+                    )
+                )
+
+            
+            station_width = 50 + columns * 25  
+            station_height = 40 + rows * 25 + 10 
+
             station_container = ft.Container(
                 content=ft.Column([
-                    ft.Text(station_data["name"], size=16, weight=ft.FontWeight.BOLD),
-                    ft.Row(spot_controls, alignment=ft.MainAxisAlignment.CENTER, spacing=5)
-                ], alignment=ft.MainAxisAlignment.CENTER, spacing=5),
-                width=150,
-                height=80,
+                    ft.Text(
+                        station_data["name"],
+                        size=16,
+                        weight=ft.FontWeight.BOLD
+                        
+                    ),
+                    ft.Column(
+                        controls=grid_rows,
+                        alignment=ft.MainAxisAlignment.CENTER,
+                        spacing=5
+                    ),
+                    ft.Container(height=10)  
+                ], 
+                alignment=ft.MainAxisAlignment.CENTER,  
+                
+                spacing=5),
+                width=station_width,
+                height=station_height,
                 bgcolor=ft.colors.GREY_200,
                 border_radius=10,
                 padding=5,
