@@ -104,13 +104,13 @@ class TimerComponent:
                 self.on_state_change()
 
     def reset(self):
-        # Останавливаем таймер
+        
         self.controller.stop_timer(int(self.station_id), self.spot_id)
-        # Сбрасываем время через данные спота
+        
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         spot["elapsed_time"] = 0
-        self.controller.save_timers_state()  # Сохраняем изменения
-        # Обновляем UI
+        self.controller.save_timers_state()  
+        
         self.update_button_state(False)
         self.update_display(0)
         if self.on_state_change:
