@@ -13,13 +13,13 @@ spot_style: dict = {
 }
 
 class Spot:
-    def __init__(self, name: str, station_id: str, spot_id: str, page: ft.Page, controller, ro_customization_controller):
+    def __init__(self, name: str, station_id: str, spot_id: str, page: ft.Page, controller):
         self.name = name
         self.station_id = station_id
         self.spot_id = spot_id
         self.page = page
         self.controller = controller
-        self.ro_customization_controller = ro_customization_controller
+        
         self.timer = TimerComponent(page, station_id, spot_id, controller)
         self.label = f"Spot {self.spot_id[-1]}"
         spot_data = self.controller.get_spot_data(int(station_id), spot_id)
@@ -37,7 +37,6 @@ class Spot:
             label="WO Number",
             value=spot_data["wo_number"],
             on_change=self.update_wo_number,
-            on_submit=self.search_order_file,
             width=300,
             keyboard_type=ft.KeyboardType.NUMBER
         )
@@ -67,30 +66,26 @@ class Spot:
 
         self.on_click = self.open_dialog
 
-
         self.dlg_modal = ft.AlertDialog(
             modal=False,
-            barrier_color = ft.colors.BLACK26,
+            barrier_color=ft.colors.BLACK26,
             title=ft.Text("Spot Details"),
-            
             content=ft.Column(
                 controls=[
                     ft.Container(content=self.wo_number_field, expand=1, alignment=ft.alignment.center),
                     ft.Container(content=self.status_dropdown, expand=1, alignment=ft.alignment.center),
                     ft.Container(content=self.snack_bar, expand=1, alignment=ft.alignment.center),
-                    
-                    ],
-                height=500,  
+                ],
+                height=500,
                 width=400,
                 alignment=ft.MainAxisAlignment.START,
             ),
         )
 
-
         self.container = ft.Container(
             content=self.content,
             **spot_style["main"],
-            on_click=self.on_click
+            on_click=self.open_dialog
         )
         self.update_color()
         self.timer.on_state_change = self.update_spot_state
@@ -99,16 +94,6 @@ class Spot:
         new_status = e.control.value
         self.controller.set_spot_status(int(self.station_id), self.spot_id, new_status)
         self.update_color()
-
-    def search_order_file(self, e):
-        print(f"search_order_file called with value: {self.wo_number_field.value}")
-        wo_number = self.wo_number_field.value
-        self.page.run_task(self.ro_customization_controller.search_and_copy_order_file, wo_number, self.page, self.show_dialog_snack_bar)
-
-    def show_dialog_snack_bar(self, message):
-        self.snack_bar.content = ft.Text(message)
-        self.snack_bar.open = True
-        self.page.update()
 
     def update_wo_number(self, e):
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
@@ -147,19 +132,16 @@ class Spot:
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         spot["wo_number"] = ""
         self.wo_number_field.value = ""
-        self.timer.reset()  
+        self.timer.reset()
         self.status_dropdown.value = default_status
         self.update_color()
         self.page.update()
-
-
-        
 
     def build(self):
         return self.container
 
 class StationView:
-    def __init__(self, page: ft.Page, controller, config: Config, selected_station_id: int, module_container: ft.Container, stations_count: int, update_module, ro_customization_controller):
+    def __init__(self, page: ft.Page, controller, config: Config, selected_station_id: int, module_container: ft.Container, stations_count: int, update_module):
         self.page = page
         self.controller = controller
         self.config = config
@@ -167,7 +149,7 @@ class StationView:
         self.module_container = module_container
         self.stations_count = stations_count
         self.update_module = update_module
-        self.ro_customization_controller = ro_customization_controller  
+        
         self.station_container = None
 
     def build(self):
@@ -193,7 +175,7 @@ class StationView:
         if self.selected_station_id is not None:
             selected_station = self.controller.get_station_by_id(self.selected_station_id)
             spots = [
-                Spot(f"Spot {i + 1}", str(self.selected_station_id), f"{self.selected_station_id}_{i + 1}", self.page, self.controller, self.ro_customization_controller).build()
+                Spot(f"Spot {i + 1}", str(self.selected_station_id), f"{self.selected_station_id}_{i + 1}", self.page, self.controller).build()
                 for i in range(spots_count)
             ]
 
@@ -227,4 +209,4 @@ class StationView:
         if self.stations_count > 1:
             new_station_id = int(e.control.value.split()[-1])
             if new_station_id != self.selected_station_id:
-                self.update_module(0, station_id=new_station_id)  
+                self.update_module(0, station_id=new_station_id)

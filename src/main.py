@@ -4,7 +4,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import flet as ft
 from controllers.station_controller import StationController
-from controllers.ro_customization_tools import ROCustomizationController
+
 from views.station_view import StationView
 from views.welcome_view import WelcomeView
 from views.settings_view import SettingsView
@@ -16,7 +16,7 @@ async def main(page: ft.Page):
     app_settings = config.get_app_settings()
     controller = StationController(config)
     config.set_controller(controller)
-    ro_customization_controller = ROCustomizationController(config)
+    
 
     page.config = config
     page.snack_bar = ft.SnackBar(content=ft.Text(""))  
@@ -107,7 +107,7 @@ async def main(page: ft.Page):
     def create_station_view(station_id=None):
         if station_id is not None:
             current_station_id[0] = station_id
-        return StationView(page, controller, config, current_station_id[0], module_container, stations_count, update_module, ro_customization_controller).build()
+        return StationView(page, controller, config, current_station_id[0], module_container, stations_count, update_module).build()
 
     def create_overview_view():
         return OverviewView(page, controller, config, module_container, update_module).build()
