@@ -1,5 +1,6 @@
 import flet as ft
 from src.controllers.timer_component import TimerComponent
+from src.controllers.ro_customization_tools import ROCustomizationController
 
 spot_style: dict = {
     "main": {
@@ -20,6 +21,7 @@ class Spot:
         self.controller = controller
         self.timer = TimerComponent(page, station_id, spot_id, controller)
         self.label = f"Spot {self.spot_id[-1]}"
+        self.ro_tools = ROCustomizationController(controller.config)
 
         spot_data = self.controller.get_spot_data(int(station_id), spot_id)
         self.status_dropdown = ft.Dropdown(
@@ -37,6 +39,15 @@ class Spot:
             on_change=self.update_wo_number,
             width=300,
             keyboard_type=ft.KeyboardType.NUMBER
+        )
+        
+        # E-number display label
+        self.e_number_label = ft.Text("E-number: Please enter WO-number", size=16)
+        
+        # Container for file buttons
+        self.file_buttons_container = ft.Container(
+            content=ft.Row([]),
+            visible=False
         )
         
         self.snack_bar = ft.SnackBar(content=ft.Text(""), open=False)
@@ -68,7 +79,10 @@ class Spot:
             title=ft.Text("Spot Details"),
             content=ft.Column(
                 controls=[
+                    ft.Container(content=self.e_number_label, expand=0, alignment=ft.alignment.center),
                     ft.Container(content=self.wo_number_field, expand=1, alignment=ft.alignment.center),
+                    
+                    ft.Container(content=self.file_buttons_container, expand=0, alignment=ft.alignment.center),
                     ft.Container(content=self.status_dropdown, expand=1, alignment=ft.alignment.center),
                     ft.Container(content=self.snack_bar, expand=1, alignment=ft.alignment.center),
                 ],
@@ -92,15 +106,85 @@ class Spot:
         self.update_color()
 
     def update_wo_number(self, e):
+        wo_number = e.control.value
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
-        spot["wo_number"] = e.control.value
+        spot["wo_number"] = wo_number
         self.controller.save_spots_state()
+        
+        # Process WO number to find files and update UI
+        self.process_wo_number(wo_number)
+        
+    def process_wo_number(self, wo_number):
+        # Clear previous file buttons
+        self.file_buttons_container.content = ft.Row([])
+        self.file_buttons_container.visible = False
+        self.e_number_label.value = "E-number: Not found"
+        
+        if not wo_number or len(wo_number) != 8 or not wo_number.isdigit():
+            self.page.update()
+            return
+            
+        # Search for files
+        result = self.ro_tools.search_wo_files(wo_number)
+        
+        if "error" in result:
+            self.e_number_label.value = "E-number: Not found"
+            # Показываем сообщение в snack_bar если файлы не найдены
+            self.snack_bar.content.value = f"SW for {wo_number} not found"
+            self.snack_bar.open = True
+            self.page.update()
+            return
+            
+        # Update E-number display
+        if result.get("e_number") and isinstance(result["e_number"], dict):
+            e_number_data = result["e_number"]
+            if e_number_data.get("e_number"):
+                self.e_number_label.value = f"E-number: {e_number_data['e_number']}"
+            else:
+                self.e_number_label.value = "E-number: Not found"
+        else:
+            self.e_number_label.value = "E-number: Not found"
+            
+        # Create file buttons if files were found
+        buttons = []
+        if result.get("dat_file"):
+            buttons.append(
+                ft.ElevatedButton(
+                    text="Open DAT",
+                    on_click=lambda e, f=result["dat_file"]: self.open_file(f)
+                )
+            )
+        
+        if result.get("pdf_file"):
+            buttons.append(
+                ft.ElevatedButton(
+                    text="Open PDF",
+                    on_click=lambda e, f=result["pdf_file"]: self.open_file(f)
+                )
+            )
+            
+        if buttons:
+            self.file_buttons_container.content = ft.Row(buttons, spacing=10)
+            self.file_buttons_container.visible = True
+            
+        self.page.update()
+    
+    def open_file(self, file_path):
+        success = self.ro_tools.open_file(file_path)
+        if not success:
+            self.snack_bar.content.value = f"Failed to open the file"
+            self.snack_bar.open = True
+            self.page.update()
 
     def open_dialog(self, e):
         if not self.dlg_modal.open:
             if self.dlg_modal not in self.page.overlay:
                 self.page.overlay.append(self.dlg_modal)
             self.status_dropdown.visible = self.page.config.is_dashboard_test_mode_enabled()
+            
+            # Process WO number when opening dialog to update UI
+            self.process_wo_number(self.wo_number_field.value)
+            
             self.dlg_modal.open = True
             self.page.update()
 
@@ -128,6 +212,12 @@ class Spot:
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         spot["wo_number"] = ""
         self.wo_number_field.value = ""
+        
+        # Clear file buttons and E-number
+        self.file_buttons_container.content = ft.Row([])
+        self.file_buttons_container.visible = False
+        self.e_number_label.value = "E-number: Not found"
+        
         self.timer.reset()
         self.status_dropdown.value = default_status
         self.update_color()
