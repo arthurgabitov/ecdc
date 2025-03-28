@@ -6,7 +6,7 @@ import copy
 class Config:
     def __init__(self):
         config_path = os.path.join(os.path.dirname(__file__), 'config.json')
-        print(f"Attempting to load config from: {config_path}")
+        
         self.config_data = {}
         try:
             with open(config_path, 'r') as config_file:
@@ -28,6 +28,9 @@ class Config:
                 ],
                 "customization_settings": {
                     "search_directory": "\\\\LUECHFS101\\Shared\\European_Customisation\\ECDC-Customised Robot SW Order File"
+                },
+                "station_overview_grid": {
+                    "columns": 2 
                 }
             }
         self.controller = None
@@ -73,4 +76,9 @@ class Config:
     def get_customization_settings(self):
         return self.config_data.get("customization_settings", {
             "search_directory": "\\\\LUECHFS101\\Shared\\European_Customisation\\ECDC-Customised Robot SW Order File"
+        })
+
+    def get_station_overview_grid(self):
+        return self.config_data.get("station_overview_grid", {
+            "columns": 2  
         })

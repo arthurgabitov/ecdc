@@ -19,7 +19,7 @@ async def main(page: ft.Page):
     ro_customization_controller = ROCustomizationController(config)
 
     page.config = config
-    page.snack_bar = ft.SnackBar(content=ft.Text(""))  # Инициализируем SnackBar
+    page.snack_bar = ft.SnackBar(content=ft.Text(""))  
 
     page.title = app_settings["title"]
     page.theme_mode = "light"
@@ -148,7 +148,7 @@ async def main(page: ft.Page):
             for spot_idx in range(1, app_settings["spots"] + 1):
                 spot_id = f"{station_id}_{spot_idx}"
                 timer = TimerComponent(page, str(station_id), spot_id, controller)
-                timer.pause_on_close()
+                timer.pause_on_close()  
         page.window_close()
 
     page.on_resized = adjust_module_width

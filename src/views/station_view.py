@@ -80,7 +80,7 @@ class Spot:
                     ft.Container(content=self.snack_bar, expand=1, alignment=ft.alignment.center),
                     
                     ],
-                height=500,  # Ограничиваем высоту контента
+                height=500,  
                 width=400,
                 alignment=ft.MainAxisAlignment.START,
             ),
@@ -113,7 +113,7 @@ class Spot:
     def update_wo_number(self, e):
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         spot["wo_number"] = e.control.value
-        self.controller.save_timers_state()
+        self.controller.save_spots_state()
 
     def open_dialog(self, e):
         if not self.dlg_modal.open:
@@ -145,13 +145,15 @@ class Spot:
         default_status = self.controller.config.get_status_names()[0]
         self.controller.set_spot_status(int(self.station_id), self.spot_id, default_status)
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
-        spot["wo_number"] = ""  # Сбрасываем WO Number в данных
-        self.wo_number_field.value = ""  # Очищаем поле ввода в интерфейсе
-        self.controller.save_timers_state()
-        self.timer.reset()
+        spot["wo_number"] = ""
+        self.wo_number_field.value = ""
+        self.timer.reset()  
         self.status_dropdown.value = default_status
         self.update_color()
         self.page.update()
+
+
+        
 
     def build(self):
         return self.container
@@ -165,7 +167,7 @@ class StationView:
         self.module_container = module_container
         self.stations_count = stations_count
         self.update_module = update_module
-        self.ro_customization_controller = ro_customization_controller  # Добавляем новый контроллер
+        self.ro_customization_controller = ro_customization_controller  
         self.station_container = None
 
     def build(self):

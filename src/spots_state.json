@@ -1,0 +1,310 @@
+{
+    "station_1": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 1.0,
+            "y": 24.0
+        }
+    },
+    "2_1": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "2_3": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "1_2": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "1_5": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "station_2": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 115.0,
+            "y": 23.0
+        }
+    },
+    "3_5": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "1_4": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "station_3": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 393.0,
+            "y": 36.0
+        }
+    },
+    "3_6": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "1_1": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "3_1": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "1_3": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "1_6": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "2_2": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "2_5": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "2_6": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "3_4": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "3_3": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "3_2": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "2_4": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "4_3": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "4_6": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "station_4": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 6.0,
+            "y": 258.0
+        }
+    },
+    "4_5": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "4_4": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "4_2": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    },
+    "4_1": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": "",
+        "place": {
+            "x": 0,
+            "y": 0
+        }
+    }
+}

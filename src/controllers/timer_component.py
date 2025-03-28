@@ -10,6 +10,7 @@ class TimerComponent:
         self.controller = controller
         self.timer_text = ft.Text("00:00", size=28)
         self.on_state_change = None
+        self._task = None
 
         self.start_button = ft.FilledButton(
             content=ft.Row([
@@ -30,18 +31,18 @@ class TimerComponent:
         )
 
         spot = self.controller.get_spot_data(int(station_id), spot_id)
-        self.update_button_state(spot["running"], update=False)  
+        self.update_button_state(spot["running"], update=False)
+        self.update_display(spot["elapsed_time"])
         if spot["running"]:
-            self.page.run_task(self.update_timer)
-        else:
-            self.update_display(spot["elapsed_time"])
+            self._task = self.page.run_task(self.update_timer)
 
     def update_display(self, elapsed_time):
         total_elapsed = elapsed_time
         minutes = int(total_elapsed // 60)
         seconds = int(total_elapsed % 60)
         self.timer_text.value = f"{minutes:02d}:{seconds:02d}"
-        self.page.update()
+        if self.page:
+            self.page.update()
 
     async def update_timer(self):
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
@@ -50,6 +51,7 @@ class TimerComponent:
             self.update_display(elapsed_time)
             await asyncio.sleep(1)
             spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
+        self._task = None
 
     def update_button_state(self, running, update=True):
         if running:
@@ -64,7 +66,7 @@ class TimerComponent:
                 ft.Text("Start  ", color=ft.colors.WHITE)
             ])
             self.start_button.bgcolor = ft.colors.GREEN_400
-        if update and self.start_button.page: 
+        if update and self.start_button.page:
             self.start_button.update()
 
     def start_pause(self, e):
@@ -72,7 +74,8 @@ class TimerComponent:
         if spot and not spot["running"]:
             self.controller.start_timer(int(self.station_id), self.spot_id)
             self.update_button_state(True)
-            self.page.run_task(self.update_timer)
+            if not self._task:
+                self._task = self.page.run_task(self.update_timer)
         elif spot:
             self.controller.pause_timer(int(self.station_id), self.spot_id)
             self.update_button_state(False)
@@ -104,17 +107,21 @@ class TimerComponent:
                 self.on_state_change()
 
     def reset(self):
-        # Останавливаем таймер
-        self.controller.stop_timer(int(self.station_id), self.spot_id)
-        # Сбрасываем время через данные спота
-        spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
-        spot["elapsed_time"] = 0
-        self.controller.save_timers_state()  # Сохраняем изменения
-        # Обновляем UI
+        
+
+        self.controller.reset_spot(int(self.station_id), self.spot_id)
         self.update_button_state(False)
         self.update_display(0)
         if self.on_state_change:
             self.on_state_change()
+        spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
+        
+        
+
+        
+        
+
+        
 
     def build(self):
         return ft.Column(
