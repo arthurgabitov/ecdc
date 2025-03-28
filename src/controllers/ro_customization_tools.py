@@ -40,7 +40,10 @@ class ROCustomizationController:
 
     def parse_e_number(self, dat_file_path: str):
         e_number = None
+        model = None
         ref_line = None
+        config_line = None
+        
         try:
             with open(dat_file_path, 'r', encoding='utf-8') as f:
                 for line in f:
@@ -51,15 +54,43 @@ class ROCustomizationController:
                         match = re.search(r'Robot F/E No\s*-\s*(E-?\d+|F\d+)', ref_line, re.IGNORECASE)
                         if match:
                             e_number = match.group(1)
-                            break
+                    
+                    # Look for lines that contain "!STARTING CONFIGURATION : IND.ROBOT"
+                    if "!STARTING CONFIGURATION" in line and "IND.ROBOT" in line:
+                        config_line = line.strip()
+                        # Extract model from the pattern: "!STARTING CONFIGURATION : IND.ROBOT M710IC50"
+                        # Изменено регулярное выражение для более точного захвата модели
+                        match = re.search(r'IND\.ROBOT\s+([A-Z0-9]+(?:[A-Z0-9-/]*[A-Z0-9]+)?)', config_line, re.IGNORECASE)
+                        if match:
+                            model = match.group(1)
+                    
+                    # Дополнительно проверим альтернативный формат строки конфигурации
+                    if not model and "STARTING CONFIGURATION" in line:
+                        config_line = line.strip()
+                        # Попробуем найти паттерны типа "M710iC/50" или подобные
+                        match = re.search(r'([A-Z][0-9]+[A-Za-z0-9-/]+)', config_line)
+                        if match:
+                            model = match.group(1)
+                    
+                    # If we found both e_number and model, we can stop reading the file
+                    if e_number and model:
+                        break
+                        
         except Exception as e:
-            print(f"Error parsing E-number: {e}")
+            print(f"Error parsing file data: {e}")
             pass
             
-        # Return both the E-number and the entire reference line for display
+        # For debugging purposes, print what we found
+        print(f"Found E-number: {e_number}, Model: {model}")
+        if config_line:
+            print(f"Configuration line: {config_line}")
+            
+        # Return both the E-number and model information
         return {
             "e_number": e_number,
-            "ref_line": ref_line
+            "model": model,
+            "ref_line": ref_line,
+            "config_line": config_line
         }
 
     def open_file(self, file_path):
