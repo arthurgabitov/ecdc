@@ -23,9 +23,11 @@
   - `controllers/` — Folder with controllers.
      - 'station_controller.py' - Manages the core logic for the station dashboard
      - 'timer_component.py' - Time counter function
+     - 'ro_customization_tools.py' - WO, SW and USB related functions
   - `views/` — Handles the user interface.
      - 'setting_view.py' - UI for settings module
      - 'station_view.py' - UI for station modules with spots generation. 
+     - 'spot_view.py' - UI for spot 
      - 'welcome_view.py' - UI for initial screen module
      - 'overview_view.py' - UI for Dashboard overview
     

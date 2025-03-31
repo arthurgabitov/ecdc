@@ -1,5 +1,7 @@
 import sys
 import os
+
+from controllers.timer_component import TimerComponent
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import flet as ft

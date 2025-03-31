@@ -1,6 +1,6 @@
 import flet as ft
 import asyncio
-from src.controllers.station_controller import StationController
+from controllers.station_controller import StationController
 
 class TimerComponent:
     def __init__(self, page: ft.Page, station_id: str, spot_id: str, controller: StationController):
@@ -118,10 +118,6 @@ class TimerComponent:
         
         
 
-        
-        
-
-        
 
     def build(self):
         return ft.Column(

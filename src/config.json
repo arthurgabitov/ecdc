@@ -3,7 +3,7 @@
       "title": "ECDC Station Dashboard",
       "spots": 6,
       "columns": 2,
-      "stations": 1
+      "stations": 3
   },
   "spot_statuses": [
       {"name": "Unblocked", "color": "WHITE60"},
