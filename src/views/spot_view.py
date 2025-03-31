@@ -6,7 +6,7 @@ spot_style: dict = {
     "main": {
         "expand": True,
         "bgcolor": ft.colors.WHITE60,
-        "border_radius": 10,
+        "border_radius": 20,
         "border": ft.border.all(width=0.5, color=ft.colors.GREY_500),
         "ink": True
     },
@@ -21,10 +21,13 @@ class Spot:
         self.controller = controller
         self.timer = TimerComponent(page, station_id, spot_id, controller)
         self.label = f"Spot {self.spot_id[-1]}"
+        
+
+
         self.ro_tools = ROCustomizationController(controller.config)
         
-        self.timer_state = "stopped"  # Возможные значения: "running", "paused", "stopped"
-        self.wo_found = False  # Флаг для отслеживания найденного WO
+        self.timer_state = "stopped"  
+        self.wo_found = False  
 
         spot_data = self.controller.get_spot_data(int(station_id), spot_id)
         self.status_dropdown = ft.Dropdown(
@@ -44,16 +47,16 @@ class Spot:
             keyboard_type=ft.KeyboardType.NUMBER
         )
         
-        # E-number display label for dialog
-        self.e_number_label = ft.Text("E-number: Please enter WO-number", size=16, text_align=ft.TextAlign.CENTER)
         
-        # Model display label for dialog
-        self.model_label = ft.Text("Model: Unknown", size=16, text_align=ft.TextAlign.CENTER)
+        self.e_number_label = ft.Text("E-number: Please enter WO-number", size=16, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER)
+        
+        
+        self.model_label = ft.Text("Model: Unknown", size=16, weight=ft.FontWeight.BOLD, text_align=ft.TextAlign.CENTER)
         
         # E-number and model display label for spot container
         self.spot_e_number_label = ft.Text("", size=14, text_align=ft.TextAlign.CENTER, visible=False)
         
-        # Container for file buttons
+        
         self.file_buttons_container = ft.Container(
             content=ft.Row([]),
             visible=False
@@ -64,8 +67,8 @@ class Spot:
         self.content = ft.Column(
             controls=[
                 ft.Divider(height=20, color="transparent"),
-                ft.Text(self.label, size=18, text_align=ft.TextAlign.CENTER),
-                self.spot_e_number_label,  # Add E-number label below the spot label
+                ft.Text(self.label, weight=ft.FontWeight.BOLD, size=18, text_align=ft.TextAlign.CENTER),
+                self.spot_e_number_label,  
                 ft.Container(expand=1),
                 ft.Container(
                     content=self.timer.build(),
@@ -92,9 +95,12 @@ class Spot:
                 controls=[
                     
                     ft.Container(content=self.wo_number_field, expand=0, alignment=ft.alignment.center),
+                    ft.Divider(),
                     ft.Container(content=self.e_number_label, expand=0, alignment=ft.alignment.center),
+                    
                     ft.Container(content=self.model_label, expand=0, alignment=ft.alignment.center),
                     ft.Container(content=self.file_buttons_container, expand=0, alignment=ft.alignment.center),
+                    
                     ft.Container(content=self.status_dropdown, expand=0, alignment=ft.alignment.center),
                     ft.Container(content=self.snack_bar, expand=0, alignment=ft.alignment.center),
                 ],
@@ -112,6 +118,11 @@ class Spot:
             **spot_style["main"],
             on_click=self.open_dialog
         )
+        
+        # Инициализируем данные WO номера при создании спота
+        if spot_data.get("wo_number") and len(spot_data["wo_number"]) == 8:
+            self.process_wo_number(spot_data["wo_number"])
+        
         self.update_color()
         self.timer.on_state_change = self.update_spot_state
 
@@ -130,11 +141,11 @@ class Spot:
         self.process_wo_number(wo_number)
         
     def process_wo_number(self, wo_number):
-        # Clear previous file buttons
+        
         self.file_buttons_container.content = ft.Row([])
         self.file_buttons_container.visible = False
-        self.e_number_label.value = "E-number: Not found"
-        self.model_label.value = "Model: Unknown"
+        self.e_number_label.value = ""
+        self.model_label.value = ""
         self.spot_e_number_label.value = ""
         self.spot_e_number_label.visible = False
         
@@ -154,16 +165,16 @@ class Spot:
         if "error" in result:
             self.e_number_label.value = "E-number: Not found"
             self.model_label.value = "Model: Unknown"
-            # Показываем сообщение в snack_bar если файлы не найдены
-            self.snack_bar.content.value = f"SW for {wo_number} not found"
+            
+            self.snack_bar.content.value = f"SW on Server for WO {wo_number} not found"
             self.snack_bar.open = True
             self.page.update()
             return
             
-        # Если WO найден, устанавливаем флаг
+        
         self.wo_found = True
         
-        # Обновляем бордер с учетом найденного WO
+        
         self.update_border()
             
         # Update E-number and model display
@@ -201,7 +212,7 @@ class Spot:
         if result.get("dat_file"):
             buttons.append(
                 ft.ElevatedButton(
-                    text="Show SW on server",
+                    text=" Show SW on server ",
                     on_click=lambda e, f=result["dat_file"]: self.open_file(f)
                 )
             )
@@ -209,7 +220,7 @@ class Spot:
         if result.get("pdf_file"):
             buttons.append(
                 ft.ElevatedButton(
-                    text="Open BOM",
+                    text=" Show BOM ",
                     on_click=lambda e, f=result["pdf_file"]: self.open_file(f)
                 )
             )
@@ -268,18 +279,10 @@ class Spot:
         self.page.update()
     
     def update_border(self):
-        # Приоритет цветов рамки: WO найден (зеленый) > таймер остановлен (красный) > таймер на паузе (оранжевый) > обычное состояние
+        
         if self.wo_found:
             self.container.border = ft.border.all(width=1.5, color=ft.colors.GREEN)
-        elif self.timer_state == "stopped":
-            # Проверяем, есть ли накопленное время напрямую из контроллера
-            spot_data = self.controller.get_spot_data(int(self.station_id), self.spot_id)
-            if spot_data and spot_data.get("elapsed_time", 0) > 0:
-                self.container.border = ft.border.all(width=1.5, color=ft.colors.RED)
-            else:
-                self.container.border = spot_style["main"]["border"]
-        elif self.timer_state == "paused":
-            self.container.border = ft.border.all(width=1.5, color=ft.colors.ORANGE)
+        
         else:
             self.container.border = spot_style["main"]["border"]
             

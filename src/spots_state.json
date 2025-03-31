@@ -45,10 +45,10 @@
     },
     "1_5": {
         "status": "Unblocked",
-        "start_time": 1743173756.816822,
-        "elapsed_time": 10.782218217849731,
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
         "running": false,
-        "wo_number": "16794301",
+        "wo_number": "",
         "place": {
             "x": 0,
             "y": 0

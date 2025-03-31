@@ -37,10 +37,45 @@ class StationView:
 
         if self.selected_station_id is not None:
             selected_station = self.controller.get_station_by_id(self.selected_station_id)
+            
             spots = [
                 Spot(f"Spot {i + 1}", str(self.selected_station_id), f"{self.selected_station_id}_{i + 1}", self.page, self.controller).build()
                 for i in range(spots_count)
             ]
+            
+            # Создаем список для колбэков
+            self.page.async_callbacks = getattr(self.page, 'async_callbacks', [])
+            
+            # Функция для добавления колбэков
+            def add_async_callback(callback):
+                self.page.async_callbacks.append(callback)
+                
+            # Добавляем метод в объект page
+            self.page.add_async_callback = add_async_callback
+            
+            # Функция для выполнения отложенных колбэков
+            def process_callbacks(e=None):
+                callbacks = self.page.async_callbacks.copy()
+                self.page.async_callbacks = []
+                for callback in callbacks:
+                    try:
+                        callback()
+                    except Exception as ex:
+                        print(f"Error in callback: {ex}")
+                # Удаляем таймер после его срабатывания
+                if self.timer in self.page.controls:
+                    self.page.controls.remove(self.timer)
+                    self.timer = None
+                    self.page.update()
+            
+            # Создаем таймер для отложенного выполнения
+            if hasattr(self.page, 'async_callbacks') and self.page.async_callbacks:
+                self.timer = ft.Text(
+                    "",
+                    opacity=0,
+                    on_loaded=lambda _: self.page.run_task_after(process_callbacks, 0.5)
+                )
+                self.page.add(self.timer)
 
             spots_per_column = spots_count // columns_count
             extra_spots = spots_count % columns_count
