@@ -4,6 +4,14 @@ import subprocess
 import time
 import threading
 import traceback
+import glob
+import shutil 
+
+try:
+    import PyPDF2
+except ImportError:
+    print("PyPDF2 module not found. PDF memory extraction will be unavailable.")
+    PyPDF2 = None
 
 class ROCustomizationController:
     def __init__(self, config):
@@ -234,32 +242,333 @@ class ROCustomizationController:
             self.usb_thread = None
 
     def create_robot_sw(self, usb_path, wo_data):
-        
+        """Создает ПО робота на USB путем копирования соответствующего .dat файла"""
         try:
-            
+            # Проверяем, что USB существует и доступен для записи
             if not os.path.exists(usb_path) or not os.access(usb_path, os.W_OK):
                 return False, "USB drive not found or not writable"
             
-            # Здесь будет логика создания ПО робота
-            # Пока это просто заглушка, которая возвращает успех
+            # Проверяем, что у нас есть .dat файл для копирования
+            dat_file = wo_data.get("dat_file")
+            if not dat_file or not os.path.exists(dat_file):
+                return False, "No SW file found for copying"
             
-            # Для демонстрации создадим файл с текущими данными WO
+            # Получаем WO номер для вывода в сообщении
+            wo_number = wo_data.get("wo_number", "Unknown")
+            
+            # Определяем версию SW путем анализа файла
+            version = "Unknown"
+            memory_info = None
+            mem_detail_line_index = -1  # Инициализируем переменную здесь
+            
+            # Читаем содержимое исходного файла
+            with open(dat_file, 'r', encoding='utf-8', errors='ignore') as f:
+                content = f.readlines()
+                
+                for i, line in enumerate(content):
+                    # Ищем строку с информацией о версии
+                    if "VERSION V" in line:
+                        version_match = re.search(r'VERSION\s+V(\d+)', line)
+                        if version_match:
+                            version = f"V{version_match.group(1)}"
+                    
+                    # Ищем строку с информацией о памяти (нечувствительно к регистру)
+                    if re.search(r'!SOF Ref8:', line, re.IGNORECASE) and "Mem Detail" in line:
+                        mem_detail_line_index = i
+                        print(f"Found memory detail line: {line.strip()}")
+            
+            # Проверяем PDF файл на наличие информации о памяти
+            if wo_data.get("pdf_file"):
+                memory_info = self.extract_memory_from_pdf(wo_data.get("pdf_file"))
+                print(f"Extracted memory info from PDF: {memory_info}")
+            
+            # Определяем путь для копирования файла в зависимости от версии
+            if version.startswith("V9") or version == "Unknown":
+                target_file = os.path.join(usb_path, "orderfil.dat")
+            else:
+                target_dir = os.path.join(usb_path, "config", "p1")
+                os.makedirs(target_dir, exist_ok=True)
+                target_file = os.path.join(target_dir, "orderfil.dat")
+            
+            # Копируем файл
             try:
-                with open(os.path.join(usb_path, "robot_sw_info.txt"), "w") as f:
-                    f.write(f"WO: {wo_data.get('wo_number', 'Unknown')}\n")
-                    if isinstance(wo_data.get('e_number'), dict):
-                        f.write(f"E-number: {wo_data['e_number'].get('e_number', 'Unknown')}\n")
-                        f.write(f"Model: {wo_data['e_number'].get('model', 'Unknown')}\n")
+                # Модифицируем содержимое файла, если есть информация о памяти
+                if memory_info:
+                    # Если нашли строку Mem Detail, модифицируем её
+                    if mem_detail_line_index >= 0:
+                        line = content[mem_detail_line_index]
+                        print(f"Modifying line: {line.strip()}")
+                        # Проверяем формат строки
+                        if "-" in line:
+                            # Формат: !SOF Ref8: Mem Detail - ЗНАЧЕНИЕ
+                            # Сохраняем оригинальный регистр и пробелы до дефиса
+                            base_part = line.split("-")[0]
+                            content[mem_detail_line_index] = f"{base_part}- {memory_info}\n"
+                            print(f"Modified to: {content[mem_detail_line_index].strip()}")
+                        elif ":" in line:
+                            # Формат: !SOF Ref8: Mem Detail: ЗНАЧЕНИЕ
+                            # Если есть двоеточие, добавляем после него
+                            parts = line.split(":", 2)
+                            if len(parts) >= 2:
+                                # Восстанавливаем оригинальную строку до двоеточия, добавляем тире и значение
+                                prefix_part = parts[0] + ":"
+                                if "Mem Detail" in parts[1]:
+                                    detail_part = parts[1].split("Mem Detail")[0] + "Mem Detail"
+                                    content[mem_detail_line_index] = f"{prefix_part}{detail_part} - {memory_info}\n"
+                                else:
+                                    content[mem_detail_line_index] = f"{prefix_part} Mem Detail - {memory_info}\n"
+                            else:
+                                content[mem_detail_line_index] = f"{line.rstrip()} - {memory_info}\n"
+                            print(f"Modified to: {content[mem_detail_line_index].strip()}")
+                        else:
+                            # Неизвестный формат, добавляем в конец строки
+                            content[mem_detail_line_index] = f"{line.rstrip()} - {memory_info}\n"
+                            print(f"Modified to: {content[mem_detail_line_index].strip()}")
+                    else:
+                        # Если не нашли строку, ищем другие строки с !SOF Ref для определения регистра
+                        sof_ref_format = "!SOF Ref"  # По умолчанию
+                        sof_ref_indices = []
+                        for i, line in enumerate(content):
+                            if re.search(r'![Ss][Oo][Ff] [Rr]ef\d+:', line):
+                                sof_ref_indices.append(i)
+                                # Определяем формат используемый в файле
+                                sof_match = re.search(r'(![Ss][Oo][Ff] [Rr]ef)\d+:', line)
+                                if sof_match:
+                                    sof_ref_format = sof_match.group(1)
+                                    break
+                        
+                        # Создаем строку в правильном регистре
+                        new_mem_detail_line = f"{sof_ref_format}8: Mem Detail - {memory_info}\n"
+                        print(f"Creating new line: {new_mem_detail_line.strip()}")
+                        
+                        if sof_ref_indices:
+                            # Если есть другие !SOF Ref строки, вставляем после последней
+                            insert_index = max(sof_ref_indices) + 1
+                            content.insert(insert_index, new_mem_detail_line)
+                        else:
+                            # Если нет !SOF Ref строк, вставляем в начало
+                            content.insert(0, new_mem_detail_line)
+                    
+                    # Создаем временный файл для записи модифицированного содержимого
+                    temp_file = os.path.join(os.path.dirname(dat_file), f"temp_{os.path.basename(dat_file)}")
+                    with open(temp_file, 'w', encoding='utf-8') as f:
+                        f.writelines(content)
+                    
+                    # Копируем модифицированный файл
+                    shutil.copy2(temp_file, target_file)
+                    
+                    # Удаляем временный файл
+                    try:
+                        os.remove(temp_file)
+                    except:
+                        pass
+                else:
+                    # Если нет информации о памяти, копируем файл без изменений
+                    shutil.copy2(dat_file, target_file)
+                
+                print(f"SW file copied from {dat_file} to {target_file}")
+                
+                # Формируем сообщение для пользователя
+                source_filename = os.path.basename(dat_file)
+                target_path_display = os.path.basename(usb_path) + ":" + target_file[len(usb_path):]
+                memory_info_msg = f" with {memory_info}" if memory_info else ""
+                
+                return True, f"SW file copied from {source_filename} to {target_path_display}{memory_info_msg}"
             except Exception as e:
-                return False, f"Failed to create robot SW: {str(e)}"
+                print(f"Error copying SW file: {e}")
+                traceback.print_exc()
+                return False, f"Failed to copy SW: {str(e)}"
                 
-            # Создаем или обновляем файл версии
-            try:
-                with open(os.path.join(usb_path, "version.txt"), "w") as f:
-                    f.write(f"1.0.0 (Created: {time.strftime('%Y-%m-%d %H:%M:%S')})")
-            except:
-                pass
-                
-            return True, "Robot SW created successfully"
         except Exception as e:
+            print(f"Error creating robot SW: {e}")
+            traceback.print_exc()
             return False, f"Error creating robot SW: {str(e)}"
+
+    def extract_memory_from_pdf(self, pdf_file_path):
+        """Извлекает информацию о памяти из PDF файла"""
+        if not PyPDF2:
+            print("PyPDF2 module not available. Cannot extract memory information.")
+            return None
+
+        try:
+            # Проверяем существование файла
+            if not os.path.exists(pdf_file_path):
+                print(f"PDF file not found: {pdf_file_path}")
+                return None
+                
+            # Открываем PDF файл
+            with open(pdf_file_path, 'rb') as file:
+                reader = PyPDF2.PdfReader(file)
+                
+                # Ищем на каждой странице
+                for page_num in range(len(reader.pages)):
+                    text = reader.pages[page_num].extract_text()
+                    
+                    # Выводим текст для отладки
+                    print(f"Extracted text from page {page_num+1} (length: {len(text)})")
+                    
+                    # Поиск строки с указанием модуля памяти
+                    memory_patterns = [
+                        # Различные форматы с вариациями пробелов
+                        r'A05B[-\s]2600[-\s]H\d+\s+.*?(FROM\s*\d+\s*MB\s*/\s*SRAM\s*\d+\s*MB)',  # С R30IB
+                        r'A05B[-\s]2600[-\s]H\d+\s+.*?(FROM\s*\d+\s*MB[/\\]\s*SRAM\s*\d+\s*MB)',  # Альтернативно с другим слешем
+                        r'(FROM\s*\d+\s*MB\s*/\s*SRAM\s*\d+\s*MB)',  # Только память
+                        r'(FROM\s*\d+\s*MB).*?(SRAM\s*\d+\s*MB)'  # Раздельные части
+                    ]
+                    
+                    for pattern in memory_patterns:
+                        match = re.search(pattern, text, re.IGNORECASE)
+                        if match:
+                            if len(match.groups()) == 1:
+                                memory_info = match.group(1).strip()
+                                # Нормализуем формат (убираем лишние пробелы)
+                                memory_info = re.sub(r'\s+', ' ', memory_info)
+                                # Заменяем "FROM 128MB / SRAM 3MB" на "FROM128MB/SRAM3MB"
+                                memory_info = re.sub(r'FROM\s+(\d+)\s*MB\s*[/\\]\s*SRAM\s+(\d+)\s*MB', r'FROM\1MB/SRAM\2MB', memory_info, flags=re.IGNORECASE)
+                                print(f"Found memory info: {memory_info}")
+                                return memory_info
+                            elif len(match.groups()) > 1:
+                                # Объединяем раздельные части
+                                from_part = match.group(1).strip()
+                                sram_part = match.group(2).strip()
+                                # Нормализуем формат
+                                from_part = re.sub(r'\s+', '', from_part)
+                                sram_part = re.sub(r'\s+', '', sram_part)
+                                combined = f"{from_part}/{sram_part}"
+                                print(f"Found combined memory info: {combined}")
+                                return combined
+                    
+                    # Ищем строки с содержанием A05B и FROM/SRAM для отладки
+                    debug_lines = []
+                    for line in text.split('\n'):
+                        if ('A05B' in line and ('FROM' in line.upper() or 'SRAM' in line.upper())):
+                            debug_lines.append(line.strip())
+                    
+                    if debug_lines:
+                        print("Potential memory info lines found but not matched:")
+                        for line in debug_lines:
+                            print(f"  > {line}")
+            
+            print(f"Memory information not found in PDF: {pdf_file_path}")
+            return None
+                
+        except Exception as e:
+            print(f"Error extracting memory from PDF: {str(e)}")
+            traceback.print_exc()
+            return None
+
+    def find_and_open_dt_file(self, e_number):
+        """Находит и открывает DT файл для указанного E-number"""
+        try:
+            # Очищаем номер от лишнего
+            clean_e_number = e_number.strip().upper()
+            if clean_e_number.startswith("E-"):
+                clean_e_number = "E" + clean_e_number[2:]
+            elif not clean_e_number.startswith("E"):
+                clean_e_number = "E" + clean_e_number
+            
+            # Извлекаем диапазон для папки
+            match = re.match(r'E(\d{3})(\d{3})', clean_e_number)
+            if not match:
+                return False, f"Invalid E-number format: {e_number}"
+            
+            first_part = match.group(1)
+            # Правильный формат для диапазона папок
+            range_folder = f"E{first_part}000-E{first_part}999"
+            
+            # Пути к возможным директориям
+            base_path = r"\\fanuc\FS\Corporate\Products\Data_Sheets_MD"
+            dt_path = os.path.join(base_path, range_folder, "DT")
+            regular_path = os.path.join(base_path, range_folder)
+            
+            # Выводим пути для отладки
+            print(f"Searching in DT path: {dt_path}")
+            print(f"Searching in regular path: {regular_path}")
+            
+            # Файл может иметь разные форматы имени, ищем по номеру E-number
+            # Используем более общий шаблон для поиска, но ограничиваем расширения
+            e_number_dash = clean_e_number.replace('E', 'E-')
+            
+            # Создаем более гибкие шаблоны поиска с указанием расширений Excel файлов
+            patterns = [
+                f"*{e_number_dash}*.xls",   # Старый формат Excel
+                f"*{e_number_dash}*.xlsx",  # Новый формат Excel
+                f"*{e_number_dash}*.xlsm",  # Excel с макросами
+                f"*{clean_e_number}*.xls",  # Без дефиса, старый формат
+                f"*{clean_e_number}*.xlsx", # Без дефиса, новый формат
+                f"*{clean_e_number}*.xlsm", # Без дефиса, с макросами
+            ]
+            
+            found_files = []
+            
+            # Ищем во всех возможных местах и по всем шаблонам
+            for pattern in patterns:
+                # Поиск в DT папке
+                if os.path.exists(dt_path):
+                    dt_search = os.path.join(dt_path, pattern)
+                    found_files.extend(glob.glob(dt_search))
+                    print(f"Searching with pattern '{dt_search}', found {len(glob.glob(dt_search))} files")
+                
+                # Поиск в обычной папке
+                if os.path.exists(regular_path):
+                    regular_search = os.path.join(regular_path, pattern)
+                    found_files.extend(glob.glob(regular_search))
+                    print(f"Searching with pattern '{regular_search}', found {len(glob.glob(regular_search))} files")
+            
+            # Убираем дубликаты
+            found_files = list(set(found_files))
+            
+            # Если Excel файлы не найдены, попробуем найти любые файлы с e-number для диагностики
+            if not found_files:
+                print(f"No Excel files found for {e_number}, checking for any files")
+                
+                # Более общий поиск для диагностики
+                any_patterns = [f"*{e_number_dash}*.*", f"*{clean_e_number}*.*"]
+                diagnostic_files = []
+                
+                for pattern in any_patterns:
+                    if os.path.exists(dt_path):
+                        diagnostic_files.extend(glob.glob(os.path.join(dt_path, pattern)))
+                    if os.path.exists(regular_path):
+                        diagnostic_files.extend(glob.glob(os.path.join(regular_path, pattern)))
+                
+                # Если нашли другие файлы, выводим их для диагностики
+                if diagnostic_files:
+                    print(f"Found non-Excel files for {e_number}:")
+                    for f in diagnostic_files:
+                        print(f"  {f} ({os.path.splitext(f)[1]})")
+                    return False, f"No Excel DT file found for {e_number}, but found {len(diagnostic_files)} other files"
+                
+                # Если ничего не нашли, перечисляем содержимое папок
+                print(f"No files found for {e_number}")
+                if os.path.exists(dt_path) and os.listdir(dt_path):
+                    print(f"Files in {dt_path}:")
+                    for f in os.listdir(dt_path):
+                        if e_number_dash.lower() in f.lower() or clean_e_number.lower() in f.lower():
+                            print(f"  {f} (PARTIAL MATCH)")
+                        
+                if os.path.exists(regular_path) and os.listdir(regular_path):
+                    print(f"Files in {regular_path}:")
+                    for f in os.listdir(regular_path):
+                        if e_number_dash.lower() in f.lower() or clean_e_number.lower() in f.lower():
+                            print(f"  {f} (PARTIAL MATCH)")
+                            
+                return False, f"No DT file found for {e_number}"
+            
+            # Выводим все найденные файлы для проверки
+            print(f"Found {len(found_files)} Excel files for {e_number}:")
+            for f in found_files:
+                print(f"  {f} ({os.path.splitext(f)[1]})")
+            
+            # Выбираем первый найденный файл и открываем его
+            file_to_open = found_files[0]
+            
+            
+            if self.open_file(file_to_open):
+                return True, f"Opening DT file: {os.path.basename(file_to_open)}"
+            else:
+                return False, f"Failed to open DT file: {os.path.basename(file_to_open)}"
+            
+        except Exception as e:
+            traceback.print_exc()
+            return False, f"Error finding DT file: {str(e)}"

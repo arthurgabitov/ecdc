@@ -1,6 +1,6 @@
 {
   "app_settings": {
-      "title": "ECDC Station Dashboard",
+      "title": "Station App",
       "spots": 6,
       "columns": 2,
       "stations": 1

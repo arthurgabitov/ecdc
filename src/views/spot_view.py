@@ -63,14 +63,21 @@ class Spot:
         
         self.snack_bar = ft.SnackBar(content=ft.Text(""), open=False)
         
-        # Robot Info section
+        # Добавляем кнопку Find DT в секцию
+        self.find_dt_button = ft.ElevatedButton(
+            text=" Find DT ",
+            on_click=self.on_find_dt_click,
+            visible=False
+        )
+
+        # Модифицируем Robot Info section с добавлением новой кнопки
         self.robot_info_section = ft.Container(
             content=ft.Column([
                 ft.Text("Robot Information", size=16, weight=ft.FontWeight.BOLD),
                 ft.Divider(),
                 self.e_number_label,
                 self.model_label,
-                self.file_buttons_container,
+                self.file_buttons_container  # Кнопка Find DT будет добавляться внутрь file_buttons_container
             ]),
             visible=False,
             padding=10,
@@ -101,7 +108,7 @@ class Spot:
             size=14
         )
         
-        # Container for USB section
+        
         self.usb_section = ft.Container(
             content=ft.Column([
                 ft.Text("Create Robot Software", size=16, weight=ft.FontWeight.BOLD),
@@ -119,7 +126,7 @@ class Spot:
             margin=ft.margin.only(top=10)
         )
         
-        # USB detection thread
+        
         self.usb_detection_active = False
         self.usb_thread = None
 
@@ -145,28 +152,35 @@ class Spot:
             spacing=0
         )
 
+        # Создаем внешний контейнер с фиксированной высотой для модального окна
+        modal_content = ft.Container(
+            content=ft.Column(
+                controls=[
+                    ft.Container(content=self.wo_number_field, alignment=ft.alignment.center),
+                    ft.Container(content=self.robot_info_section, alignment=ft.alignment.center),
+                    ft.Container(content=self.usb_section, alignment=ft.alignment.center),
+                    ft.Container(content=self.status_dropdown, alignment=ft.alignment.center),
+                    ft.Container(content=self.snack_bar, alignment=ft.alignment.center),
+                ],
+                alignment=ft.MainAxisAlignment.START,
+                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=20,
+                tight=True,  
+            ),
+            padding=0,
+            height=None,  
+            width=450,    
+        )
+
         self.dlg_modal = ft.AlertDialog(
             modal=False,
             barrier_color=ft.colors.BLACK26,
             title=ft.Text("Spot Details", text_align=ft.TextAlign.CENTER),
             title_padding=ft.padding.symmetric(horizontal=0, vertical=10),
-            content=ft.Column(
-                controls=[
-                    ft.Container(content=self.wo_number_field, expand=0, alignment=ft.alignment.center),
-                    
-                    ft.Container(content=self.robot_info_section, expand=0, alignment=ft.alignment.center),
-                    ft.Container(content=self.usb_section, expand=0, alignment=ft.alignment.center),
-                    ft.Container(content=self.status_dropdown, expand=0, alignment=ft.alignment.center),
-                    ft.Container(content=self.snack_bar, expand=0, alignment=ft.alignment.center),
-                ],
-                height=500,  # Увеличиваем высоту для размещения всех разделов
-                width=400,
-                alignment=ft.MainAxisAlignment.START,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            ),
+            content=modal_content,
             actions_alignment=ft.MainAxisAlignment.CENTER,
             content_padding=ft.padding.all(20),
-            on_dismiss=self.on_dialog_dismiss
+            on_dismiss=self.on_dialog_dismiss,
         )
 
         self.container = ft.Container(
@@ -208,6 +222,7 @@ class Spot:
         self.spot_e_number_label.value = ""
         self.spot_e_number_label.visible = False
         self.robot_info_section.visible = False
+        self.find_dt_button.visible = False
         self.wo_data = {"wo_number": wo_number}  # Сохраняем WO номер
         
         # Сбрасываем флаг найденного WO
@@ -267,8 +282,11 @@ class Spot:
             
             if e_number_value != "Not found":
                 self.e_number_label.value = f"E-number: {e_number_value}"
+                # Показываем кнопку Find DT только если найден E-number
+                self.find_dt_button.visible = True
             else:
                 self.e_number_label.value = "E-number: Not found"
+                self.find_dt_button.visible = False
                 
             if model_value != "Unknown":
                 self.model_label.value = f"Model: {model_value}"
@@ -288,6 +306,7 @@ class Spot:
         else:
             self.e_number_label.value = "E-number: Not found"
             self.model_label.value = "Model: Unknown"
+            self.find_dt_button.visible = False
             
         # Create file buttons if files were found
         buttons = []
@@ -306,6 +325,15 @@ class Spot:
                     on_click=lambda e, f=result["pdf_file"]: self.open_file(f)
                 )
             )
+        
+        # Добавляем кнопку Find DT в тот же ряд кнопок
+        if e_number_value != "Not found":
+            buttons.append(
+                self.find_dt_button
+            )
+            self.find_dt_button.visible = True
+        else:
+            self.find_dt_button.visible = False
             
         if buttons:
             self.file_buttons_container.content = ft.Row(
@@ -316,20 +344,23 @@ class Spot:
             self.file_buttons_container.visible = True
             
         self.page.update()
+        
+        # После всех изменений, явно обновляем размеры диалога
+        self.page.update()
     
     def update_usb_drives_callback(self, drives):
         """Callback для обновления списка USB-дисков"""
         try:
-            # Безопасно выполняем обновление через стандартный update страницы
+            
             self.update_usb_drives(drives)
             self.page.update()
         except Exception as e:
             print(f"Error in update_usb_drives_callback: {str(e)}")
     
     def update_usb_drives(self, drives):
-        """Обновляет список USB-дисков в выпадающем списке"""
+        
         try:
-            # Запоминаем текущее значение
+            
             current_value = self.usb_dropdown.value
             
             # Обновляем опции
@@ -344,16 +375,16 @@ class Spot:
             
             self.usb_dropdown.options = options
             
-            # Если нет дисков или текущее значение не существует
+            
             if not options:
-                # Нет подключенных дисков
+                
                 self.usb_dropdown.value = None
                 self.usb_version_label.value = "No USB drives detected"
                 self.usb_dropdown.visible = False
                 self.create_sw_button.visible = False
                 self.usb_version_label.visible = True
             else:
-                # Есть подключенные диски
+                
                 if not current_value_exists or current_value is None:
                     self.usb_dropdown.value = options[0].key
                 
@@ -369,7 +400,7 @@ class Spot:
             traceback.print_exc()
     
     def update_usb_version_label(self):
-        """Обновляет надпись с версией SW на USB"""
+        
         if not self.usb_dropdown.value:
             self.usb_version_label.value = "SW version on USB: Not detected"
             return
@@ -381,26 +412,31 @@ class Spot:
             self.usb_version_label.value = "SW version on USB: No version file found"
     
     def on_create_sw_click(self, e):
-        """Обработчик нажатия на кнопку Create SW"""
+        
         if not self.usb_dropdown.value:
             self.snack_bar.content.value = "Please select a USB drive first"
             self.snack_bar.open = True
             self.page.update()
             return
+        
+        
+        if not self.wo_data.get("dat_file"):
+            self.snack_bar.content.value = "No SW file available for copying"
+            self.snack_bar.open = True
+            self.page.update()
+            return
             
-        # Передаем данные WO в функцию создания ПО
+        
         success, message = self.ro_tools.create_robot_sw(self.usb_dropdown.value, self.wo_data)
+        
+        # Показываем сообщение о результате
         self.snack_bar.content.value = message
         self.snack_bar.open = True
         
-        # Если успешно, обновляем версию ПО
-        if success:
-            self.update_usb_version_label()
-            
         self.page.update()
     
     def on_usb_dropdown_change(self, e):
-        """Обработчик изменения выбранного USB-накопителя"""
+        
         self.update_usb_version_label()
         self.page.update()
     
@@ -426,6 +462,10 @@ class Spot:
                 self.update_usb_drives(drives)
                 print(f"Found {len(drives)} USB drives when opening dialog")
                 
+            # Устанавливаем видимость нужных секций перед открытием диалога
+            self.robot_info_section.visible = self.wo_found
+            self.usb_section.visible = self.wo_found
+            
             self.dlg_modal.open = True
             self.page.update()
         
@@ -502,6 +542,9 @@ class Spot:
         # Скрываем Robot Info секцию
         self.robot_info_section.visible = False
         
+        # Скрываем кнопку Find DT
+        self.find_dt_button.visible = False
+        
         # Сбрасываем флаг найденного WO и состояние таймера
         self.wo_found = False
         self.timer_state = "stopped"
@@ -522,6 +565,28 @@ class Spot:
         
         # Очищаем данные WO
         self.wo_data = {}
+
+    def on_find_dt_click(self, e):
+        """Обработчик нажатия на кнопку Find DT"""
+        if "e_number" not in self.wo_data or not isinstance(self.wo_data["e_number"], dict):
+            self.snack_bar.content.value = "No E-number information available"
+            self.snack_bar.open = True
+            self.page.update()
+            return
+        
+        e_number = self.wo_data["e_number"].get("e_number")
+        if not e_number:
+            self.snack_bar.content.value = "No E-number found"
+            self.snack_bar.open = True
+            self.page.update()
+            return
+        
+        
+        success, message = self.ro_tools.find_and_open_dt_file(e_number)
+        
+        self.snack_bar.content.value = message
+        self.snack_bar.open = True
+        self.page.update()
 
     def build(self):
         return self.container
