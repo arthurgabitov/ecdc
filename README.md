@@ -1,10 +1,10 @@
 
 ## Current version: 
-- 0.0.9 Bug fixing
+- 0.0.11 General improvements
 
 
 ## Updates history: 
-
+- 0.0.10 Search SW file and parsing of E-number functions added
 - 0.0.8 Performance updates. Dashboard test mode in settings page added
 - 0.0.7 Single Station Mode added. (to Activate put "stations": 1 in config.json)
 - 0.0.6 Dashboard overview added. + spot status update
