@@ -14,6 +14,7 @@ class StationView:
         self.stations_count = stations_count
         self.update_module = update_module
         self.station_container = None
+        self.timer = None
 
     def build(self):
         app_settings = self.config.get_app_settings()
@@ -63,19 +64,22 @@ class StationView:
                     except Exception as ex:
                         print(f"Error in callback: {ex}")
                 # Удаляем таймер после его срабатывания
-                if self.timer in self.page.controls:
+                if self.timer and self.timer in self.page.controls:
                     self.page.controls.remove(self.timer)
                     self.timer = None
                     self.page.update()
             
             # Создаем таймер для отложенного выполнения
             if hasattr(self.page, 'async_callbacks') and self.page.async_callbacks:
-                self.timer = ft.Text(
-                    "",
-                    opacity=0,
-                    on_loaded=lambda _: self.page.run_task_after(process_callbacks, 0.5)
-                )
+                # Используем более безопасный метод, добавляем таймер
+                def delayed_process():
+                    import time
+                    time.sleep(0.5)  # Задержка 0.5 секунды
+                    self.page.run_sync_in_app(process_callbacks)
+                
+                self.timer = ft.Text("", opacity=0)
                 self.page.add(self.timer)
+                self.page.run_task(delayed_process)
 
             spots_per_column = spots_count // columns_count
             extra_spots = spots_count % columns_count

@@ -102,6 +102,20 @@ class Spot:
             on_click=self.on_create_sw_click
         )
         
+        self.create_aoa_button = ft.ElevatedButton(
+            text="Create AOA Folder",
+            width=150,
+            visible=False,
+            on_click=self.on_create_aoa_click
+        )
+        
+        self.move_backups_button = ft.ElevatedButton(
+            text="Move Backups",
+            width=150,
+            visible=False,
+            on_click=self.on_move_backups_click
+        )
+        
         self.usb_version_label = ft.Text(
             "SW version on USB: Not detected",
             visible=False,
@@ -117,7 +131,13 @@ class Spot:
                     self.usb_dropdown,
                     self.create_sw_button
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
-                self.usb_version_label
+                self.usb_version_label,
+                ft.Divider(),
+                ft.Row([
+                    self.create_aoa_button,
+                    self.move_backups_button
+                ], alignment=ft.MainAxisAlignment.CENTER),
+                
             ]),
             visible=False,
             padding=10,
@@ -157,9 +177,10 @@ class Spot:
             content=ft.Column(
                 controls=[
                     ft.Container(content=self.wo_number_field, alignment=ft.alignment.center),
+                    ft.Container(content=self.status_dropdown, alignment=ft.alignment.center),
                     ft.Container(content=self.robot_info_section, alignment=ft.alignment.center),
                     ft.Container(content=self.usb_section, alignment=ft.alignment.center),
-                    ft.Container(content=self.status_dropdown, alignment=ft.alignment.center),
+                    
                     ft.Container(content=self.snack_bar, alignment=ft.alignment.center),
                 ],
                 alignment=ft.MainAxisAlignment.START,
@@ -198,6 +219,49 @@ class Spot:
         
         # Сохраняем WO данные для использования при создании SW
         self.wo_data = {}
+        
+        # Добавляем переменную для хранения информационного диалога 
+        self.info_dialog = None
+
+    # Создаем новый метод для показа информационного диалога
+    def show_info_dialog(self, message, title="Information"):
+        # Закрываем предыдущий диалог, если он существует
+        if self.info_dialog and self.info_dialog in self.page.overlay:
+            self.info_dialog.open = False
+            self.page.update()
+            
+        # Создаем новый диалог
+        self.info_dialog = ft.AlertDialog(
+            modal=True,
+            title=ft.Text(title),
+            content=ft.Text(message),
+            actions=[
+                ft.TextButton("OK", on_click=self.close_info_dialog),
+            ],
+            actions_alignment=ft.MainAxisAlignment.END,
+        )
+        
+        # Добавляем диалог в overlay и открываем его
+        if self.info_dialog not in self.page.overlay:
+            self.page.overlay.append(self.info_dialog)
+        self.info_dialog.open = True
+        
+        # Важное изменение: обновляем только диалог, а не всю страницу
+        # Это предотвратит закрытие основного диалога спота
+        if self.info_dialog.page:
+            self.info_dialog.update()
+        else:
+            self.page.update()
+    
+    # Метод для закрытия информационного диалога
+    def close_info_dialog(self, e=None):
+        if self.info_dialog:
+            self.info_dialog.open = False
+            # Обновляем только диалог, а не всю страницу
+            if self.info_dialog.page:
+                self.info_dialog.update()
+            else:
+                self.page.update()
 
     def update_status(self, e):
         new_status = e.control.value
@@ -223,6 +287,8 @@ class Spot:
         self.spot_e_number_label.visible = False
         self.robot_info_section.visible = False
         self.find_dt_button.visible = False
+        self.create_aoa_button.visible = False
+        self.move_backups_button.visible = False
         self.wo_data = {"wo_number": wo_number}  # Сохраняем WO номер
         
         # Сбрасываем флаг найденного WO
@@ -242,8 +308,10 @@ class Spot:
             self.e_number_label.value = "E-number: Not found"
             self.model_label.value = "Model: Unknown"
             
+            # Возвращаем использование snackbar для этого сообщения
             self.snack_bar.content.value = f"SW on Server for WO {wo_number} not found"
             self.snack_bar.open = True
+            self.page.update()
             
             # Скрываем USB секцию и Robot Info секцию
             self.usb_section.visible = False
@@ -332,8 +400,12 @@ class Spot:
                 self.find_dt_button
             )
             self.find_dt_button.visible = True
+            self.create_aoa_button.visible = True
+            self.move_backups_button.visible = True
         else:
             self.find_dt_button.visible = False
+            self.create_aoa_button.visible = False
+            self.move_backups_button.visible = False
             
         if buttons:
             self.file_buttons_container.content = ft.Row(
@@ -382,6 +454,8 @@ class Spot:
                 self.usb_version_label.value = "No USB drives detected"
                 self.usb_dropdown.visible = False
                 self.create_sw_button.visible = False
+                self.create_aoa_button.visible = False
+                self.move_backups_button.visible = False
                 self.usb_version_label.visible = True
             else:
                 
@@ -390,6 +464,8 @@ class Spot:
                 
                 self.usb_dropdown.visible = True
                 self.create_sw_button.visible = True
+                self.create_aoa_button.visible = True
+                self.move_backups_button.visible = True
                 self.usb_version_label.visible = True
                 
                 # Обновляем информацию о версии для выбранного диска
@@ -414,13 +490,14 @@ class Spot:
     def on_create_sw_click(self, e):
         
         if not self.usb_dropdown.value:
+            # Возвращаем использование snackbar
             self.snack_bar.content.value = "Please select a USB drive first"
             self.snack_bar.open = True
             self.page.update()
             return
         
-        
         if not self.wo_data.get("dat_file"):
+            # Возвращаем использование snackbar
             self.snack_bar.content.value = "No SW file available for copying"
             self.snack_bar.open = True
             self.page.update()
@@ -429,11 +506,9 @@ class Spot:
         
         success, message = self.ro_tools.create_robot_sw(self.usb_dropdown.value, self.wo_data)
         
-        # Показываем сообщение о результате
-        self.snack_bar.content.value = message
-        self.snack_bar.open = True
-        
-        self.page.update()
+        # Оставляем модальный диалог для сообщений о создании SW
+        title = "SW Created Successfully" if success else "SW Creation Failed"
+        self.show_info_dialog(message, title)
     
     def on_usb_dropdown_change(self, e):
         
@@ -443,7 +518,8 @@ class Spot:
     def open_file(self, file_path):
         success = self.ro_tools.open_file(file_path)
         if not success:
-            self.snack_bar.content.value = f"Failed to open the file"
+            # Возвращаем использование snackbar
+            self.snack_bar.content.value = "Failed to open the file"
             self.snack_bar.open = True
             self.page.update()
 
@@ -545,6 +621,12 @@ class Spot:
         # Скрываем кнопку Find DT
         self.find_dt_button.visible = False
         
+        # Скрываем кнопку Create AOA Folder
+        self.create_aoa_button.visible = False
+        
+        # Скрываем кнопку Move Backups
+        self.move_backups_button.visible = False
+        
         # Сбрасываем флаг найденного WO и состояние таймера
         self.wo_found = False
         self.timer_state = "stopped"
@@ -569,6 +651,7 @@ class Spot:
     def on_find_dt_click(self, e):
         """Обработчик нажатия на кнопку Find DT"""
         if "e_number" not in self.wo_data or not isinstance(self.wo_data["e_number"], dict):
+            # Возвращаем использование snackbar
             self.snack_bar.content.value = "No E-number information available"
             self.snack_bar.open = True
             self.page.update()
@@ -576,6 +659,7 @@ class Spot:
         
         e_number = self.wo_data["e_number"].get("e_number")
         if not e_number:
+            # Возвращаем использование snackbar
             self.snack_bar.content.value = "No E-number found"
             self.snack_bar.open = True
             self.page.update()
@@ -584,9 +668,76 @@ class Spot:
         
         success, message = self.ro_tools.find_and_open_dt_file(e_number)
         
+        # Возвращаем использование snackbar
         self.snack_bar.content.value = message
         self.snack_bar.open = True
         self.page.update()
+
+    def on_create_aoa_click(self, e):
+        if not self.usb_dropdown.value:
+            # Используем snackbar для сообщений об ошибках
+            self.snack_bar.content.value = "Please select a USB drive first"
+            self.snack_bar.open = True
+            self.page.update()
+            return
+        
+        # Проверяем, что у нас есть WO номер и E-number
+        wo_number = self.wo_number_field.value
+        e_number = None
+        
+        if "e_number" in self.wo_data and isinstance(self.wo_data["e_number"], dict):
+            e_number = self.wo_data["e_number"].get("e_number")
+        
+        if not wo_number or len(wo_number) != 8:
+            self.snack_bar.content.value = "Valid WO number is required"
+            self.snack_bar.open = True
+            self.page.update()
+            return
+        
+        if not e_number:
+            self.snack_bar.content.value = "No E-number found for this WO"
+            self.snack_bar.open = True
+            self.page.update()
+            return
+        
+        # Вызываем метод для создания папки
+        success, message = self.ro_tools.create_aoa_folder(self.usb_dropdown.value, wo_number, e_number)
+        
+        # Используем snackbar для сообщений о результате
+        self.snack_bar.content.value = message
+        self.snack_bar.open = True
+        self.page.update()
+
+    def on_move_backups_click(self, e):
+        if not self.usb_dropdown.value:
+            # Используем snackbar для сообщений об ошибках
+            self.snack_bar.content.value = "Please select a USB drive first"
+            self.snack_bar.open = True
+            self.page.update()
+            return
+        
+        # Показываем сообщение, что начался процесс перемещения
+        self.snack_bar.content.value = "Moving backup folders, please wait..."
+        self.snack_bar.open = True
+        self.page.update()
+        
+        # Запускаем процесс перемещения напрямую
+        try:
+            success, message = self.ro_tools.move_backup_folders(self.usb_dropdown.value)
+            
+            # Показываем результат операции
+            self.snack_bar.content.value = message
+            self.snack_bar.open = True
+            self.page.update()
+            
+        except Exception as ex:
+            print(f"Error moving backups: {str(ex)}")
+            traceback.print_exc()
+            
+            # Показываем сообщение об ошибке
+            self.snack_bar.content.value = f"Error moving backups: {str(ex)}"
+            self.snack_bar.open = True
+            self.page.update()
 
     def build(self):
         return self.container

@@ -256,22 +256,18 @@ class ROCustomizationController:
             # Получаем WO номер для вывода в сообщении
             wo_number = wo_data.get("wo_number", "Unknown")
             
-            # Определяем версию SW путем анализа файла
-            version = "Unknown"
-            memory_info = None
-            mem_detail_line_index = -1  # Инициализируем переменную здесь
+            # Получаем версию SW из файла version.txt на USB-диске
+            version = self.check_sw_version(usb_path) or "Unknown"
+            print(f"USB SW version: {version}")
             
-            # Читаем содержимое исходного файла
+            # Читаем содержимое исходного файла для поиска информации о памяти
+            memory_info = None
+            mem_detail_line_index = -1
+            
             with open(dat_file, 'r', encoding='utf-8', errors='ignore') as f:
                 content = f.readlines()
                 
                 for i, line in enumerate(content):
-                    # Ищем строку с информацией о версии
-                    if "VERSION V" in line:
-                        version_match = re.search(r'VERSION\s+V(\d+)', line)
-                        if version_match:
-                            version = f"V{version_match.group(1)}"
-                    
                     # Ищем строку с информацией о памяти (нечувствительно к регистру)
                     if re.search(r'!SOF Ref8:', line, re.IGNORECASE) and "Mem Detail" in line:
                         mem_detail_line_index = i
@@ -283,12 +279,16 @@ class ROCustomizationController:
                 print(f"Extracted memory info from PDF: {memory_info}")
             
             # Определяем путь для копирования файла в зависимости от версии
-            if version.startswith("V9") or version == "Unknown":
+            # Для версий P9 и ниже (V9) файл должен быть в корне USB
+            # Для более новых версий - в папке config/p1
+            if version.startswith("V9") or version.startswith("9") or version == "Unknown":
                 target_file = os.path.join(usb_path, "orderfil.dat")
+                print(f"Using root path for version {version}")
             else:
                 target_dir = os.path.join(usb_path, "config", "p1")
                 os.makedirs(target_dir, exist_ok=True)
                 target_file = os.path.join(target_dir, "orderfil.dat")
+                print(f"Using config/p1 path for version {version}")
             
             # Копируем файл
             try:
@@ -301,13 +301,13 @@ class ROCustomizationController:
                         # Проверяем формат строки
                         if "-" in line:
                             # Формат: !SOF Ref8: Mem Detail - ЗНАЧЕНИЕ
-                            # Сохраняем оригинальный регистр и пробелы до дефиса
+                            
                             base_part = line.split("-")[0]
                             content[mem_detail_line_index] = f"{base_part}- {memory_info}\n"
                             print(f"Modified to: {content[mem_detail_line_index].strip()}")
                         elif ":" in line:
                             # Формат: !SOF Ref8: Mem Detail: ЗНАЧЕНИЕ
-                            # Если есть двоеточие, добавляем после него
+                            
                             parts = line.split(":", 2)
                             if len(parts) >= 2:
                                 # Восстанавливаем оригинальную строку до двоеточия, добавляем тире и значение
@@ -370,7 +370,18 @@ class ROCustomizationController:
                 
                 # Формируем сообщение для пользователя
                 source_filename = os.path.basename(dat_file)
-                target_path_display = os.path.basename(usb_path) + ":" + target_file[len(usb_path):]
+                
+                # Исправляем формирование пути назначения, чтобы отображалась буква диска
+                if os.name == 'nt':  # Для Windows
+                    # Получаем букву диска из полного пути
+                    drive_letter = os.path.splitdrive(usb_path)[0]
+                    # Получаем относительный путь от корня USB диска
+                    relative_path = target_file[len(usb_path):].lstrip('\\/')
+                    target_path_display = f"{drive_letter}\\{relative_path}"
+                else:
+                    # Для других ОС просто используем путь
+                    target_path_display = target_file
+                
                 memory_info_msg = f" with {memory_info}" if memory_info else ""
                 
                 return True, f"SW file copied from {source_filename} to {target_path_display}{memory_info_msg}"
@@ -572,3 +583,110 @@ class ROCustomizationController:
         except Exception as e:
             traceback.print_exc()
             return False, f"Error finding DT file: {str(e)}"
+
+    def create_aoa_folder(self, usb_path, wo_number, e_number):
+        """Создает AOA папку на USB диске"""
+        try:
+            # Проверяем, что USB существует и доступен для записи
+            if not os.path.exists(usb_path) or not os.access(usb_path, os.W_OK):
+                return False, "USB drive not found or not writable"
+            
+            # Проверяем, что у нас есть номер WO и E-number
+            if not wo_number:
+                return False, "WO number is required to create AOA folder"
+            
+            if not e_number:
+                return False, "E-number is required to create AOA folder"
+            
+            # Форматируем E-number, удаляя возможный дефис
+            if e_number.startswith("E-"):
+                e_number = "E" + e_number[2:]
+                
+            # Создаем имя папки в формате "12345678_Е123456"
+            folder_name = f"{wo_number}_{e_number}"
+            folder_path = os.path.join(usb_path, folder_name)
+            
+            # Проверяем, существует ли уже папка
+            if os.path.exists(folder_path):
+                return False, f"Folder '{folder_name}' already exists"
+            
+            # Создаем папку
+            os.makedirs(folder_path)
+            
+            return True, f"Created AOA folder: {folder_path}"
+            
+        except Exception as e:
+            print(f"Error creating AOA folder: {e}")
+            traceback.print_exc()
+            return False, f"Error creating AOA folder: {str(e)}"
+
+    def move_backup_folders(self, usb_path):
+        """Перемещает все папки с бэкапами с USB на рабочий стол"""
+        try:
+            # Проверяем, что USB существует и доступен для чтения
+            if not os.path.exists(usb_path) or not os.access(usb_path, os.R_OK):
+                return False, "USB drive not found or not readable"
+            
+            # Получаем путь к рабочему столу пользователя
+            desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop')
+            # Создаем папку для бэкапов на рабочем столе, если её нет
+            backup_folder = os.path.join(desktop_path, 'Backups')
+            if not os.path.exists(backup_folder):
+                os.makedirs(backup_folder)
+            
+            # Счетчики для отчета
+            moved_folders = 0
+            errors = 0
+            
+            # Ищем папки в формате 12345678_E123456 на USB
+            backup_folders = []
+            for item in os.listdir(usb_path):
+                item_path = os.path.join(usb_path, item)
+                # Проверяем, что это папка и соответствует шаблону "12345678_E123456"
+                if os.path.isdir(item_path) and re.match(r'\d{8}_E\d+', item):
+                    # Проверяем, что папка не пуста
+                    if os.listdir(item_path):
+                        backup_folders.append((item, item_path))
+            
+            # Если нет папок для перемещения
+            if not backup_folders:
+                return False, "No backup folders found on the USB drive."
+                
+            # Перемещаем папки
+            for item, item_path in backup_folders:
+                try:
+                    target_path = os.path.join(backup_folder, item)
+                    
+                    # Если папка назначения уже существует, добавляем метку времени
+                    if os.path.exists(target_path):
+                        import datetime
+                        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+                        target_path = os.path.join(backup_folder, f"{item}_{timestamp}")
+                    
+                    # Перемещаем папку с USB на рабочий стол
+                    shutil.copytree(item_path, target_path)
+                    
+                    # После успешного копирования удаляем оригинальную папку
+                    shutil.rmtree(item_path)
+                    
+                    moved_folders += 1
+                except Exception as e:
+                    print(f"Error moving folder {item}: {str(e)}")
+                    errors += 1
+            
+            # Формируем сообщение о результате
+            if moved_folders > 0:
+                message = f"Successfully moved {moved_folders} backup folder{'s' if moved_folders > 1 else ''} to {backup_folder}"
+                if errors > 0:
+                    message += f". {errors} folder{'s' if errors > 1 else ''} couldn't be moved due to errors."
+                return True, message
+            else:
+                if errors > 0:
+                    return False, f"Failed to move {errors} folder{'s' if errors > 1 else ''}. No backups were moved."
+                else:
+                    return False, "No backup folders found on the USB drive."
+                
+        except Exception as e:
+            print(f"Error moving backup folders: {e}")
+            traceback.print_exc()
+            return False, f"Error moving backup folders: {str(e)}"
