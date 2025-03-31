@@ -1,10 +1,16 @@
 import os
 import re
 import subprocess
+import time
+import threading
+import traceback
 
 class ROCustomizationController:
     def __init__(self, config):
         self.config = config
+        self.usb_detection_callbacks = []
+        self.usb_detection_active = False
+        self.usb_thread = None
 
     def search_wo_files(self, wo_number: str):
         
@@ -107,3 +113,153 @@ class ROCustomizationController:
         except Exception as e:
             print(f"Error opening file: {e}")
             return False
+
+    def get_connected_usb_drives(self):
+        
+        drives = []
+        
+        try:
+            if os.name == 'nt':  
+                
+                for letter in "DEFGHIKLMNOPQRSTUVWXYZ":
+                    drive_path = f"{letter}:"
+                    try:
+                        
+                        if os.path.exists(drive_path) and os.access(drive_path, os.R_OK):
+                            try:
+                               
+                                import win32file
+                                drive_type = win32file.GetDriveType(f"{drive_path}\\")
+                                
+                                
+                                if drive_type == win32file.DRIVE_REMOVABLE:
+                                    
+                                    try:
+                                        import win32api
+                                        volume_name = win32api.GetVolumeInformation(f"{drive_path}\\")[0]
+                                        drive_label = f"{drive_path} ({volume_name})" if volume_name else f"{drive_path} (USB Drive)"
+                                    except:
+                                        drive_label = f"{drive_path} (USB Drive)"
+                                    
+                                    
+                                    drives.append((drive_path, drive_label))
+                            except Exception as e:
+                                
+                                if os.path.isdir(drive_path):
+                                    drives.append((drive_path, f"{drive_path} (Drive)"))
+                    except Exception as e:
+                        
+                        pass
+                        
+            
+        
+        except Exception as e:
+            print(f"Error in get_connected_usb_drives: {str(e)}")
+            traceback.print_exc()
+        
+        return drives
+    
+    def check_sw_version(self, drive_path):
+        
+        version_file = os.path.join(drive_path, "version.txt")
+        if os.path.exists(version_file):
+            try:
+                with open(version_file, 'r') as f:
+                    return f.read().strip()
+            except:
+                pass
+        return None
+        
+    def register_usb_detection_callback(self, callback):
+        
+        if callback not in self.usb_detection_callbacks:
+            self.usb_detection_callbacks.append(callback)
+        
+        
+        if self.usb_detection_callbacks and not self.usb_detection_active:
+            self.start_usb_detection()
+    
+    def unregister_usb_detection_callback(self, callback):
+        
+        if callback in self.usb_detection_callbacks:
+            self.usb_detection_callbacks.remove(callback)
+            
+        # Останавливаем мониторинг, если больше нет callback'ов
+        if not self.usb_detection_callbacks and self.usb_detection_active:
+            self.stop_usb_detection()
+    
+    def monitor_usb_drives(self):
+       
+        last_drives = []
+        
+        while self.usb_detection_active:
+            try:
+                
+                drives = self.get_connected_usb_drives()
+                
+                
+                drives_changed = len(drives) != len(last_drives) or any(d1 != d2 for d1, d2 in zip(drives, last_drives) if len(last_drives) == len(drives))
+                
+                if drives_changed:
+                    
+                    last_drives = drives.copy()
+                    
+                    
+                    callbacks = list(self.usb_detection_callbacks)
+                    for callback in callbacks:
+                        try:
+                            callback(drives)
+                        except Exception as e:
+                            print(f"Error in USB detection callback: {str(e)}")
+            except Exception as e:
+                print(f"Error in USB monitoring loop: {str(e)}")
+                
+            time.sleep(2)  # Проверка каждые 2 секунды
+        
+        
+    
+    def start_usb_detection(self):
+        
+        
+        if not self.usb_detection_active:
+            self.usb_detection_active = True
+            self.usb_thread = threading.Thread(target=self.monitor_usb_drives, daemon=True)
+            self.usb_thread.start()
+            
+    
+    def stop_usb_detection(self):
+        
+        self.usb_detection_active = False
+        if self.usb_thread:
+            self.usb_thread = None
+
+    def create_robot_sw(self, usb_path, wo_data):
+        
+        try:
+            
+            if not os.path.exists(usb_path) or not os.access(usb_path, os.W_OK):
+                return False, "USB drive not found or not writable"
+            
+            # Здесь будет логика создания ПО робота
+            # Пока это просто заглушка, которая возвращает успех
+            
+            # Для демонстрации создадим файл с текущими данными WO
+            try:
+                with open(os.path.join(usb_path, "robot_sw_info.txt"), "w") as f:
+                    f.write(f"WO: {wo_data.get('wo_number', 'Unknown')}\n")
+                    if isinstance(wo_data.get('e_number'), dict):
+                        f.write(f"E-number: {wo_data['e_number'].get('e_number', 'Unknown')}\n")
+                        f.write(f"Model: {wo_data['e_number'].get('model', 'Unknown')}\n")
+            except Exception as e:
+                return False, f"Failed to create robot SW: {str(e)}"
+                
+            # Создаем или обновляем файл версии
+            try:
+                with open(os.path.join(usb_path, "version.txt"), "w") as f:
+                    f.write(f"1.0.0 (Created: {time.strftime('%Y-%m-%d %H:%M:%S')})")
+            except:
+                pass
+                
+            return True, "Robot SW created successfully"
+        except Exception as e:
+            return False, f"Error creating robot SW: {str(e)}"
