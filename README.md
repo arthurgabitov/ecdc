@@ -1,9 +1,10 @@
 
 ## Current version: 
-- 0.0.11 General improvements
+- 0.1.1 Robot info section in spot modified. SW and backup section in spot updated.
 
 
 ## Updates history: 
+- 0.0.11 General improvements. Robot info section added in spot. General functions for SW generating added. PyPDF2 added for memorysize parsing. 
 - 0.0.10 Search SW file and parsing of E-number functions added
 - 0.0.8 Performance updates. Dashboard test mode in settings page added
 - 0.0.7 Single Station Mode added. (to Activate put "stations": 1 in config.json)

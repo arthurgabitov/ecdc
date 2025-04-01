@@ -61,29 +61,35 @@ class Spot:
             visible=False
         )
         
-        self.snack_bar = ft.SnackBar(content=ft.Text(""), open=False)
+        self.snack_bar = ft.SnackBar(
+            content=ft.Text(""), 
+            open=False,
+            bgcolor=ft.colors.BLUE_GREY_700,  # Более заметный цвет фона
+            duration=5000,  # Увеличенное время отображения (5 секунд)
+        )
         
-        # Добавляем кнопку Find DT в секцию
+        # Find DT
         self.find_dt_button = ft.ElevatedButton(
             text=" Find DT ",
             on_click=self.on_find_dt_click,
             visible=False
         )
 
-        # Модифицируем Robot Info section с добавлением новой кнопки
+        # Robot Info section
         self.robot_info_section = ft.Container(
             content=ft.Column([
                 ft.Text("Robot Information", size=16, weight=ft.FontWeight.BOLD),
                 ft.Divider(),
                 self.e_number_label,
                 self.model_label,
-                self.file_buttons_container  # Кнопка Find DT будет добавляться внутрь file_buttons_container
+                ft.Divider(),
+                self.file_buttons_container  
             ]),
             visible=False,
             padding=10,
-            border=ft.border.all(width=1, color=ft.colors.BLUE_100),
+            border=ft.border.all(width=1, color=ft.Colors.ON_PRIMARY_CONTAINER),
             border_radius=10,
-            margin=ft.margin.only(top=10, bottom=10)
+            margin=ft.margin.only(top=10, bottom=3)
         )
 
         # USB devices section
@@ -97,21 +103,28 @@ class Spot:
         
         self.create_sw_button = ft.ElevatedButton(
             text=" Create SW ",
-            width=120,
+            width=150,
             visible=False,
             on_click=self.on_create_sw_click
         )
         
         self.create_aoa_button = ft.ElevatedButton(
-            text="Create AOA Folder",
-            width=150,
+            text=" Create AOA Folder ",
+            width=160,
             visible=False,
             on_click=self.on_create_aoa_click
         )
         
+        self.open_orderfil_button = ft.ElevatedButton(
+            text=" Show orderfil on USB ",
+            width=160,
+            visible=False,
+            on_click=self.on_open_orderfil_click
+        )
+        
         self.move_backups_button = ft.ElevatedButton(
-            text="Move Backups",
-            width=150,
+            text=" Move Backups ",
+            width=130,
             visible=False,
             on_click=self.on_move_backups_click
         )
@@ -125,7 +138,7 @@ class Spot:
         
         self.usb_section = ft.Container(
             content=ft.Column([
-                ft.Text("Create Robot Software", size=16, weight=ft.FontWeight.BOLD),
+                ft.Text(" Robot Software and Backups ", size=16, weight=ft.FontWeight.BOLD),
                 ft.Divider(),
                 ft.Row([
                     self.usb_dropdown,
@@ -135,15 +148,16 @@ class Spot:
                 ft.Divider(),
                 ft.Row([
                     self.create_aoa_button,
+                    self.open_orderfil_button,
                     self.move_backups_button
-                ], alignment=ft.MainAxisAlignment.CENTER),
+                ], alignment=ft.MainAxisAlignment.CENTER, wrap=True, spacing=5),
                 
             ]),
             visible=False,
             padding=10,
-            border=ft.border.all(width=1, color=ft.colors.BLUE_100),
+            border=ft.border.all(width=1, color=ft.Colors.ON_PRIMARY_CONTAINER),
             border_radius=10,
-            margin=ft.margin.only(top=10)
+            margin=ft.margin.only(top=3)
         )
         
         
@@ -172,7 +186,7 @@ class Spot:
             spacing=0
         )
 
-        # Создаем внешний контейнер с фиксированной высотой для модального окна
+        
         modal_content = ft.Container(
             content=ft.Column(
                 controls=[
@@ -190,7 +204,7 @@ class Spot:
             ),
             padding=0,
             height=None,  
-            width=450,    
+            width=500,    
         )
 
         self.dlg_modal = ft.AlertDialog(
@@ -288,6 +302,7 @@ class Spot:
         self.robot_info_section.visible = False
         self.find_dt_button.visible = False
         self.create_aoa_button.visible = False
+        self.open_orderfil_button.visible = False
         self.move_backups_button.visible = False
         self.wo_data = {"wo_number": wo_number}  # Сохраняем WO номер
         
@@ -341,7 +356,10 @@ class Spot:
         # Инициируем первое обновление списка USB
         initial_drives = self.ro_tools.get_connected_usb_drives()
         self.update_usb_drives(initial_drives)
-            
+        
+        # Устанавливаем видимость кнопок в зависимости от наличия USB
+        # Проверка выполняется в методе update_usb_drives
+        
         # Update E-number and model display
         if result.get("e_number") and isinstance(result["e_number"], dict):
             e_number_data = result["e_number"]
@@ -401,10 +419,12 @@ class Spot:
             )
             self.find_dt_button.visible = True
             self.create_aoa_button.visible = True
+            self.open_orderfil_button.visible = True
             self.move_backups_button.visible = True
         else:
             self.find_dt_button.visible = False
             self.create_aoa_button.visible = False
+            self.open_orderfil_button.visible = False
             self.move_backups_button.visible = False
             
         if buttons:
@@ -455,6 +475,7 @@ class Spot:
                 self.usb_dropdown.visible = False
                 self.create_sw_button.visible = False
                 self.create_aoa_button.visible = False
+                self.open_orderfil_button.visible = False
                 self.move_backups_button.visible = False
                 self.usb_version_label.visible = True
             else:
@@ -464,8 +485,17 @@ class Spot:
                 
                 self.usb_dropdown.visible = True
                 self.create_sw_button.visible = True
-                self.create_aoa_button.visible = True
-                self.move_backups_button.visible = True
+                self.open_orderfil_button.visible = True
+                
+                # Показываем кнопку AOA только если найден E-number
+                if "e_number" in self.wo_data and isinstance(self.wo_data["e_number"], dict):
+                    e_number_value = self.wo_data["e_number"].get("e_number", "Not found")
+                    self.create_aoa_button.visible = e_number_value != "Not found"
+                    self.move_backups_button.visible = True
+                else:
+                    self.create_aoa_button.visible = False
+                    self.move_backups_button.visible = False
+                    
                 self.usb_version_label.visible = True
                 
                 # Обновляем информацию о версии для выбранного диска
@@ -490,14 +520,14 @@ class Spot:
     def on_create_sw_click(self, e):
         
         if not self.usb_dropdown.value:
-            # Возвращаем использование snackbar
+            # Используем snackbar
             self.snack_bar.content.value = "Please select a USB drive first"
             self.snack_bar.open = True
             self.page.update()
             return
         
         if not self.wo_data.get("dat_file"):
-            # Возвращаем использование snackbar
+            # Используем snackbar
             self.snack_bar.content.value = "No SW file available for copying"
             self.snack_bar.open = True
             self.page.update()
@@ -506,9 +536,24 @@ class Spot:
         
         success, message = self.ro_tools.create_robot_sw(self.usb_dropdown.value, self.wo_data)
         
-        # Оставляем модальный диалог для сообщений о создании SW
-        title = "SW Created Successfully" if success else "SW Creation Failed"
-        self.show_info_dialog(message, title)
+        # Используем улучшенный snackbar вместо отдельного диалога
+        if success:
+            self.snack_bar.bgcolor = ft.colors.GREEN_700  # Зеленый для успеха
+            self.snack_bar.content = ft.Text(
+                f"✅ SW Created Successfully: {message}", 
+                color=ft.colors.WHITE,
+                weight=ft.FontWeight.BOLD
+            )
+        else:
+            self.snack_bar.bgcolor = ft.colors.RED_700  # Красный для ошибки
+            self.snack_bar.content = ft.Text(
+                f"❌ SW Creation Failed: {message}", 
+                color=ft.colors.WHITE,
+                weight=ft.FontWeight.BOLD
+            )
+        
+        self.snack_bar.open = True
+        self.page.update()
     
     def on_usb_dropdown_change(self, e):
         
@@ -541,6 +586,13 @@ class Spot:
             # Устанавливаем видимость нужных секций перед открытием диалога
             self.robot_info_section.visible = self.wo_found
             self.usb_section.visible = self.wo_found
+            
+            # Устанавливаем видимость кнопок в зависимости от наличия USB
+            if not self.usb_dropdown.options or len(self.usb_dropdown.options) == 0:
+                self.create_sw_button.visible = False
+                self.create_aoa_button.visible = False
+                self.open_orderfil_button.visible = False
+                self.move_backups_button.visible = False
             
             self.dlg_modal.open = True
             self.page.update()
@@ -623,6 +675,9 @@ class Spot:
         
         # Скрываем кнопку Create AOA Folder
         self.create_aoa_button.visible = False
+        
+        # Скрываем кнопку Open orderfil.dat
+        self.open_orderfil_button.visible = False
         
         # Скрываем кнопку Move Backups
         self.move_backups_button.visible = False
@@ -738,6 +793,37 @@ class Spot:
             self.snack_bar.content.value = f"Error moving backups: {str(ex)}"
             self.snack_bar.open = True
             self.page.update()
+
+    def on_open_orderfil_click(self, e):
+        """Обработчик нажатия на кнопку Open orderfil.dat"""
+        if not self.usb_dropdown.value:
+            # Используем snackbar для сообщений об ошибках
+            self.snack_bar.content.value = "Please select a USB drive first"
+            self.snack_bar.open = True
+            self.page.update()
+            return
+            
+        # Вызываем метод для открытия файла orderfil.dat
+        success, message = self.ro_tools.open_orderfil_from_usb(self.usb_dropdown.value)
+        
+        # Показываем результат с улучшенным форматированием
+        if success:
+            self.snack_bar.bgcolor = ft.colors.GREEN_700
+            self.snack_bar.content = ft.Text(
+                f"✅ {message}", 
+                color=ft.colors.WHITE,
+                weight=ft.FontWeight.BOLD
+            )
+        else:
+            self.snack_bar.bgcolor = ft.colors.RED_700
+            self.snack_bar.content = ft.Text(
+                f"❌ {message}", 
+                color=ft.colors.WHITE,
+                weight=ft.FontWeight.BOLD
+            )
+        
+        self.snack_bar.open = True
+        self.page.update()
 
     def build(self):
         return self.container

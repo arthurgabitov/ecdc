@@ -690,3 +690,36 @@ class ROCustomizationController:
             print(f"Error moving backup folders: {e}")
             traceback.print_exc()
             return False, f"Error moving backup folders: {str(e)}"
+            
+    def open_orderfil_from_usb(self, usb_path):
+        """Открывает файл orderfil.dat на USB-накопителе"""
+        try:
+            # Проверяем, что USB существует
+            if not os.path.exists(usb_path):
+                return False, "USB drive not found"
+            
+            # Определяем возможные пути к файлу orderfil.dat
+            # Для версии P9 и ниже файл находится в корне
+            root_path = os.path.join(usb_path, "orderfil.dat")
+            # Для более новых версий файл находится в папке config/p1
+            config_path = os.path.join(usb_path, "config", "p1", "orderfil.dat")
+            
+            # Проверяем, существует ли файл по одному из путей
+            if os.path.exists(root_path):
+                success = self.open_file(root_path)
+                path_display = root_path
+            elif os.path.exists(config_path):
+                success = self.open_file(config_path)
+                path_display = config_path
+            else:
+                return False, "orderfil.dat not found on this USB drive"
+            
+            if success:
+                return True, f"Opened orderfil.dat from {path_display}"
+            else:
+                return False, f"Failed to open orderfil.dat"
+                
+        except Exception as e:
+            print(f"Error opening orderfil.dat: {e}")
+            traceback.print_exc()
+            return False, f"Error opening orderfil.dat: {str(e)}"
