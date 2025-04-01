@@ -6,12 +6,9 @@ import threading
 import traceback
 import glob
 import shutil 
+import PyPDF2
 
-try:
-    import PyPDF2
-except ImportError:
-    print("PyPDF2 module not found. PDF memory extraction will be unavailable.")
-    PyPDF2 = None
+
 
 class ROCustomizationController:
     def __init__(self, config):
@@ -21,6 +18,7 @@ class ROCustomizationController:
         self.usb_thread = None
 
     def search_wo_files(self, wo_number: str):
+        
         
         if not re.match(r"^\d{8}$", wo_number):
             return {"error": "WO number must be an 8-digit number"}
@@ -53,6 +51,7 @@ class ROCustomizationController:
         }
 
     def parse_e_number(self, dat_file_path: str):
+        
         e_number = None
         model = None
         ref_line = None
@@ -80,7 +79,7 @@ class ROCustomizationController:
                     
                     if not model and "STARTING CONFIGURATION" in line:
                         config_line = line.strip()
-                        # Попробуем найти паттерны типа "M710iC/50" или подобные
+                       
                         match = re.search(r'([A-Z][0-9]+[A-Za-z0-9-/]+)', config_line)
                         if match:
                             model = match.group(1)
@@ -92,12 +91,6 @@ class ROCustomizationController:
         except Exception as e:
             print(f"Error parsing file data: {e}")
             pass
-            
-        
-        print(f"Found E-number: {e_number}, Model: {model}")
-        if config_line:
-            print(f"Configuration line: {config_line}")
-            
         
         return {
             "e_number": e_number,
@@ -107,7 +100,6 @@ class ROCustomizationController:
         }
 
     def open_file(self, file_path):
-        
         try:
             if os.path.exists(file_path):
                 
@@ -123,7 +115,6 @@ class ROCustomizationController:
             return False
 
     def get_connected_usb_drives(self):
-        
         drives = []
         
         try:
@@ -168,7 +159,6 @@ class ROCustomizationController:
         return drives
     
     def check_sw_version(self, drive_path):
-        
         version_file = os.path.join(drive_path, "version.txt")
         if os.path.exists(version_file):
             try:
@@ -179,7 +169,6 @@ class ROCustomizationController:
         return None
         
     def register_usb_detection_callback(self, callback):
-        
         if callback not in self.usb_detection_callbacks:
             self.usb_detection_callbacks.append(callback)
         
@@ -188,16 +177,14 @@ class ROCustomizationController:
             self.start_usb_detection()
     
     def unregister_usb_detection_callback(self, callback):
-        
         if callback in self.usb_detection_callbacks:
             self.usb_detection_callbacks.remove(callback)
             
-        # Останавливаем мониторинг, если больше нет callback'ов
+        
         if not self.usb_detection_callbacks and self.usb_detection_active:
             self.stop_usb_detection()
     
     def monitor_usb_drives(self):
-       
         last_drives = []
         
         while self.usb_detection_active:
@@ -222,13 +209,11 @@ class ROCustomizationController:
             except Exception as e:
                 print(f"Error in USB monitoring loop: {str(e)}")
                 
-            time.sleep(2)  # Проверка каждые 2 секунды
+            time.sleep(2)  
         
         
     
     def start_usb_detection(self):
-        
-        
         if not self.usb_detection_active:
             self.usb_detection_active = True
             self.usb_thread = threading.Thread(target=self.monitor_usb_drives, daemon=True)
@@ -236,31 +221,28 @@ class ROCustomizationController:
             
     
     def stop_usb_detection(self):
-        
         self.usb_detection_active = False
         if self.usb_thread:
-            self.usb_thread = None
+            self.usb_thread = None  # This doesn't actually stop the thread, just removes the reference
 
     def create_robot_sw(self, usb_path, wo_data):
-        """Создает ПО робота на USB путем копирования соответствующего .dat файла"""
         try:
-            # Проверяем, что USB существует и доступен для записи
             if not os.path.exists(usb_path) or not os.access(usb_path, os.W_OK):
                 return False, "USB drive not found or not writable"
             
-            # Проверяем, что у нас есть .dat файл для копирования
+            
             dat_file = wo_data.get("dat_file")
             if not dat_file or not os.path.exists(dat_file):
                 return False, "No SW file found for copying"
             
-            # Получаем WO номер для вывода в сообщении
+            
             wo_number = wo_data.get("wo_number", "Unknown")
             
-            # Получаем версию SW из файла version.txt на USB-диске
+            
             version = self.check_sw_version(usb_path) or "Unknown"
             print(f"USB SW version: {version}")
             
-            # Читаем содержимое исходного файла для поиска информации о памяти
+            
             memory_info = None
             mem_detail_line_index = -1
             
@@ -268,12 +250,12 @@ class ROCustomizationController:
                 content = f.readlines()
                 
                 for i, line in enumerate(content):
-                    # Ищем строку с информацией о памяти (нечувствительно к регистру)
+                    
                     if re.search(r'!SOF Ref8:', line, re.IGNORECASE) and "Mem Detail" in line:
                         mem_detail_line_index = i
                         print(f"Found memory detail line: {line.strip()}")
             
-            # Проверяем PDF файл на наличие информации о памяти
+            
             if wo_data.get("pdf_file"):
                 memory_info = self.extract_memory_from_pdf(wo_data.get("pdf_file"))
                 print(f"Extracted memory info from PDF: {memory_info}")
@@ -396,7 +378,7 @@ class ROCustomizationController:
             return False, f"Error creating robot SW: {str(e)}"
 
     def extract_memory_from_pdf(self, pdf_file_path):
-        """Извлекает информацию о памяти из PDF файла"""
+        """Extract memory information from PDF file"""
         if not PyPDF2:
             print("PyPDF2 module not available. Cannot extract memory information.")
             return None
@@ -469,7 +451,7 @@ class ROCustomizationController:
             return None
 
     def find_and_open_dt_file(self, e_number):
-        """Находит и открывает DT файл для указанного E-number"""
+        """Find and open DT file for the specified E-number"""
         try:
             # Очищаем номер от лишнего
             clean_e_number = e_number.strip().upper()
@@ -585,7 +567,7 @@ class ROCustomizationController:
             return False, f"Error finding DT file: {str(e)}"
 
     def create_aoa_folder(self, usb_path, wo_number, e_number):
-        """Создает AOA папку на USB диске"""
+        """Create an AOA folder on USB drive"""
         try:
             # Проверяем, что USB существует и доступен для записи
             if not os.path.exists(usb_path) or not os.access(usb_path, os.W_OK):
@@ -621,7 +603,7 @@ class ROCustomizationController:
             return False, f"Error creating AOA folder: {str(e)}"
 
     def move_backup_folders(self, usb_path):
-        """Перемещает все папки с бэкапами с USB на рабочий стол"""
+        """Move backup folders from USB to desktop"""
         try:
             # Проверяем, что USB существует и доступен для чтения
             if not os.path.exists(usb_path) or not os.access(usb_path, os.R_OK):
@@ -692,7 +674,7 @@ class ROCustomizationController:
             return False, f"Error moving backup folders: {str(e)}"
             
     def open_orderfil_from_usb(self, usb_path):
-        """Открывает файл orderfil.dat на USB-накопителе"""
+        """Open orderfil.dat file from USB drive"""
         try:
             # Проверяем, что USB существует
             if not os.path.exists(usb_path):

@@ -10,6 +10,7 @@ class OverviewView:
         self.update_module = update_module
 
     def build(self):
+        """Build the overview screen with draggable station indicators"""
         settings = self.config.get_app_settings()
         num_stations = settings["stations"]
         spots_per_station = settings["spots"]
@@ -21,6 +22,12 @@ class OverviewView:
         for i, station_id in enumerate(station_ids):
             station_key = f"station_{station_id}"
             station_data = self.controller.get_spot_data(station_id, station_key)
+            
+            # Initialize place dictionary if it doesn't exist
+            if "place" not in station_data:
+                station_data["place"] = {"x": 0, "y": 0}
+                self.controller.save_spots_state()
+                
             if station_data["place"]["x"] != 0 or station_data["place"]["y"] != 0:
                 x_pos = station_data["place"]["x"]
                 y_pos = station_data["place"]["y"]
@@ -37,6 +44,7 @@ class OverviewView:
             })
 
         def on_pan_update(self, e: ft.DragUpdateEvent, detector):
+            """Update station position during drag"""
             detector.left = max(0, min(self.page.window.width - detector.content.width, detector.left + e.delta_x))
             detector.top = max(0, min(self.page.window.height - detector.content.height, detector.top + e.delta_y))
             station_id = detector.content.data["id"]
@@ -45,11 +53,13 @@ class OverviewView:
             detector.update()
 
         def on_pan_end(self, e: ft.DragEndEvent, station_id):
+            """Save station position when drag ends"""
             station_key = f"station_{station_id}"
             self.controller.save_spots_state()
             print(f"Saved position for {station_key} after drag end")
 
         def open_station_view(self, e, station_id):
+            """Open station view when station is clicked"""
             self.update_module(0, station_id=station_id)
 
         station_controls = []

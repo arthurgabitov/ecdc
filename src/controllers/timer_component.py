@@ -37,6 +37,7 @@ class TimerComponent:
             self._task = self.page.run_task(self.update_timer)
 
     def update_display(self, elapsed_time):
+        """Update timer display with formatted time"""
         total_elapsed = elapsed_time
         minutes = int(total_elapsed // 60)
         seconds = int(total_elapsed % 60)
@@ -45,6 +46,7 @@ class TimerComponent:
             self.page.update()
 
     async def update_timer(self):
+        """Periodically update timer while running"""
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         while spot and spot["running"]:
             elapsed_time = self.controller.get_timer_value(int(self.station_id), self.spot_id)
@@ -54,6 +56,7 @@ class TimerComponent:
         self._task = None
 
     def update_button_state(self, running, update=True):
+        """Update button appearance based on timer state"""
         if running:
             self.start_button.content = ft.Row([
                 ft.Icon(ft.Icons.PAUSE, color=ft.colors.WHITE),
@@ -70,6 +73,7 @@ class TimerComponent:
             self.start_button.update()
 
     def start_pause(self, e):
+        """Handle start/pause button click"""
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         if spot and not spot["running"]:
             self.controller.start_timer(int(self.station_id), self.spot_id)
@@ -85,6 +89,7 @@ class TimerComponent:
             self.on_state_change()
 
     def stop(self, e):
+        """Handle stop button click"""
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         if spot:
             elapsed_time = self.controller.get_timer_value(int(self.station_id), self.spot_id)
@@ -97,6 +102,7 @@ class TimerComponent:
                 self.on_state_change()
 
     def pause_on_close(self):
+        """Pause timer when page closes"""
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         if spot and spot["running"]:
             self.controller.pause_timer(int(self.station_id), self.spot_id)
@@ -107,19 +113,16 @@ class TimerComponent:
                 self.on_state_change()
 
     def reset(self):
-        
-
+        """Reset the timer to initial state"""
         self.controller.reset_spot(int(self.station_id), self.spot_id)
         self.update_button_state(False)
         self.update_display(0)
         if self.on_state_change:
             self.on_state_change()
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
-        
-        
-
 
     def build(self):
+        """Build and return the timer component"""
         return ft.Column(
             [
                 self.timer_text,
