@@ -19,7 +19,6 @@ async def main(page: ft.Page):
     controller = StationController(config)
     config.set_controller(controller)
     
-
     page.config = config
     page.snack_bar = ft.SnackBar(content=ft.Text(""))  
 
@@ -29,35 +28,43 @@ async def main(page: ft.Page):
     page.window.width = 800
     page.padding = 0
 
-    stations_count = len(controller.get_stations())
+    stations = controller.get_stations()
+    stations_count = len(stations)
 
-    destinations = [
-        ft.NavigationRailDestination(
-            icon_content=ft.Icon(ft.Icons.HOME, color=ft.Colors.WHITE),
-            selected_icon_content=ft.Icon(ft.Icons.HOME_FILLED, color=ft.Colors.WHITE),
-            label_content=ft.Text("RO Station", color=ft.Colors.WHITE),
-            label="RO Station"
-        )
-    ]
+    # Only create navigation rail if there's more than one station
+    # NOTE: Fixed condition - always hide rail when only one station
+    show_nav_rail = stations_count > 1
     
-    if stations_count > 1:
+    destinations = []
+    
+    if show_nav_rail:
         destinations.append(
             ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.Icons.DASHBOARD, color=ft.Colors.WHITE),
-                selected_icon_content=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE, color=ft.Colors.WHITE),
-                label_content=ft.Text("Overview", color=ft.Colors.WHITE),
-                label="Overview"
+                icon_content=ft.Icon(ft.Icons.HOME, color=ft.Colors.WHITE),
+                selected_icon_content=ft.Icon(ft.Icons.HOME_FILLED, color=ft.Colors.WHITE),
+                label_content=ft.Text("RO Station", color=ft.Colors.WHITE),
+                label="RO Station"
             )
         )
     
-    destinations.append(
-        ft.NavigationRailDestination(
-            icon_content=ft.Icon(ft.Icons.SETTINGS, color=ft.Colors.WHITE),
-            selected_icon_content=ft.Icon(ft.Icons.SETTINGS_APPLICATIONS, color=ft.Colors.WHITE),
-            label_content=ft.Text("Settings", color=ft.Colors.WHITE),
-            label="Settings"
+        if stations_count > 1:
+            destinations.append(
+                ft.NavigationRailDestination(
+                    icon_content=ft.Icon(ft.Icons.DASHBOARD, color=ft.Colors.WHITE),
+                    selected_icon_content=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE, color=ft.Colors.WHITE),
+                    label_content=ft.Text("Overview", color=ft.Colors.WHITE),
+                    label="Overview"
+                )
+            )
+    
+        destinations.append(
+            ft.NavigationRailDestination(
+                icon_content=ft.Icon(ft.Icons.SETTINGS, color=ft.Colors.WHITE),
+                selected_icon_content=ft.Icon(ft.Icons.SETTINGS_APPLICATIONS, color=ft.Colors.WHITE),
+                label_content=ft.Text("Settings", color=ft.Colors.WHITE),
+                label="Settings"
+            )
         )
-    )
 
     nav_rail = ft.NavigationRail(
         selected_index=0,
@@ -69,7 +76,8 @@ async def main(page: ft.Page):
         indicator_color=ft.Colors.WHITE10,
         destinations=destinations,
         on_change=lambda e: update_module(e.control.selected_index),
-    )
+        visible=show_nav_rail  # Only show if we have multiple stations
+    ) if show_nav_rail else None  # Only create nav_rail if needed
 
     module_container = ft.Container(
         content=ft.AnimatedSwitcher(
@@ -82,27 +90,43 @@ async def main(page: ft.Page):
         alignment=ft.alignment.center
     )
 
-    main_layout = ft.Column(
-        [
-            ft.Row(
-                [
-                    nav_rail,
-                    ft.Container(
-                        content=module_container,
-                        alignment=ft.alignment.center,
-                        expand=True,
-                        padding=ft.padding.all(15)
-                    )
-                ],
-                expand=True,
-                spacing=0,
-                alignment=ft.MainAxisAlignment.START,
-                vertical_alignment=ft.CrossAxisAlignment.STRETCH
-            )
-        ],
-        spacing=0,
-        expand=True
-    )
+    # Create layout with or without nav rail based on stations count
+    if show_nav_rail:
+        main_layout = ft.Column(
+            [
+                ft.Row(
+                    [
+                        nav_rail,
+                        ft.Container(
+                            content=module_container,
+                            alignment=ft.alignment.center,
+                            expand=True,
+                            padding=ft.padding.all(15)
+                        )
+                    ],
+                    expand=True,
+                    spacing=0,
+                    alignment=ft.MainAxisAlignment.START,
+                    vertical_alignment=ft.CrossAxisAlignment.STRETCH
+                )
+            ],
+            spacing=0,
+            expand=True
+        )
+    else:
+        # Simplified layout without nav rail for single station mode
+        main_layout = ft.Column(
+            [
+                ft.Container(
+                    content=module_container,
+                    alignment=ft.alignment.center,
+                    expand=True,
+                    padding=ft.padding.all(15)
+                )
+            ],
+            spacing=0,
+            expand=True
+        )
 
     current_station_id = [None]
 
@@ -118,31 +142,40 @@ async def main(page: ft.Page):
         return SettingsView(page).build()
 
     def update_module(selected_index, station_id=None):
-        nav_rail.selected_index = selected_index
-        
-        new_content = ft.Container()
-        if selected_index == 0:
-            new_content = create_station_view(station_id)
-        elif selected_index == 1 and stations_count > 1:
-            new_content = create_overview_view()
-        elif (stations_count > 1 and selected_index == 2) or (stations_count == 1 and selected_index == 1):
-            new_content = create_settings_view()
+        # If nav rail is hidden, enforce station view
+        if not show_nav_rail:
+            # In single station mode, just show the station view
+            new_content = create_station_view(station_id if station_id else stations[0])
+        else:
+            nav_rail.selected_index = selected_index
+            
+            new_content = ft.Container()
+            if selected_index == 0:
+                new_content = create_station_view(station_id)
+            elif selected_index == 1 and stations_count > 1:
+                new_content = create_overview_view()
+            elif selected_index == 2:
+                new_content = create_settings_view()
         
         if module_container.content.content != new_content:
             module_container.content.content = new_content
-            nav_rail.update()
+            if show_nav_rail and nav_rail:
+                nav_rail.update()
             module_container.update()
 
     def adjust_module_width(e=None):
-        available_width = page.window.width - nav_rail.min_width
-        module_container.width = max(300, min(available_width, page.window.width * 0.75))
+        if show_nav_rail:
+            available_width = page.window.width - 100  # nav_rail width
+            module_container.width = max(300, min(available_width, page.window.width * 0.75))
+        else:
+            module_container.width = page.window.width
         page.update()
 
     def show_main_interface(selected_station_id):
         current_station_id[0] = selected_station_id
         page.controls.clear()
         page.add(main_layout)
-        update_module(nav_rail.selected_index)
+        update_module(0, selected_station_id)
         page.update()
 
     def on_close(e):

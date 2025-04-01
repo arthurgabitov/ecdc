@@ -1,6 +1,5 @@
 import flet as ft
 import asyncio
-import os
 from src.controllers.station_controller import StationController
 
 class WelcomeView:
@@ -9,6 +8,7 @@ class WelcomeView:
         self.controller = controller
         self.on_complete = on_complete
 
+        
         self.welcome_text = ft.Text(
             "Station App",
             size=40,
@@ -19,32 +19,6 @@ class WelcomeView:
         stations = self.controller.get_stations()
         self.stations_count = len(stations)
         
-        # Determine if running in web mode
-        is_web = getattr(page, "web", False)
-        
-        # Use different animation approach depending on mode
-        if is_web:
-            # For web mode: Use Lottie animation (better web support)
-            self.animation = ft.LottieAnimation(
-                "https://assets6.lottiefiles.com/packages/lf20_ghs9gkeh.json",
-                width=300,
-                height=200,
-                animate=True,
-                repeat=True,
-                animate_automatically=True
-            )
-        else:
-            # For desktop mode: Use Rive animation
-            animation_path = os.path.join(os.path.dirname(__file__), "..", "robot_looping_test.riv")
-            if not os.path.exists(animation_path):
-                animation_path = "src/robot_looping_test.riv"
-            
-            self.animation = ft.Rive(
-                animation_path,
-                placeholder=ft.ProgressBar(),
-                width=300,
-                height=200
-            )
 
         if self.stations_count == 1:
             self.station_selector = ft.Container()  
@@ -61,7 +35,12 @@ class WelcomeView:
 
         self.content = ft.Column(
             [   
-                self.animation,
+                ft.Rive(
+                    "src/robot_looping_test.riv",
+                    placeholder=ft.ProgressBar(),
+                    width=300,
+                    height=200,
+                ),
                 self.welcome_text,
                 self.station_selector
             ],
@@ -84,9 +63,12 @@ class WelcomeView:
             self.on_complete(selected_station_id)
 
     def build(self):
+        
         return self.page_container
 
     async def run_auto_transition(self):
         if self.auto_transition_needed:
+            
             await asyncio.sleep(1)
+            
             self.on_complete(self.station_id)

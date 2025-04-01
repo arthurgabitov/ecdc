@@ -94,8 +94,8 @@
         "running": false,
         "wo_number": "",
         "place": {
-            "x": 360.99999999999983,
-            "y": 18.66666666666667
+            "x": 244.99999999999977,
+            "y": 473.3333333333333
         }
     },
     "3_6": {
@@ -111,10 +111,10 @@
     },
     "1_1": {
         "status": "Unblocked",
-        "start_time": 1743500057.6642098,
-        "elapsed_time": 442.4856927394867,
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
         "running": false,
-        "wo_number": "16925500",
+        "wo_number": "",
         "place": {
             "x": 0,
             "y": 0

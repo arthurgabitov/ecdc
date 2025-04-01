@@ -34,7 +34,7 @@ class StationView:
                 tooltip="Change Station"
             )
         else:
-            station_dropdown = ft.Text(f"Station {self.selected_station_id}", size=14)
+            station_dropdown = ft.Text(f"", size=14)
 
         if self.selected_station_id is not None:
             selected_station = self.controller.get_station_by_id(self.selected_station_id)
