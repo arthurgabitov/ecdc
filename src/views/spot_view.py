@@ -331,8 +331,9 @@ class Spot:
         # Update E-number and model display
         if result.get("e_number") and isinstance(result["e_number"], dict):
             e_number_data = result["e_number"]
-            e_number_value = e_number_data.get("e_number", "Not found")
-            model_value = e_number_data.get("model", "Unknown")
+            # Make sure we have string values, not None
+            e_number_value = e_number_data.get("e_number", "Not found") or "Not found"
+            model_value = e_number_data.get("model", "Unknown") or "Unknown"
             
             if e_number_value != "Not found":
                 self.e_number_label.value = f"E-number: {e_number_value}"
@@ -350,13 +351,18 @@ class Spot:
             # Update the spot container label with combined info if both are present
             if e_number_value != "Not found" or model_value != "Unknown":
                 display_info = []
-                if e_number_value != "Not found":
-                    display_info.append(e_number_value)
-                if model_value != "Unknown":
-                    display_info.append(model_value)
-                        
-                self.spot_e_number_label.value = " - ".join(display_info)
-                self.spot_e_number_label.visible = True
+                if e_number_value != "Not found" and e_number_value:
+                    display_info.append(str(e_number_value))
+                if model_value != "Unknown" and model_value:
+                    display_info.append(str(model_value))
+                
+                # Check if the list is not empty before joining
+                if display_info:
+                    self.spot_e_number_label.value = " - ".join(display_info)
+                    self.spot_e_number_label.visible = True
+                else:
+                    self.spot_e_number_label.value = ""
+                    self.spot_e_number_label.visible = False
         else:
             self.e_number_label.value = "E-number: Not found"
             self.model_label.value = "Model: Unknown"

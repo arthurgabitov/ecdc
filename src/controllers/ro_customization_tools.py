@@ -6,9 +6,12 @@ import threading
 import traceback
 import glob
 import shutil 
-import PyPDF2
 
-
+try:
+    import PyPDF2
+except ImportError:
+    print("PyPDF2 module not found. PDF memory extraction will be unavailable.")
+    PyPDF2 = None
 
 class ROCustomizationController:
     def __init__(self, config):
@@ -51,46 +54,56 @@ class ROCustomizationController:
         }
 
     def parse_e_number(self, dat_file_path: str):
-        
+        """Extract E-number and model information from DAT file"""
         e_number = None
         model = None
         ref_line = None
         config_line = None
         
+        # Try reading the file in binary mode first to handle any encoding
         try:
-            with open(dat_file_path, 'r', encoding='utf-8') as f:
-                for line in f:
-                    
+            with open(dat_file_path, 'rb') as f:
+                # Try to detect encoding or use a fallback
+                content = f.read()
+                encodings = ['utf-8', 'latin1', 'iso-8859-1', 'cp1252', 'windows-1252']
+                file_lines = None
+                
+                # Try different encodings
+                for encoding in encodings:
+                    try:
+                        file_lines = content.decode(encoding).splitlines()
+                        break
+                    except UnicodeDecodeError:
+                        continue
+                
+                # If we couldn't decode with any encoding, use latin1 which can decode any byte
+                if file_lines is None:
+                    file_lines = content.decode('latin1', errors='replace').splitlines()
+                
+                # Process lines
+                for line in file_lines:
                     if "!SOF Ref6:" in line and "Robot F/E No" in line:
                         ref_line = line.strip()
-                        
                         match = re.search(r'Robot F/E No\s*-\s*(E-?\d+|F\d+)', ref_line, re.IGNORECASE)
                         if match:
                             e_number = match.group(1)
                     
-                    
                     if "!STARTING CONFIGURATION" in line and "IND.ROBOT" in line:
                         config_line = line.strip()
-                        
                         match = re.search(r'IND\.ROBOT\s+([A-Z0-9]+(?:[A-Z0-9-/]*[A-Z0-9]+)?)', config_line, re.IGNORECASE)
                         if match:
                             model = match.group(1)
                     
-                    
                     if not model and "STARTING CONFIGURATION" in line:
                         config_line = line.strip()
-                       
                         match = re.search(r'([A-Z][0-9]+[A-Za-z0-9-/]+)', config_line)
                         if match:
                             model = match.group(1)
                     
-                    
                     if e_number and model:
                         break
-                        
         except Exception as e:
             print(f"Error parsing file data: {e}")
-            pass
         
         return {
             "e_number": e_number,
@@ -226,6 +239,7 @@ class ROCustomizationController:
             self.usb_thread = None  # This doesn't actually stop the thread, just removes the reference
 
     def create_robot_sw(self, usb_path, wo_data):
+        """Create robot SW on USB by copying the corresponding DAT file"""
         try:
             if not os.path.exists(usb_path) or not os.access(usb_path, os.W_OK):
                 return False, "USB drive not found or not writable"
@@ -245,17 +259,46 @@ class ROCustomizationController:
             
             memory_info = None
             mem_detail_line_index = -1
+            content = []
             
-            with open(dat_file, 'r', encoding='utf-8', errors='ignore') as f:
-                content = f.readlines()
-                
-                for i, line in enumerate(content):
+            # Read file in binary mode
+            try:
+                with open(dat_file, 'rb') as f:
+                    file_bytes = f.read()
                     
-                    if re.search(r'!SOF Ref8:', line, re.IGNORECASE) and "Mem Detail" in line:
-                        mem_detail_line_index = i
-                        print(f"Found memory detail line: {line.strip()}")
+                    # Try different encodings
+                    encodings = ['utf-8', 'latin1', 'iso-8859-1', 'cp1252', 'windows-1252']
+                    decoded_content = None
+                    
+                    for encoding in encodings:
+                        try:
+                            decoded_content = file_bytes.decode(encoding)
+                            print(f"Successfully decoded with {encoding}")
+                            break
+                        except UnicodeDecodeError:
+                            continue
+                    
+                    # Fall back to latin1 which can decode any byte sequence
+                    if decoded_content is None:
+                        decoded_content = file_bytes.decode('latin1', errors='replace')
+                        print("Falling back to latin1 with replacement")
+                    
+                    # Split into lines
+                    content = decoded_content.splitlines(keepends=True)
+                    
+                    # Find memory detail line
+                    for i, line in enumerate(content):
+                        if re.search(r'!SOF Ref8:', line, re.IGNORECASE) and "Mem Detail" in line:
+                            mem_detail_line_index = i
+                            print(f"Found memory detail line: {line.strip()}")
+                            break
+                            
+            except Exception as e:
+                print(f"Error reading DAT file: {e}")
+                traceback.print_exc()
+                return False, f"Error reading DAT file: {str(e)}"
             
-            
+            # Check PDF file for memory info if available
             if wo_data.get("pdf_file"):
                 memory_info = self.extract_memory_from_pdf(wo_data.get("pdf_file"))
                 print(f"Extracted memory info from PDF: {memory_info}")
@@ -274,8 +317,8 @@ class ROCustomizationController:
             
             # Копируем файл
             try:
-                # Модифицируем содержимое файла, если есть информация о памяти
-                if memory_info:
+                # Safely create modified content
+                if memory_info and content:
                     # Если нашли строку Mem Detail, модифицируем её
                     if mem_detail_line_index >= 0:
                         line = content[mem_detail_line_index]
@@ -331,10 +374,16 @@ class ROCustomizationController:
                             # Если нет !SOF Ref строк, вставляем в начало
                             content.insert(0, new_mem_detail_line)
                     
-                    # Создаем временный файл для записи модифицированного содержимого
+                    # Write the modified file with the same encoding as we read it
                     temp_file = os.path.join(os.path.dirname(dat_file), f"temp_{os.path.basename(dat_file)}")
-                    with open(temp_file, 'w', encoding='utf-8') as f:
-                        f.writelines(content)
+                    
+                    # Use latin1 for writing which can encode any byte
+                    try:
+                        with open(temp_file, 'w', encoding='latin1', errors='replace') as f:
+                            f.writelines(content)
+                    except Exception as e:
+                        print(f"Error writing modified file: {e}")
+                        return False, f"Failed to create modified file: {str(e)}"
                     
                     # Копируем модифицированный файл
                     shutil.copy2(temp_file, target_file)
@@ -453,69 +502,69 @@ class ROCustomizationController:
     def find_and_open_dt_file(self, e_number):
         """Find and open DT file for the specified E-number"""
         try:
-            # Очищаем номер от лишнего
+            # Clean up the number
             clean_e_number = e_number.strip().upper()
             if clean_e_number.startswith("E-"):
                 clean_e_number = "E" + clean_e_number[2:]
             elif not clean_e_number.startswith("E"):
                 clean_e_number = "E" + clean_e_number
             
-            # Извлекаем диапазон для папки
+            # Extract folder range
             match = re.match(r'E(\d{3})(\d{3})', clean_e_number)
             if not match:
                 return False, f"Invalid E-number format: {e_number}"
             
             first_part = match.group(1)
-            # Правильный формат для диапазона папок
+            # Correct format for folder range
             range_folder = f"E{first_part}000-E{first_part}999"
             
-            # Пути к возможным директориям
+            # Paths to possible directories
             base_path = r"\\fanuc\FS\Corporate\Products\Data_Sheets_MD"
             dt_path = os.path.join(base_path, range_folder, "DT")
             regular_path = os.path.join(base_path, range_folder)
             
-            # Выводим пути для отладки
+            # Debug paths
             print(f"Searching in DT path: {dt_path}")
             print(f"Searching in regular path: {regular_path}")
             
-            # Файл может иметь разные форматы имени, ищем по номеру E-number
-            # Используем более общий шаблон для поиска, но ограничиваем расширения
+            # File may have different formats, search by E-number
+            # Use more general pattern for search but limit extensions
             e_number_dash = clean_e_number.replace('E', 'E-')
             
-            # Создаем более гибкие шаблоны поиска с указанием расширений Excel файлов
+            # Create more flexible search patterns with Excel file extensions
             patterns = [
-                f"*{e_number_dash}*.xls",   # Старый формат Excel
-                f"*{e_number_dash}*.xlsx",  # Новый формат Excel
-                f"*{e_number_dash}*.xlsm",  # Excel с макросами
-                f"*{clean_e_number}*.xls",  # Без дефиса, старый формат
-                f"*{clean_e_number}*.xlsx", # Без дефиса, новый формат
-                f"*{clean_e_number}*.xlsm", # Без дефиса, с макросами
+                f"*{e_number_dash}*.xls",   # Old Excel format
+                f"*{e_number_dash}*.xlsx",  # New Excel format
+                f"*{e_number_dash}*.xlsm",  # Excel with macros
+                f"*{clean_e_number}*.xls",  # Without dash, old format
+                f"*{clean_e_number}*.xlsx", # Without dash, new format
+                f"*{clean_e_number}*.xlsm", # Without dash, with macros
             ]
             
             found_files = []
             
-            # Ищем во всех возможных местах и по всем шаблонам
+            # Search in all possible locations with all patterns
             for pattern in patterns:
-                # Поиск в DT папке
+                # Search in DT folder
                 if os.path.exists(dt_path):
                     dt_search = os.path.join(dt_path, pattern)
                     found_files.extend(glob.glob(dt_search))
                     print(f"Searching with pattern '{dt_search}', found {len(glob.glob(dt_search))} files")
                 
-                # Поиск в обычной папке
+                # Search in regular folder
                 if os.path.exists(regular_path):
                     regular_search = os.path.join(regular_path, pattern)
                     found_files.extend(glob.glob(regular_search))
                     print(f"Searching with pattern '{regular_search}', found {len(glob.glob(regular_search))} files")
             
-            # Убираем дубликаты
+            # Remove duplicates
             found_files = list(set(found_files))
             
-            # Если Excel файлы не найдены, попробуем найти любые файлы с e-number для диагностики
+            # If no Excel files found, try to find any files with e-number for diagnostics
             if not found_files:
                 print(f"No Excel files found for {e_number}, checking for any files")
                 
-                # Более общий поиск для диагностики
+                # More general search for diagnostics
                 any_patterns = [f"*{e_number_dash}*.*", f"*{clean_e_number}*.*"]
                 diagnostic_files = []
                 
@@ -525,14 +574,14 @@ class ROCustomizationController:
                     if os.path.exists(regular_path):
                         diagnostic_files.extend(glob.glob(os.path.join(regular_path, pattern)))
                 
-                # Если нашли другие файлы, выводим их для диагностики
+                # If other files found, list them for diagnostics
                 if diagnostic_files:
                     print(f"Found non-Excel files for {e_number}:")
                     for f in diagnostic_files:
                         print(f"  {f} ({os.path.splitext(f)[1]})")
                     return False, f"No Excel DT file found for {e_number}, but found {len(diagnostic_files)} other files"
                 
-                # Если ничего не нашли, перечисляем содержимое папок
+                # If nothing found, list folder contents
                 print(f"No files found for {e_number}")
                 if os.path.exists(dt_path) and os.listdir(dt_path):
                     print(f"Files in {dt_path}:")
@@ -548,12 +597,12 @@ class ROCustomizationController:
                             
                 return False, f"No DT file found for {e_number}"
             
-            # Выводим все найденные файлы для проверки
+            # List all found files for verification
             print(f"Found {len(found_files)} Excel files for {e_number}:")
             for f in found_files:
                 print(f"  {f} ({os.path.splitext(f)[1]})")
             
-            # Выбираем первый найденный файл и открываем его
+            # Select the first found file and open it
             file_to_open = found_files[0]
             
             
@@ -605,50 +654,50 @@ class ROCustomizationController:
     def move_backup_folders(self, usb_path):
         """Move backup folders from USB to desktop"""
         try:
-            # Проверяем, что USB существует и доступен для чтения
+            # Check that USB exists and is readable
             if not os.path.exists(usb_path) or not os.access(usb_path, os.R_OK):
                 return False, "USB drive not found or not readable"
             
-            # Получаем путь к рабочему столу пользователя
+            # Get user's desktop path
             desktop_path = os.path.join(os.path.expanduser('~'), 'Desktop')
-            # Создаем папку для бэкапов на рабочем столе, если её нет
+            # Create backups folder on desktop if it doesn't exist
             backup_folder = os.path.join(desktop_path, 'Backups')
             if not os.path.exists(backup_folder):
                 os.makedirs(backup_folder)
             
-            # Счетчики для отчета
+            # Counters for report
             moved_folders = 0
             errors = 0
             
-            # Ищем папки в формате 12345678_E123456 на USB
+            # Look for folders in format 12345678_E123456 on USB
             backup_folders = []
             for item in os.listdir(usb_path):
                 item_path = os.path.join(usb_path, item)
-                # Проверяем, что это папка и соответствует шаблону "12345678_E123456"
+                # Check that it's a folder and matches pattern "12345678_E123456"
                 if os.path.isdir(item_path) and re.match(r'\d{8}_E\d+', item):
-                    # Проверяем, что папка не пуста
+                    # Check that folder isn't empty
                     if os.listdir(item_path):
                         backup_folders.append((item, item_path))
             
-            # Если нет папок для перемещения
+            # If no folders to move
             if not backup_folders:
                 return False, "No backup folders found on the USB drive."
                 
-            # Перемещаем папки
+            # Move folders
             for item, item_path in backup_folders:
                 try:
                     target_path = os.path.join(backup_folder, item)
                     
-                    # Если папка назначения уже существует, добавляем метку времени
+                    # If target folder already exists, add timestamp
                     if os.path.exists(target_path):
                         import datetime
                         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
                         target_path = os.path.join(backup_folder, f"{item}_{timestamp}")
                     
-                    # Перемещаем папку с USB на рабочий стол
+                    # Move folder from USB to desktop
                     shutil.copytree(item_path, target_path)
                     
-                    # После успешного копирования удаляем оригинальную папку
+                    # After successful copy, remove original folder
                     shutil.rmtree(item_path)
                     
                     moved_folders += 1
@@ -656,7 +705,7 @@ class ROCustomizationController:
                     print(f"Error moving folder {item}: {str(e)}")
                     errors += 1
             
-            # Формируем сообщение о результате
+            # Create result message
             if moved_folders > 0:
                 message = f"Successfully moved {moved_folders} backup folder{'s' if moved_folders > 1 else ''} to {backup_folder}"
                 if errors > 0:
@@ -667,7 +716,7 @@ class ROCustomizationController:
                     return False, f"Failed to move {errors} folder{'s' if errors > 1 else ''}. No backups were moved."
                 else:
                     return False, "No backup folders found on the USB drive."
-                
+            
         except Exception as e:
             print(f"Error moving backup folders: {e}")
             traceback.print_exc()
