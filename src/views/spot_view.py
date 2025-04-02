@@ -3,8 +3,8 @@ import os
 import threading
 import time
 import traceback
-from src.controllers.timer_component import TimerComponent
-from src.controllers.ro_customization_tools import ROCustomizationController
+from controllers.timer_component import TimerComponent
+from controllers.ro_customization_tools import ROCustomizationController
 
 spot_style: dict = {
     "main": {

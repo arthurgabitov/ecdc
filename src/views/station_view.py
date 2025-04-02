@@ -1,6 +1,6 @@
 import flet as ft
 from config import Config
-from src.controllers.timer_component import TimerComponent
+from controllers.timer_component import TimerComponent
 from .spot_view import Spot
 
 

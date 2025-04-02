@@ -131,46 +131,133 @@ class ROCustomizationController:
         drives = []
         
         try:
-            if os.name == 'nt':  
-                
-                for letter in "DEFGHIKLMNOPQRSTUVWXYZ":
-                    drive_path = f"{letter}:"
-                    try:
-                        
-                        if os.path.exists(drive_path) and os.access(drive_path, os.R_OK):
-                            try:
-                               
-                                import win32file
-                                drive_type = win32file.GetDriveType(f"{drive_path}\\")
-                                
-                                
-                                if drive_type == win32file.DRIVE_REMOVABLE:
-                                    
+            if os.name == 'nt':
+                # Use direct ctypes approach which is more reliable across different packaging methods
+                try:
+                    import ctypes
+                    
+                    # Define the GetLogicalDrives function
+                    GetLogicalDrives = ctypes.windll.kernel32.GetLogicalDrives
+                    GetLogicalDrives.restype = ctypes.c_ulong
+                    
+                    # Define GetDriveType function
+                    GetDriveType = ctypes.windll.kernel32.GetDriveTypeW
+                    GetDriveType.argtypes = [ctypes.c_wchar_p]
+                    GetDriveType.restype = ctypes.c_uint
+                    
+                    # Constants for drive types
+                    DRIVE_REMOVABLE = 2
+                    
+                    # Get bitmask of available drives
+                    bitmask = GetLogicalDrives()
+                    
+                    # Check each possible drive letter
+                    for letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+                        # If drive exists (bit is set in bitmask)
+                        if bitmask & (1 << (ord(letter) - ord('A'))):
+                            drive_path = f"{letter}:"
+                            drive_type = GetDriveType(f"{drive_path}\\")
+                            
+                            # If it's a removable drive
+                            if drive_type == DRIVE_REMOVABLE:
+                                # Add extra validation to confirm it's a real USB drive
+                                if self._is_physical_usb_drive(drive_path):
                                     try:
-                                        import win32api
-                                        volume_name = win32api.GetVolumeInformation(f"{drive_path}\\")[0]
-                                        drive_label = f"{drive_path} ({volume_name})" if volume_name else f"{drive_path} (USB Drive)"
-                                    except:
-                                        drive_label = f"{drive_path} (USB Drive)"
-                                    
-                                    
-                                    drives.append((drive_path, drive_label))
-                            except Exception as e:
-                                
-                                if os.path.isdir(drive_path):
-                                    drives.append((drive_path, f"{drive_path} (Drive)"))
-                    except Exception as e:
-                        
-                        pass
-                        
+                                        # Define constants and structures for GetVolumeInformation
+                                        buffer_len = 256
+                                        volume_name_buffer = ctypes.create_unicode_buffer(buffer_len)
+                                        fs_name_buffer = ctypes.create_unicode_buffer(buffer_len)
+                                        
+                                        # Call GetVolumeInformation directly
+                                        result = ctypes.windll.kernel32.GetVolumeInformationW(
+                                            ctypes.c_wchar_p(f"{drive_path}\\"),
+                                            volume_name_buffer,
+                                            buffer_len,
+                                            None, None, None,
+                                            fs_name_buffer,
+                                            buffer_len
+                                        )
+                                        
+                                        # Get volume name
+                                        volume_name = volume_name_buffer.value if result else ""
+                                        
+                                        # Format the drive label - IMPORTANT: Remove parentheses for consistency
+                                        if volume_name:
+                                            drive_label = f"{drive_path} {volume_name}"
+                                        else:
+                                            drive_label = f"{drive_path} USB Drive"
+                                        
+                                        drives.append((drive_path, drive_label))
+                                        print(f"Found removable drive: {drive_label}")
+                                        
+                                    except Exception as e:
+                                        print(f"Error getting volume name for {drive_path}: {str(e)}")
+                                        drives.append((drive_path, f"{drive_path} USB Drive"))
+                
+                except Exception as e:
+                    print(f"Error using ctypes for drive detection: {str(e)}")
+                    # Fall back to the original method if ctypes approach fails
+                    try:
+                        # Импортируем win32 модули только если они нужны и доступны
+                        import win32file
+                        import win32api
+                        have_win32 = True
+                    except ImportError:
+                        print("Warning: win32api/win32file modules not available")
+                        have_win32 = False
+                    
+                    for letter in "DEFGHIJKLMNOPQRSTUVWXYZ":
+                        drive_path = f"{letter}:"
+                        try:
+                            if os.path.exists(drive_path) and os.access(drive_path, os.R_OK):
+                                if have_win32:
+                                    try:
+                                        drive_type = win32file.GetDriveType(f"{drive_path}\\")
+                                        
+                                        if drive_type == win32file.DRIVE_REMOVABLE:
+                                            try:
+                                                volume_name = win32api.GetVolumeInformation(f"{drive_path}\\")[0]
+                                                # IMPORTANT: Changed format to remove parentheses for consistency
+                                                drive_label = f"{drive_path} {volume_name}" if volume_name else f"{drive_path} USB Drive"
+                                            except:
+                                                drive_label = f"{drive_path} USB Drive"
+                                            
+                                            drives.append((drive_path, drive_label))
+                                    except Exception as e:
+                                        print(f"Win32 API error for {drive_path}: {e}")
+                                        if os.path.isdir(drive_path):
+                                            drives.append((drive_path, f"{drive_path} Drive"))
+                                else:
+                                    # Альтернативный метод определения съемных дисков
+                                    if os.path.isdir(drive_path):
+                                        drives.append((drive_path, f"{drive_path} Drive"))
+                        except Exception as e:
+                            pass
             
-        
+            # For debugging - show all found drives without filtering
+            print(f"Found drives: {drives}")
+            
         except Exception as e:
             print(f"Error in get_connected_usb_drives: {str(e)}")
             traceback.print_exc()
         
         return drives
-    
+
+    def _is_physical_usb_drive(self, drive_path):
+        """Check if a drive is a physical USB drive by verifying it has typical USB drive characteristics"""
+        try:
+            # Check if the drive actually exists and is accessible
+            if not os.path.exists(f"{drive_path}\\"):
+                print(f"Drive path {drive_path}\\ does not exist or is not accessible")
+                return False
+                
+            # When using flet build windows, trust GetDriveType's assessment
+            return True
+            
+        except Exception as e:
+            print(f"Error checking if {drive_path} is physical USB: {e}")
+            return False
+
     def check_sw_version(self, drive_path):
         version_file = os.path.join(drive_path, "version.txt")
         if os.path.exists(version_file):
@@ -261,6 +348,15 @@ class ROCustomizationController:
             mem_detail_line_index = -1
             content = []
             
+            # Check if we have a CRX model - if so, use standard memory
+            is_crx_model = False
+            if wo_data.get("e_number") and wo_data["e_number"].get("model"):
+                robot_model = wo_data["e_number"]["model"]
+                if robot_model and "CRX" in robot_model.upper():
+                    memory_info = "FROM256MB/SRAM3MB"
+                    is_crx_model = True
+                    print(f"CRX model detected: {robot_model}. Using standard memory: {memory_info}")
+            
             # Read file in binary mode
             try:
                 with open(dat_file, 'rb') as f:
@@ -298,10 +394,12 @@ class ROCustomizationController:
                 traceback.print_exc()
                 return False, f"Error reading DAT file: {str(e)}"
             
-            # Check PDF file for memory info if available
-            if wo_data.get("pdf_file"):
-                memory_info = self.extract_memory_from_pdf(wo_data.get("pdf_file"))
-                print(f"Extracted memory info from PDF: {memory_info}")
+            # If not CRX model, check PDF file for memory info if available
+            if not is_crx_model and wo_data.get("pdf_file"):
+                pdf_memory_info = self.extract_memory_from_pdf(wo_data.get("pdf_file"))
+                if pdf_memory_info:
+                    memory_info = pdf_memory_info
+                    print(f"Extracted memory info from PDF: {memory_info}")
             
             # Определяем путь для копирования файла в зависимости от версии
             # Для версий P9 и ниже (V9) файл должен быть в корне USB

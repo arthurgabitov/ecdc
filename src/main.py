@@ -25,14 +25,13 @@ async def main(page: ft.Page):
     page.title = app_settings["title"]
     page.theme_mode = "light"
     page.window.height = 1000
-    page.window.width = 800
+    page.window.width = 700
     page.padding = 0
 
     stations = controller.get_stations()
     stations_count = len(stations)
 
-    # Only create navigation rail if there's more than one station
-    # NOTE: Fixed condition - always hide rail when only one station
+ 
     show_nav_rail = stations_count > 1
     
     destinations = []

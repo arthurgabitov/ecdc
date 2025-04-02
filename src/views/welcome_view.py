@@ -1,6 +1,6 @@
 import flet as ft
 import asyncio
-from src.controllers.station_controller import StationController
+from controllers.station_controller import StationController
 
 class WelcomeView:
     def __init__(self, page: ft.Page, controller: StationController, on_complete):
@@ -35,12 +35,12 @@ class WelcomeView:
 
         self.content = ft.Column(
             [   
-                ft.Rive(
-                    "src/robot_looping_test.riv",
-                    placeholder=ft.ProgressBar(),
-                    width=300,
-                    height=200,
-                ),
+                #ft.Rive(
+                #    "src/robot_looping_test.riv",
+                #    placeholder=ft.ProgressBar(),
+                #    width=300,
+                #    height=200,
+                #),
                 self.welcome_text,
                 self.station_selector
             ],
