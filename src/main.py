@@ -11,6 +11,7 @@ from views.station_view import StationView
 from views.welcome_view import WelcomeView
 from views.settings_view import SettingsView
 from views.overview_view import OverviewView
+from views.navigation_rail_view import NavigationRailView
 from config import Config
 
 async def main(page: ft.Page):
@@ -25,58 +26,18 @@ async def main(page: ft.Page):
     page.title = app_settings["title"]
     page.theme_mode = "light"
     page.window.height = 1000
-    page.window.width = 700
+    page.window.width = 800
     page.padding = 0
 
     stations = controller.get_stations()
     stations_count = len(stations)
 
- 
+    
     show_nav_rail = stations_count > 1
     
-    destinations = []
     
-    if show_nav_rail:
-        destinations.append(
-            ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.Icons.HOME, color=ft.Colors.WHITE),
-                selected_icon_content=ft.Icon(ft.Icons.HOME_FILLED, color=ft.Colors.WHITE),
-                label_content=ft.Text("RO Station", color=ft.Colors.WHITE),
-                label="RO Station"
-            )
-        )
-    
-        if stations_count > 1:
-            destinations.append(
-                ft.NavigationRailDestination(
-                    icon_content=ft.Icon(ft.Icons.DASHBOARD, color=ft.Colors.WHITE),
-                    selected_icon_content=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE, color=ft.Colors.WHITE),
-                    label_content=ft.Text("Overview", color=ft.Colors.WHITE),
-                    label="Overview"
-                )
-            )
-    
-        destinations.append(
-            ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.Icons.SETTINGS, color=ft.Colors.WHITE),
-                selected_icon_content=ft.Icon(ft.Icons.SETTINGS_APPLICATIONS, color=ft.Colors.WHITE),
-                label_content=ft.Text("Settings", color=ft.Colors.WHITE),
-                label="Settings"
-            )
-        )
-
-    nav_rail = ft.NavigationRail(
-        selected_index=0,
-        label_type=ft.NavigationRailLabelType.ALL,
-        min_width=100,
-        min_extended_width=200,
-        width=100,
-        bgcolor=ft.Colors.ON_PRIMARY_CONTAINER,
-        indicator_color=ft.Colors.WHITE10,
-        destinations=destinations,
-        on_change=lambda e: update_module(e.control.selected_index),
-        visible=show_nav_rail  # Only show if we have multiple stations
-    ) if show_nav_rail else None  # Only create nav_rail if needed
+    nav_rail_view = NavigationRailView(page, stations_count, lambda idx: update_module(idx)) if show_nav_rail else None
+    nav_rail = nav_rail_view.build() if nav_rail_view else None
 
     module_container = ft.Container(
         content=ft.AnimatedSwitcher(
@@ -89,7 +50,7 @@ async def main(page: ft.Page):
         alignment=ft.alignment.center
     )
 
-    # Create layout with or without nav rail based on stations count
+    
     if show_nav_rail:
         main_layout = ft.Column(
             [
@@ -113,7 +74,7 @@ async def main(page: ft.Page):
             expand=True
         )
     else:
-        # Simplified layout without nav rail for single station mode
+        
         main_layout = ft.Column(
             [
                 ft.Container(
@@ -141,12 +102,11 @@ async def main(page: ft.Page):
         return SettingsView(page).build()
 
     def update_module(selected_index, station_id=None):
-        # If nav rail is hidden, enforce station view
         if not show_nav_rail:
-            # In single station mode, just show the station view
             new_content = create_station_view(station_id if station_id else stations[0])
         else:
-            nav_rail.selected_index = selected_index
+            if nav_rail_view:
+                nav_rail_view.set_selected_index(selected_index)
             
             new_content = ft.Container()
             if selected_index == 0:
@@ -158,8 +118,8 @@ async def main(page: ft.Page):
         
         if module_container.content.content != new_content:
             module_container.content.content = new_content
-            if show_nav_rail and nav_rail:
-                nav_rail.update()
+            if show_nav_rail and nav_rail_view:
+                nav_rail_view.update()
             module_container.update()
 
     def adjust_module_width(e=None):

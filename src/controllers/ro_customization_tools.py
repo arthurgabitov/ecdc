@@ -6,12 +6,9 @@ import threading
 import traceback
 import glob
 import shutil 
+import PyPDF2
 
-try:
-    import PyPDF2
-except ImportError:
-    print("PyPDF2 module not found. PDF memory extraction will be unavailable.")
-    PyPDF2 = None
+
 
 class ROCustomizationController:
     def __init__(self, config):
@@ -531,29 +528,26 @@ class ROCustomizationController:
             return None
 
         try:
-            # Проверяем существование файла
+            # Check if the file exists
             if not os.path.exists(pdf_file_path):
                 print(f"PDF file not found: {pdf_file_path}")
                 return None
                 
-            # Открываем PDF файл
+            # Open the PDF file
             with open(pdf_file_path, 'rb') as file:
                 reader = PyPDF2.PdfReader(file)
                 
-                # Ищем на каждой странице
+                # Search each page
                 for page_num in range(len(reader.pages)):
                     text = reader.pages[page_num].extract_text()
                     
-                    # Выводим текст для отладки
-                    print(f"Extracted text from page {page_num+1} (length: {len(text)})")
-                    
-                    # Поиск строки с указанием модуля памяти
+                    # Search for memory module information
                     memory_patterns = [
-                        # Различные форматы с вариациями пробелов
-                        r'A05B[-\s]2600[-\s]H\d+\s+.*?(FROM\s*\d+\s*MB\s*/\s*SRAM\s*\d+\s*MB)',  # С R30IB
-                        r'A05B[-\s]2600[-\s]H\d+\s+.*?(FROM\s*\d+\s*MB[/\\]\s*SRAM\s*\d+\s*MB)',  # Альтернативно с другим слешем
-                        r'(FROM\s*\d+\s*MB\s*/\s*SRAM\s*\d+\s*MB)',  # Только память
-                        r'(FROM\s*\d+\s*MB).*?(SRAM\s*\d+\s*MB)'  # Раздельные части
+                        # Various formats with space variations
+                        r'A05B[-\s]2600[-\s]H\d+\s+.*?(FROM\s*\d+\s*MB\s*/\s*SRAM\s*\d+\s*MB)', 
+                        r'A05B[-\s]2600[-\s]H\d+\s+.*?(FROM\s*\d+\s*MB[/\\]\s*SRAM\s*\d+\s*MB)',  
+                        r'(FROM\s*\d+\s*MB\s*/\s*SRAM\s*\d+\s*MB)',  
+                        r'(FROM\s*\d+\s*MB).*?(SRAM\s*\d+\s*MB)'  
                     ]
                     
                     for pattern in memory_patterns:
@@ -561,35 +555,21 @@ class ROCustomizationController:
                         if match:
                             if len(match.groups()) == 1:
                                 memory_info = match.group(1).strip()
-                                # Нормализуем формат (убираем лишние пробелы)
+                                # Normalize format (remove extra spaces)
                                 memory_info = re.sub(r'\s+', ' ', memory_info)
-                                # Заменяем "FROM 128MB / SRAM 3MB" на "FROM128MB/SRAM3MB"
+                                # Replace "FROM xxxMB / SRAM yMB" with "FROMxxxMB/SRAMyMB"
                                 memory_info = re.sub(r'FROM\s+(\d+)\s*MB\s*[/\\]\s*SRAM\s+(\d+)\s*MB', r'FROM\1MB/SRAM\2MB', memory_info, flags=re.IGNORECASE)
-                                print(f"Found memory info: {memory_info}")
                                 return memory_info
                             elif len(match.groups()) > 1:
-                                # Объединяем раздельные части
+                                # Combine separate parts
                                 from_part = match.group(1).strip()
                                 sram_part = match.group(2).strip()
-                                # Нормализуем формат
+                                # Normalize format
                                 from_part = re.sub(r'\s+', '', from_part)
                                 sram_part = re.sub(r'\s+', '', sram_part)
                                 combined = f"{from_part}/{sram_part}"
-                                print(f"Found combined memory info: {combined}")
                                 return combined
-                    
-                    # Ищем строки с содержанием A05B и FROM/SRAM для отладки
-                    debug_lines = []
-                    for line in text.split('\n'):
-                        if ('A05B' in line and ('FROM' in line.upper() or 'SRAM' in line.upper())):
-                            debug_lines.append(line.strip())
-                    
-                    if debug_lines:
-                        print("Potential memory info lines found but not matched:")
-                        for line in debug_lines:
-                            print(f"  > {line}")
             
-            print(f"Memory information not found in PDF: {pdf_file_path}")
             return None
                 
         except Exception as e:
@@ -621,22 +601,18 @@ class ROCustomizationController:
             dt_path = os.path.join(base_path, range_folder, "DT")
             regular_path = os.path.join(base_path, range_folder)
             
-            # Debug paths
-            print(f"Searching in DT path: {dt_path}")
-            print(f"Searching in regular path: {regular_path}")
-            
             # File may have different formats, search by E-number
             # Use more general pattern for search but limit extensions
             e_number_dash = clean_e_number.replace('E', 'E-')
             
-            # Create more flexible search patterns with Excel file extensions
+            # Create search patterns with Excel file extensions
             patterns = [
-                f"*{e_number_dash}*.xls",   # Old Excel format
-                f"*{e_number_dash}*.xlsx",  # New Excel format
-                f"*{e_number_dash}*.xlsm",  # Excel with macros
-                f"*{clean_e_number}*.xls",  # Without dash, old format
-                f"*{clean_e_number}*.xlsx", # Without dash, new format
-                f"*{clean_e_number}*.xlsm", # Without dash, with macros
+                f"*{e_number_dash}*.xls",   
+                f"*{e_number_dash}*.xlsx",  
+                f"*{e_number_dash}*.xlsm",  
+                f"*{clean_e_number}*.xls",  
+                f"*{clean_e_number}*.xlsx", 
+                f"*{clean_e_number}*.xlsm", 
             ]
             
             found_files = []
@@ -647,21 +623,17 @@ class ROCustomizationController:
                 if os.path.exists(dt_path):
                     dt_search = os.path.join(dt_path, pattern)
                     found_files.extend(glob.glob(dt_search))
-                    print(f"Searching with pattern '{dt_search}', found {len(glob.glob(dt_search))} files")
                 
                 # Search in regular folder
                 if os.path.exists(regular_path):
                     regular_search = os.path.join(regular_path, pattern)
                     found_files.extend(glob.glob(regular_search))
-                    print(f"Searching with pattern '{regular_search}', found {len(glob.glob(regular_search))} files")
             
             # Remove duplicates
             found_files = list(set(found_files))
             
             # If no Excel files found, try to find any files with e-number for diagnostics
             if not found_files:
-                print(f"No Excel files found for {e_number}, checking for any files")
-                
                 # More general search for diagnostics
                 any_patterns = [f"*{e_number_dash}*.*", f"*{clean_e_number}*.*"]
                 diagnostic_files = []
@@ -674,35 +646,12 @@ class ROCustomizationController:
                 
                 # If other files found, list them for diagnostics
                 if diagnostic_files:
-                    print(f"Found non-Excel files for {e_number}:")
-                    for f in diagnostic_files:
-                        print(f"  {f} ({os.path.splitext(f)[1]})")
                     return False, f"No Excel DT file found for {e_number}, but found {len(diagnostic_files)} other files"
-                
-                # If nothing found, list folder contents
-                print(f"No files found for {e_number}")
-                if os.path.exists(dt_path) and os.listdir(dt_path):
-                    print(f"Files in {dt_path}:")
-                    for f in os.listdir(dt_path):
-                        if e_number_dash.lower() in f.lower() or clean_e_number.lower() in f.lower():
-                            print(f"  {f} (PARTIAL MATCH)")
-                        
-                if os.path.exists(regular_path) and os.listdir(regular_path):
-                    print(f"Files in {regular_path}:")
-                    for f in os.listdir(regular_path):
-                        if e_number_dash.lower() in f.lower() or clean_e_number.lower() in f.lower():
-                            print(f"  {f} (PARTIAL MATCH)")
                             
                 return False, f"No DT file found for {e_number}"
             
-            # List all found files for verification
-            print(f"Found {len(found_files)} Excel files for {e_number}:")
-            for f in found_files:
-                print(f"  {f} ({os.path.splitext(f)[1]})")
-            
             # Select the first found file and open it
             file_to_open = found_files[0]
-            
             
             if self.open_file(file_to_open):
                 return True, f"Opening DT file: {os.path.basename(file_to_open)}"

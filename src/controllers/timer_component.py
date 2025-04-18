@@ -122,7 +122,7 @@ class TimerComponent:
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
 
     def build(self):
-        """Build and return the timer component"""
+        
         return ft.Column(
             [
                 self.timer_text,

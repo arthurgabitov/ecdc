@@ -12,7 +12,7 @@ spot_style: dict = {
         "bgcolor": ft.colors.WHITE60,
         "border_radius": 20,
         "border": ft.border.all(width=0.5, color=ft.colors.GREY_500),
-        "ink": True
+        "ink": True,
     },
 }
 
@@ -172,27 +172,29 @@ class Spot:
 
         self.content = ft.Column(
             controls=[
-                ft.Divider(height=20, color="transparent"),
-                ft.Text(self.label, weight=ft.FontWeight.BOLD, size=18, text_align=ft.TextAlign.CENTER),
-                # Use a container with fixed height for the e-number label
+                
+                ft.Text(self.label, weight=ft.FontWeight.BOLD, size=18, text_align=ft.TextAlign.CENTER,expand=0),
+                
                 ft.Container(
                     content=self.spot_e_number_label,
-                    height=24,  
+                      
+                    expand=0,
                     alignment=ft.alignment.center
                 ),
-                ft.Container(expand=1),
+                
                 ft.Container(
                     content=self.timer.build(),
-                    expand=1,
-                    alignment=ft.alignment.bottom_center
+                    expand=0,
+                    alignment=ft.alignment.center
                 ),
                 ft.Container(
                     content=ft.TextButton("Reset", on_click=self.reset_spot),
                     alignment=ft.alignment.center,
+                    expand=0,
                     padding=ft.padding.all(10) 
                 ),
             ],
-            expand=True,
+            expand=1,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=0
         )
