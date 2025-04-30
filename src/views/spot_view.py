@@ -26,6 +26,9 @@ class Spot:
         self.timer = TimerComponent(page, station_id, spot_id, controller)
         self.label = f"Spot {self.spot_id[-1]}"
         
+        # Определяем, запущено ли приложение в браузере
+        self.is_web = page.platform == "web"
+        
         self.ro_tools = ROCustomizationController(controller.config)
         
         self.timer_state = "stopped"  
@@ -173,30 +176,43 @@ class Spot:
         self.content = ft.Column(
             controls=[
                 
-                ft.Text(self.label, weight=ft.FontWeight.BOLD, size=18, text_align=ft.TextAlign.CENTER,expand=0),
+                ft.Container(
+                    content=ft.Text(self.label, weight=ft.FontWeight.BOLD, size=22, text_align=ft.TextAlign.CENTER),
+                    padding=ft.padding.only(top=10),
+                    expand=0,
+                ),
                 
                 ft.Container(
                     content=self.spot_e_number_label,
-                      
-                    expand=0,
+                    expand=1,
+                    alignment=ft.alignment.center
+                ),
+                
+                # Отдельный блок для текста таймера
+                ft.Container(
+                    content=self.timer.build_text(),
+                    expand=1,
+                    alignment=ft.alignment.center
+                ),
+                
+                # Отдельный блок для кнопок таймера
+                ft.Container(
+                    content=self.timer.build_buttons(),
+                    expand=1,
                     alignment=ft.alignment.center
                 ),
                 
                 ft.Container(
-                    content=self.timer.build(),
-                    expand=0,
-                    alignment=ft.alignment.center
-                ),
-                ft.Container(
                     content=ft.TextButton("Reset", on_click=self.reset_spot),
                     alignment=ft.alignment.center,
-                    expand=0,
+                    expand=1,
                     padding=ft.padding.all(10) 
                 ),
             ],
             expand=1,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=0
+            spacing=0,
+            alignment=ft.MainAxisAlignment.SPACE_EVENLY
         )
 
         
@@ -231,11 +247,26 @@ class Spot:
             on_dismiss=self.on_dialog_dismiss,
         )
 
-        self.container = ft.Container(
-            content=self.content,
-            **spot_style["main"],
-            on_click=self.open_dialog
-        )
+        # Изменение стиля для веб-версии
+        if self.is_web:
+            self.container = ft.Container(
+                content=self.content,
+                expand=1,  # Используем expand вместо hardcoded размеров
+                bgcolor=spot_style["main"]["bgcolor"],
+                border_radius=spot_style["main"]["border_radius"],
+                border=spot_style["main"]["border"],
+                ink=spot_style["main"]["ink"],
+                on_click=self.open_dialog,
+                # Устанавливаем максимальную ширину для веб-версии
+                max_width=300,
+                min_width=250
+            )
+        else:
+            self.container = ft.Container(
+                content=self.content,
+                **spot_style["main"],
+                on_click=self.open_dialog
+            )
         
         # Initialize WO number data when creating the spot
         if spot_data.get("wo_number") and len(spot_data["wo_number"]) == 8:

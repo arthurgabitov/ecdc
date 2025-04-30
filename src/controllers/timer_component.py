@@ -8,7 +8,7 @@ class TimerComponent:
         self.station_id = station_id
         self.spot_id = spot_id
         self.controller = controller
-        self.timer_text = ft.Text("00:00", size=28)
+        self.timer_text = ft.Text("00:00", size=24)
         self.on_state_change = None
         self._task = None
 
@@ -121,15 +121,36 @@ class TimerComponent:
             self.on_state_change()
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
 
+    def build_text(self):
+        """Return just the timer text component"""
+        return self.timer_text
+        
+    def build_buttons(self):
+        """Return just the timer buttons in a row"""
+        return ft.Row(
+            [self.start_button, self.stop_button],
+            alignment=ft.MainAxisAlignment.CENTER
+        )
+
     def build(self):
         
         return ft.Column(
             [
-                self.timer_text,
-                ft.Row(
-                    [self.start_button, self.stop_button],
-                    alignment=ft.MainAxisAlignment.CENTER
+                ft.Container(
+                    content=self.timer_text,
+                    alignment=ft.alignment.center,
+                    expand=True
+                ),
+                ft.Container(
+                    content=ft.Row(
+                        [self.start_button, self.stop_button],
+                        alignment=ft.MainAxisAlignment.CENTER
+                    ),
+                    alignment=ft.alignment.center,
+                    expand=True
                 )
             ],
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            expand=True
         )

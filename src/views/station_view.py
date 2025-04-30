@@ -69,12 +69,12 @@ class StationView:
                     self.timer = None
                     self.page.update()
             
-            # Создаем таймер для отложенного выполнения
+            
             if hasattr(self.page, 'async_callbacks') and self.page.async_callbacks:
-                # Используем более безопасный метод, добавляем таймер
+                
                 def delayed_process():
                     import time
-                    time.sleep(0.5)  # Задержка 0.5 секунды
+                    time.sleep(0.5)  
                     self.page.run_sync_in_app(process_callbacks)
                 
                 self.timer = ft.Text("", opacity=0)
