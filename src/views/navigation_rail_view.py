@@ -12,9 +12,9 @@ class NavigationRailView:
         
         destinations.append(
             ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.Icons.HOME, color=ft.Colors.WHITE),
-                selected_icon_content=ft.Icon(ft.Icons.HOME_FILLED, color=ft.Colors.WHITE),
-                label_content=ft.Text("RO Station", color=ft.Colors.WHITE),
+                icon_content=ft.Icon(ft.Icons.HOME, ),
+                selected_icon_content=ft.Icon(ft.Icons.HOME_FILLED, ),
+                label_content=ft.Text("RO Station", ),
                 label="RO Station"
             )
         )
@@ -22,18 +22,18 @@ class NavigationRailView:
         if self.stations_count > 1:
             destinations.append(
                 ft.NavigationRailDestination(
-                    icon_content=ft.Icon(ft.Icons.DASHBOARD, color=ft.Colors.WHITE),
-                    selected_icon_content=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE, color=ft.Colors.WHITE),
-                    label_content=ft.Text("Overview", color=ft.Colors.WHITE),
+                    icon_content=ft.Icon(ft.Icons.DASHBOARD, ),
+                    selected_icon_content=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE, ),
+                    label_content=ft.Text("Overview", ),
                     label="Overview"
                 )
             )
     
         destinations.append(
             ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.Icons.SETTINGS, color=ft.Colors.WHITE),
-                selected_icon_content=ft.Icon(ft.Icons.SETTINGS_APPLICATIONS, color=ft.Colors.WHITE),
-                label_content=ft.Text("Settings", color=ft.Colors.WHITE),
+                icon_content=ft.Icon(ft.Icons.SETTINGS, ),
+                selected_icon_content=ft.Icon(ft.Icons.SETTINGS_APPLICATIONS, ),
+                label_content=ft.Text("Settings", ),
                 label="Settings"
             )
         )
@@ -45,8 +45,8 @@ class NavigationRailView:
             min_width=100,
             min_extended_width=200,
             width=200,
-            bgcolor=ft.Colors.ON_PRIMARY_CONTAINER,
-            indicator_color=ft.Colors.WHITE10,
+            #bgcolor=ft.Colors.ON_PRIMARY_CONTAINER,
+            #indicator_color=ft.Colors.WHITE10,
             destinations=destinations,
             on_change=lambda e: self.on_change_callback(e.control.selected_index)
         )

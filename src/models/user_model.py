@@ -186,9 +186,14 @@ class UserModel:
         Returns:
             Optional[Dict]: Данные пользователя или None, если не найден
         """
+        # Преобразуем ID в строку для гарантированного сравнения
+        user_id_str = str(user_id)
         for user in self.users_cache:
-            if user.get("id") == user_id:
+            if str(user.get("id", "")) == user_id_str:
                 return user
+        
+        # Логируем информацию для отладки
+        log.info(f"Пользователь с ID {user_id} не найден в кэше. Доступные ID: {[str(u.get('id')) for u in self.users_cache]}")
         return None
 
     def get_default_users(self) -> List[Dict]:

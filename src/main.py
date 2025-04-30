@@ -13,6 +13,7 @@ from views.settings_view import SettingsView
 from views.overview_view import OverviewView
 from views.navigation_rail_view import NavigationRailView
 from config import Config
+from models.user_model import UserModel
 
 async def main(page: ft.Page):
     config = Config()
@@ -32,11 +33,53 @@ async def main(page: ft.Page):
     
     if not is_web:
         page.window.height = 1000
-        page.window.width = 1000
+        page.window.width = 1200
     
     
     page.padding = 0
     
+    
+    current_user = {"id": None, "name": ""}
+    user_model = UserModel()
+    
+    def format_display_name(full_name):
+        
+        return full_name  
+
+    
+    dropdown_content = ft.Row(
+        [
+            ft.Icon(ft.icons.PERSON),
+            ft.Text("Пользователь", color=ft.colors.BLACK, size=14),
+        ],
+        spacing=5,
+    )
+    
+    # AppBar dropdown menu
+    user_dropdown = ft.PopupMenuButton(
+        content=dropdown_content,
+        tooltip="User menu",
+        items=[]
+    )
+    
+    # Create AppBar
+    appbar = ft.AppBar(
+        title=ft.Container(
+            content=ft.Text('ECDC Station App'),
+            padding=ft.padding.only(left=15)
+        ),
+        leading_width=55,  
+        bgcolor=ft.Colors.YELLOW_600,
+        actions=[
+            ft.Container(
+                content=user_dropdown,
+                padding=ft.padding.only(right=15)
+            )
+        ],
+        elevation=3,
+        shadow_color=ft.Colors.BLACK,
+        center_title=False,  
+    )
     
     main_container = ft.Container(
         expand=True,
@@ -139,11 +182,102 @@ async def main(page: ft.Page):
             module_container.width = page.window.width
             page.update()
 
-    def show_main_interface(selected_station_id):
+    def update_user_menu(user_id):
+        # Get user data from model
+        user = None
+        if user_id:
+            user = user_model.get_user_by_id(user_id)
+        
+        # Update current user information
+        if user:
+            current_user["id"] = user_id
+            current_user["name"] = user.get("name", "Unknown User")
+            # Форматируем имя для отображения
+            display_name = format_display_name(current_user["name"])
+        else:
+            current_user["id"] = None
+            current_user["name"] = "Unknown User"
+            display_name = "Unknown User"
+        
+        # Update dropdown button text
+        if isinstance(user_dropdown.content, ft.Row) and len(user_dropdown.content.controls) > 1:
+            user_dropdown.content.controls[1].value = display_name
+        
+        # Update dropdown menu items
+        user_dropdown.items = [
+            ft.PopupMenuItem(
+                text=display_name,
+                disabled=True,
+            ),
+            ft.PopupMenuDivider(),
+            ft.PopupMenuItem(
+                text="Logout",
+                icon=ft.Icons.LOGOUT,
+                on_click=lambda _: show_welcome_view(),
+            ),
+        ]
+        
+        
+        if user_dropdown.page:
+            user_dropdown.update()
+
+    def show_main_interface(selected_station_id, selected_user_id):
+        
         current_station_id[0] = selected_station_id
+        
+        
+        
+        
+       
+        if selected_user_id:
+            user = user_model.get_user_by_id(selected_user_id)
+            
+            
+            if user:
+                current_user["id"] = selected_user_id
+                current_user["name"] = user.get("name", "Unknown User")
+                
+                display_name = format_display_name(current_user["name"])
+                
+            else:
+                
+                display_name = "Unknown User"
+        else:
+            display_name = "Unknown User"
+        
+        
+        if isinstance(user_dropdown.content, ft.Row) and len(user_dropdown.content.controls) > 1:
+            user_dropdown.content.controls[1].value = display_name
+            
+        
+        
+        user_dropdown.items = [
+            ft.PopupMenuItem(
+                text=display_name,
+                disabled=True,
+            ),
+            ft.PopupMenuItem(),
+            ft.PopupMenuItem(
+                text="Logout",
+                icon=ft.Icons.LOGOUT,
+                on_click=lambda _: show_welcome_view(),
+            ),
+        ]
+        
+        
         page.controls.clear()
+        page.appbar = appbar  
         page.add(main_container)
+        
+        
         update_module(0, selected_station_id)
+        page.update()
+
+    def show_welcome_view():
+        page.controls.clear()
+        page.appbar = None
+        welcome_view = WelcomeView(page, controller, lambda station_id, user_id: show_main_interface(station_id, user_id))
+        page.add(welcome_view.build())
         page.update()
 
     def on_close(e):
@@ -157,7 +291,7 @@ async def main(page: ft.Page):
     page.on_resized = adjust_module_width
     page.on_close = on_close
 
-    welcome_view = WelcomeView(page, controller, show_main_interface)
+    welcome_view = WelcomeView(page, controller, lambda station_id, user_id: show_main_interface(station_id, user_id))
     page.add(welcome_view.build())
     page.update()
 

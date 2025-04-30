@@ -97,7 +97,7 @@ class WelcomeView:
 
             # Обновляем выпадающий список пользователей
             self.user_selector.options = [
-                ft.dropdown.Option(key=str(user["id"]), text=f"{user['name']} ({user['login']})") 
+                ft.dropdown.Option(key=str(user["id"]), text=f"{user['name']}") 
                 for user in users
             ]
             
@@ -144,10 +144,10 @@ class WelcomeView:
         if self.selected_user_id:
             # Если есть несколько станций, используем выбранную станцию
             if self.stations_count > 1 and hasattr(self, 'station_id'):
-                self.on_complete(self.station_id)
+                self.on_complete(self.station_id, self.selected_user_id)
             # Иначе используем единственную станцию
             elif self.stations_count == 1:
-                self.on_complete(self.station_id)
+                self.on_complete(self.station_id, self.selected_user_id)
 
     def build(self):
         return self.page_container
@@ -155,4 +155,4 @@ class WelcomeView:
     async def run_auto_transition(self):
         if self.auto_transition_needed and self.selected_user_id:
             await asyncio.sleep(1)
-            self.on_complete(self.station_id)
+            self.on_complete(self.station_id, self.selected_user_id)
