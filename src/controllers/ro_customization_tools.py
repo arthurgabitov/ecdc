@@ -185,7 +185,7 @@ class ROCustomizationController:
                                             drive_label = f"{drive_path} USB Drive"
                                         
                                         drives.append((drive_path, drive_label))
-                                        print(f"Found removable drive: {drive_label}")
+                                        
                                         
                                     except Exception as e:
                                         print(f"Error getting volume name for {drive_path}: {str(e)}")
@@ -231,8 +231,7 @@ class ROCustomizationController:
                         except Exception as e:
                             pass
             
-            # For debugging - show all found drives without filtering
-            print(f"Found drives: {drives}")
+            
             
         except Exception as e:
             print(f"Error in get_connected_usb_drives: {str(e)}")
