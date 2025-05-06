@@ -3,7 +3,8 @@
       "title": "Station App",
       "spots": 6,
       "columns": 2,
-      "stations": 3
+      "stations": 1
+
   },
   "spot_statuses": [
       {"name": "Unblocked", "color": "WHITE60"},

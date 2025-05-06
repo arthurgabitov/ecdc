@@ -29,11 +29,13 @@ async def main(page: ft.Page):
     
     
     is_web = page.platform == "web"
-    
+    stations = controller.get_stations()
+    stations_count = len(stations)
+    show_nav_rail = stations_count > 1
     
     if not is_web:
         page.window.height = 1000
-        page.window.width = 1200
+        page.window.width = 1200 if show_nav_rail else 800
     
     
     page.padding = 0
@@ -70,7 +72,7 @@ async def main(page: ft.Page):
         ),
         leading_width=55,  
         bgcolor=ft.Colors.YELLOW_600,
-        actions=[
+        actions=[] if not show_nav_rail else [
             ft.Container(
                 content=user_dropdown,
                 padding=ft.padding.only(right=15)
@@ -85,9 +87,6 @@ async def main(page: ft.Page):
         expand=True,
         
     )
-
-    stations = controller.get_stations()
-    stations_count = len(stations)
 
     show_nav_rail = stations_count > 1
     
@@ -291,12 +290,18 @@ async def main(page: ft.Page):
     page.on_resized = adjust_module_width
     page.on_close = on_close
 
-    welcome_view = WelcomeView(page, controller, lambda station_id, user_id: show_main_interface(station_id, user_id))
-    page.add(welcome_view.build())
-    page.update()
+    # Для режима с одной станцией сразу показываем основной интерфейс без логина
+    if not show_nav_rail and stations:
+        # Используем первую станцию и пустой ID пользователя
+        show_main_interface(stations[0], None)
+    else:
+        # Стандартный запуск с экраном приветствия
+        welcome_view = WelcomeView(page, controller, lambda station_id, user_id: show_main_interface(station_id, user_id))
+        page.add(welcome_view.build())
+        page.update()
 
-    if welcome_view.auto_transition_needed:
-        await welcome_view.run_auto_transition()
+        if welcome_view.auto_transition_needed:
+            await welcome_view.run_auto_transition()
 
 if __name__ == "__main__":
     ft.app(main)

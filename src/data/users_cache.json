@@ -1,15 +1,15 @@
 {
     "users": [
         {
-            "id": 207,
-            "name": "ADMIN Andries, Robin",
-            "login": "FANUC\\a99990304",
-            "email": ""
-        },
-        {
             "id": 206,
             "name": "ADMIN Andries, Robin",
             "login": "i:0#.w|fanuc\\a99990304",
+            "email": ""
+        },
+        {
+            "id": 207,
+            "name": "ADMIN Andries, Robin",
+            "login": "FANUC\\a99990304",
             "email": ""
         },
         {
@@ -349,6 +349,12 @@
             "email": "Daniel.Byberg@fanuc.eu"
         },
         {
+            "id": 370,
+            "name": "Cadet, Ridwan (FANUC External)",
+            "login": "i:0#.w|fanuc\\94000188",
+            "email": "Ridwan.Cadet.External@fanuc.eu"
+        },
+        {
             "id": 364,
             "name": "Cafourek, Jan (FANUC Czech s.r.o.)",
             "login": "i:0#.w|fanuc\\98500074",
@@ -431,6 +437,12 @@
             "name": "Couvelaire, Enzo (FANUC Europe Corporation)",
             "login": "i:0#.w|fanuc\\90501726",
             "email": "Enzo.Couvelaire@fanuc.eu"
+        },
+        {
+            "id": 369,
+            "name": "Cressaut, Laurent (FANUC France SAS)",
+            "login": "i:0#.w|fanuc\\90501188",
+            "email": "Laurent.Cressaut@fanuc.eu"
         },
         {
             "id": 26,
@@ -2077,5 +2089,5 @@
             "email": "Andrew.Akesson@fanuc.eu"
         }
     ],
-    "last_fetch_time": "2025-04-30T13:52:46.361949"
+    "last_fetch_time": "2025-05-06T10:56:40.628080"
 }
