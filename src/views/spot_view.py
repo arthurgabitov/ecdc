@@ -191,7 +191,7 @@ class Spot:
                 # Отдельный блок для текста таймера
                 ft.Container(
                     content=self.timer.build_text(),
-                    expand=1,
+                    expand=0,
                     alignment=ft.alignment.center
                 ),
                 
@@ -206,7 +206,7 @@ class Spot:
                     content=ft.TextButton("Reset", on_click=self.reset_spot),
                     alignment=ft.alignment.center,
                     expand=1,
-                    padding=ft.padding.all(10) 
+                    #padding=ft.padding.all(10) 
                 ),
             ],
             expand=1,

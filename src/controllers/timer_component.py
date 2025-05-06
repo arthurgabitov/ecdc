@@ -8,7 +8,7 @@ class TimerComponent:
         self.station_id = station_id
         self.spot_id = spot_id
         self.controller = controller
-        self.timer_text = ft.Text("00:00", size=24)
+        self.timer_text = ft.Text("00:00", size=22)
         self.on_state_change = None
         self._task = None
 
