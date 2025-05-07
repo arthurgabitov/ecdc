@@ -2,10 +2,34 @@ import json
 import os
 import flet as ft
 import copy
+import sys
+
+def get_app_data_path():
+    """
+    Получает правильный путь к директории данных приложения, 
+    работает как в режиме разработки, так и в упакованном приложении
+    """
+    # Определяем, запущено ли приложение как frozen (упакованным PyInstaller)
+    if getattr(sys, 'frozen', False):
+        # Если приложение упаковано, используем директорию, где находится исполняемый файл
+        app_dir = os.path.dirname(sys.executable)
+        # Создаем директорию data рядом с исполняемым файлом если её нет
+        data_dir = os.path.join(app_dir, 'data')
+        if not os.path.exists(data_dir):
+            try:
+                os.makedirs(data_dir)
+            except Exception:
+                # Если не можем создать директорию, используем директорию исполняемого файла
+                data_dir = app_dir
+    else:
+        # В режиме разработки используем текущую директорию скрипта
+        data_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    return data_dir
 
 class Config:
     def __init__(self):
-        config_path = os.path.join(os.path.dirname(__file__), 'config.json')
+        config_path = os.path.join(get_app_data_path(), 'config.json')
         
         self.config_data = {}
         try:
@@ -17,7 +41,7 @@ class Config:
                     "title": "ECDC Station Dashboard",
                     "spots": 6,
                     "columns": 2,
-                    "stations": 10
+                    "stations": 1
                 },
                 "spot_statuses": [
                     {"name": "Unblocked", "color": "WHITE60"},
@@ -33,6 +57,14 @@ class Config:
                     "columns": 2 
                 }
             }
+            # Сохраняем дефолтную конфигурацию, если файл не найден
+            try:
+                with open(config_path, 'w') as config_file:
+                    json.dump(self.config_data, config_file, indent=4)
+            except Exception:
+                # Если не удалось сохранить, просто продолжаем работу
+                pass
+                
         self.controller = None
         self._cached_statuses = None
         self._dashboard_test_mode = False
@@ -45,7 +77,7 @@ class Config:
             "title": "ECDC Station Dashboard",
             "spots": 6,
             "columns": 2,
-            "stations": 10
+            "stations": 1
         })
 
     def get_spot_statuses(self):

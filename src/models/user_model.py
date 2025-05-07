@@ -12,6 +12,7 @@ import requests
 from requests_ntlm import HttpNtlmAuth
 
 from models.sharepoint_config import SharePointConfig
+from config import get_app_data_path
 
 # Настройка логирования
 logging.basicConfig(level=logging.INFO)
@@ -30,10 +31,11 @@ class UserModel:
         self.sp_config = SharePointConfig()
         self.users_cache = []
         self.last_fetch_time = None
-        self.cache_file = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'data', 'users_cache.json')
         
-        # Создаем директорию для кэша, если не существует
-        os.makedirs(os.path.dirname(self.cache_file), exist_ok=True)
+        # Используем функцию get_app_data_path для правильного определения пути
+        data_dir = os.path.join(get_app_data_path(), 'data')
+        os.makedirs(data_dir, exist_ok=True)
+        self.cache_file = os.path.join(data_dir, 'users_cache.json')
         
         # Загружаем кэш пользователей при инициализации
         self._load_users_cache()
