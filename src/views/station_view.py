@@ -44,14 +44,14 @@ class StationView:
                 for i in range(spots_count)
             ]
             
-            # Создаем список для колбэков
+            
             self.page.async_callbacks = getattr(self.page, 'async_callbacks', [])
             
-            # Функция для добавления колбэков
+           
             def add_async_callback(callback):
                 self.page.async_callbacks.append(callback)
                 
-            # Добавляем метод в объект page
+            
             self.page.add_async_callback = add_async_callback
             
             # Функция для выполнения отложенных колбэков
