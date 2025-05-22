@@ -15,6 +15,7 @@ from datetime import datetime
 from typing import Dict, List, Any, Optional
 
 from models.sharepoint_analysis import SharePointConfig, get_robot_data, save_data_to_json, get_robot_details, parse_robot_xml
+from config import get_app_data_path
 
 # Конфигурация логирования
 logging.basicConfig(
@@ -38,14 +39,16 @@ class SharePointController:
         """
         self.config = SharePointConfig()
         self.data_cache = {}
-        self.cache_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'sharepoint_cache.json')
-        self.users_cache_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'users_cache.json')
+        
+        # Используем функцию get_app_data_path для правильного определения пути
+        data_dir = os.path.join(get_app_data_path(), 'data')
+        os.makedirs(data_dir, exist_ok=True)
+        
+        self.cache_path = os.path.join(data_dir, 'sharepoint_cache.json')
+        self.users_cache_path = os.path.join(data_dir, 'users_cache.json')
         self.last_update = None
         self.is_updating = False
         self.update_interval = 60 * 60  # 1 час в секундах
-        
-        # Создаем папку для кеша, если её нет
-        os.makedirs(os.path.dirname(self.cache_path), exist_ok=True)
         
         # Загружаем кеш из файла
         self.load_cache()

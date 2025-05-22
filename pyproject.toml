@@ -14,7 +14,10 @@ dependencies = [
   "screeninfo>=0.8.1",
   "configparser>=6.0.1",
   "requests>=2.31.0",
-  "requests_ntlm>=1.2.0"
+  "requests_ntlm>=1.2.0",
+  "httpx>=0.25.0",
+  "python-dotenv>=1.0.0",
+  "office365-rest-python-client>=2.4.0"
 ]
 
 [tool.flet.app.startup_screen]
@@ -42,7 +45,14 @@ path = "src"
 dev-dependencies = [
     "flet[all]==0.27.5",
     "pywin32>=306",
-    "PyPDF2>=3.0.0"
+    "PyPDF2>=3.0.0",
+    "screeninfo>=0.8.1",
+    "configparser>=6.0.1",
+    "requests>=2.31.0",
+    "requests_ntlm>=1.2.0",
+    "httpx>=0.25.0",
+    "python-dotenv>=1.0.0",
+    "office365-rest-python-client>=2.4.0"
 ]
 
 [tool.poetry]

@@ -1,14 +1,18 @@
 import time
 import json
 import os
-from config import Config
+from config import Config, get_app_data_path
 
 class StationController:
     def __init__(self, config: Config):
         self.config = config
         self.config.set_controller(self)
         self.stations = self.load_stations()
-        self.state_file = os.path.join(os.path.dirname(__file__), '..', 'spots_state.json')
+        
+        # Используем функцию get_app_data_path для правильного определения пути
+        data_dir = get_app_data_path()
+        self.state_file = os.path.join(data_dir, 'spots_state.json')
+        
         self.spots = self.load_spots_state()
         self._dirty_spots = set()  
         self.initialize_spots()
@@ -134,4 +138,3 @@ class StationController:
         spot["wo_number"] = ""
         self._dirty_spots.add(spot_id)
         self.save_spots_state()
-        
