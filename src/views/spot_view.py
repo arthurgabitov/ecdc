@@ -166,13 +166,11 @@ class Spot:
             padding=10,
             border=ft.border.all(width=1, color=ft.Colors.ON_PRIMARY_CONTAINER),
             border_radius=10,
-            margin=ft.margin.only(top=3)
-        )
-        
+            margin=ft.margin.only(top=3)        )
         
         self.usb_detection_active = False
         self.usb_thread = None
-
+        
         self.content = ft.Column(
             controls=[
                 
@@ -186,33 +184,36 @@ class Spot:
                     content=self.spot_e_number_label,
                     expand=1,
                     alignment=ft.alignment.center
-                ),
-                
-                # Отдельный блок для текста таймера
+                ),                  # Общий блок для таймера (и текст, и кнопки)
                 ft.Container(
-                    content=self.timer.build_text(),
-                    expand=0,
-                    alignment=ft.alignment.center
+                    content=ft.Container(
+                        content=ft.Column([
+                            self.timer.build_text(),
+                            self.timer.build_buttons(),
+                            # Добавляем невидимый элемент для увеличения высоты
+                            ft.Container(height=10, visible=False)
+                        ],                        spacing=5,
+                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                        alignment=ft.MainAxisAlignment.CENTER),
+                        bgcolor=ft.colors.with_opacity(0.2, ft.colors.WHITE60),  # Прозрачный черный цвет (20% непрозрачности)
+                        border_radius=20,  # Скругленные углы
+                        padding=ft.padding.all(10),  # Отступ для содержимого
+                    ),
+                    expand=0,  # Убираем расширение, чтобы таймер не сжимался при уменьшении окна
+                    alignment=ft.alignment.center,
+                    padding=ft.padding.symmetric(horizontal=40),  # Отступы слева и справа
                 ),
-                
-                # Отдельный блок для кнопок таймера
-                ft.Container(
-                    content=self.timer.build_buttons(),
-                    expand=1,
-                    alignment=ft.alignment.center
-                ),
-                
-                ft.Container(
+                  ft.Container(
                     content=ft.TextButton("Reset", on_click=self.reset_spot),
                     alignment=ft.alignment.center,
-                    expand=1,
-                    #padding=ft.padding.all(10) 
+                    expand=0,  # Убираем расширение, чтобы кнопка не сжималась
+                    padding=ft.padding.only(bottom=10),  # Отступ снизу
                 ),
             ],
             expand=1,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=0,
-            alignment=ft.MainAxisAlignment.SPACE_EVENLY
+            spacing=10,  # Увеличиваем отступ между элементами
+            alignment=ft.MainAxisAlignment.START  # Изменяем выравнивание на START
         )
 
         
