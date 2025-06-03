@@ -12,8 +12,8 @@ class NavigationRailView:
         
         destinations.append(
             ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.Icons.HOME, ),
-                selected_icon_content=ft.Icon(ft.Icons.HOME_FILLED, ),
+                icon=ft.Icon(ft.Icons.HOME, ),
+                selected_icon=ft.Icon(ft.Icons.HOME_FILLED, ),
                 label_content=ft.Text("RO Station", ),
                 label="RO Station"
             )
@@ -22,8 +22,8 @@ class NavigationRailView:
         if self.stations_count > 1:
             destinations.append(
                 ft.NavigationRailDestination(
-                    icon_content=ft.Icon(ft.Icons.DASHBOARD, ),
-                    selected_icon_content=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE, ),
+                    icon=ft.Icon(ft.Icons.DASHBOARD, ),
+                    selected_icon=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE, ),
                     label_content=ft.Text("Overview", ),
                     label="Overview"
                 )
@@ -31,8 +31,8 @@ class NavigationRailView:
     
         destinations.append(
             ft.NavigationRailDestination(
-                icon_content=ft.Icon(ft.Icons.SETTINGS, ),
-                selected_icon_content=ft.Icon(ft.Icons.SETTINGS_APPLICATIONS, ),
+                icon=ft.Icon(ft.Icons.SETTINGS, ),
+                selected_icon=ft.Icon(ft.Icons.SETTINGS_APPLICATIONS, ),
                 label_content=ft.Text("Settings", ),
                 label="Settings"
             )

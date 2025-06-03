@@ -1,15 +1,15 @@
 {
     "users": [
         {
-            "id": 206,
-            "name": "ADMIN Andries, Robin",
-            "login": "i:0#.w|fanuc\\a99990304",
-            "email": ""
-        },
-        {
             "id": 207,
             "name": "ADMIN Andries, Robin",
             "login": "FANUC\\a99990304",
+            "email": ""
+        },
+        {
+            "id": 206,
+            "name": "ADMIN Andries, Robin",
+            "login": "i:0#.w|fanuc\\a99990304",
             "email": ""
         },
         {
@@ -721,6 +721,12 @@
             "email": "Michael.Heib@fanuc.eu"
         },
         {
+            "id": 373,
+            "name": "Herrmann, Nicolas (FANUC Europe Corporation)",
+            "login": "i:0#.w|fanuc\\90500912",
+            "email": "Nicolas.Herrmann@fanuc.eu"
+        },
+        {
             "id": 272,
             "name": "Hieslmair, Julia (FANUC Österreich Gmbh)",
             "login": "i:0#.w|fanuc\\90501156",
@@ -959,6 +965,12 @@
             "name": "Krolski, Kacper (FANUC Europe Corporation)",
             "login": "i:0#.w|fanuc\\90500174",
             "email": "Kacper.Krolski@fanuc.eu"
+        },
+        {
+            "id": 374,
+            "name": "Kronsberg, Petr (FANUC Europe GmbH)",
+            "login": "i:0#.w|fanuc\\90502132",
+            "email": "Petr.Kronsberg@fanuc.eu"
         },
         {
             "id": 133,
@@ -1699,6 +1711,12 @@
             "email": "Christos.Spougiadakis@fanuc.eu"
         },
         {
+            "id": 371,
+            "name": "Steiger, Wilfried (FANUC Europe Corporation)",
+            "login": "i:0#.w|fanuc\\90100071",
+            "email": "Wilfried.Steiger@fanuc.eu"
+        },
+        {
             "id": 121,
             "name": "Steinhäuser, René (FANUC Europe Corporation)",
             "login": "i:0#.w|fanuc\\90501109",
@@ -2089,9 +2107,5 @@
             "email": "Andrew.Akesson@fanuc.eu"
         }
     ],
-<<<<<<< Updated upstream
-    "last_fetch_time": "2025-05-06T10:56:40.628080"
-=======
-    "last_fetch_time": "2025-05-26T11:49:42.511290"
->>>>>>> Stashed changes
+    "last_fetch_time": "2025-06-03T09:11:44.725808"
 }
