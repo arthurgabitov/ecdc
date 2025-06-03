@@ -35,13 +35,15 @@ class Spot:
         self.wo_found = False  
 
         spot_data = self.controller.get_spot_data(int(station_id), spot_id)
+        # Pass config explicitly
+        config = self.controller.config
         self.status_dropdown = ft.Dropdown(
             label="Status",
             value=spot_data["status"],
-            options=[ft.dropdown.Option(status) for status in controller.config.get_status_names()],
+            options=[ft.dropdown.Option(status) for status in config.get_status_names()],
             on_change=self.update_status,
             width=250,
-            visible=self.page.config.is_dashboard_test_mode_enabled()
+            visible=config.is_dashboard_test_mode_enabled()
         )
 
         self.wo_number_field = ft.TextField(
@@ -325,7 +327,7 @@ class Spot:
             self.model_label.value = "Model: Unknown"
             
             # Use snackbar for this message
-            self.snack_bar.content.value = f"SW on Server for WO {wo_number} not found"
+            self.snack_bar.content = ft.Text(f"SW on Server for WO {wo_number} not found")
             self.snack_bar.open = True
             self.page.update()
             
@@ -517,14 +519,14 @@ class Spot:
     def on_create_sw_click(self, e):
         if not self.usb_dropdown.value:
             # Use snackbar for notification
-            self.snack_bar.content.value = "Please select a USB drive first"
+            self.snack_bar.content = ft.Text("Please select a USB drive first")
             self.snack_bar.open = True
             self.page.update()
             return
         
         if not self.wo_data.get("dat_file"):
             # Use snackbar for notification
-            self.snack_bar.content.value = "No SW file available for copying"
+            self.snack_bar.content = ft.Text("No SW file available for copying")
             self.snack_bar.open = True
             self.page.update()
             return
@@ -558,7 +560,7 @@ class Spot:
         success = self.ro_tools.open_file(file_path)
         if not success:
             # Use snackbar for notification
-            self.snack_bar.content.value = "Failed to open the file"
+            self.snack_bar.content = ft.Text("Failed to open the file")
             self.snack_bar.open = True
             self.page.update()
 
@@ -566,7 +568,8 @@ class Spot:
         if not self.dlg_modal.open:
             if self.dlg_modal not in self.page.overlay:
                 self.page.overlay.append(self.dlg_modal)
-            self.status_dropdown.visible = self.page.config.is_dashboard_test_mode_enabled()
+            # Use controller.config instead of self.page.config
+            self.status_dropdown.visible = self.controller.config.is_dashboard_test_mode_enabled()
             
             # Process WO number when opening dialog to update UI
             self.process_wo_number(self.wo_number_field.value)
@@ -699,7 +702,7 @@ class Spot:
         """Find DT button handler"""
         if "e_number" not in self.wo_data or not isinstance(self.wo_data["e_number"], dict):
             # Use snackbar for notification
-            self.snack_bar.content.value = "No E-number information available"
+            self.snack_bar.content = ft.Text("No E-number information available")
             self.snack_bar.open = True
             self.page.update()
             return
@@ -707,7 +710,7 @@ class Spot:
         e_number = self.wo_data["e_number"].get("e_number")
         if not e_number:
             # Use snackbar for notification
-            self.snack_bar.content.value = "No E-number found"
+            self.snack_bar.content = ft.Text("No E-number found")
             self.snack_bar.open = True
             self.page.update()
             return
@@ -715,14 +718,14 @@ class Spot:
         success, message = self.ro_tools.find_and_open_dt_file(e_number)
         
         # Use snackbar for notification
-        self.snack_bar.content.value = message
+        self.snack_bar.content = ft.Text(message)
         self.snack_bar.open = True
         self.page.update()
 
     def on_create_aoa_click(self, e):
         if not self.usb_dropdown.value:
             # Use snackbar for notification
-            self.snack_bar.content.value = "Please select a USB drive first"
+            self.snack_bar.content = ft.Text("Please select a USB drive first")
             self.snack_bar.open = True
             self.page.update()
             return
@@ -735,13 +738,13 @@ class Spot:
             e_number = self.wo_data["e_number"].get("e_number")
         
         if not wo_number or len(wo_number) != 8:
-            self.snack_bar.content.value = "Valid WO number is required"
+            self.snack_bar.content = ft.Text("Valid WO number is required")
             self.snack_bar.open = True
             self.page.update()
             return
                 
         if not e_number:
-            self.snack_bar.content.value = "No E-number found for this WO"
+            self.snack_bar.content = ft.Text("No E-number found for this WO")
             self.snack_bar.open = True
             self.page.update()
             return
@@ -750,20 +753,20 @@ class Spot:
         success, message = self.ro_tools.create_aoa_folder(self.usb_dropdown.value, wo_number, e_number)
         
         # Use snackbar for notification
-        self.snack_bar.content.value = message
+        self.snack_bar.content = ft.Text(message)
         self.snack_bar.open = True
         self.page.update()
 
     def on_move_backups_click(self, e):
         if not self.usb_dropdown.value:
             # Use snackbar for notification
-            self.snack_bar.content.value = "Please select a USB drive first"
+            self.snack_bar.content = ft.Text("Please select a USB drive first")
             self.snack_bar.open = True
             self.page.update()
             return
         
         # Show message that moving process has started
-        self.snack_bar.content.value = "Moving backup folders, please wait..."
+        self.snack_bar.content = ft.Text("Moving backup folders, please wait...")
         self.snack_bar.open = True
         self.page.update()
         
@@ -772,7 +775,7 @@ class Spot:
             success, message = self.ro_tools.move_backup_folders(self.usb_dropdown.value)
             
             # Show operation result
-            self.snack_bar.content.value = message
+            self.snack_bar.content = ft.Text(message)
             self.snack_bar.open = True
             self.page.update()
             
@@ -781,7 +784,7 @@ class Spot:
             traceback.print_exc()
                 
             # Show error message
-            self.snack_bar.content.value = f"Error moving backups: {str(ex)}"
+            self.snack_bar.content = ft.Text(f"Error moving backups: {str(ex)}")
             self.snack_bar.open = True
             self.page.update()
 
@@ -789,7 +792,7 @@ class Spot:
         """Open orderfil.dat button handler"""
         if not self.usb_dropdown.value:
             # Use snackbar for notification
-            self.snack_bar.content.value = "Please select a USB drive first"
+            self.snack_bar.content = ft.Text("Please select a USB drive first")
             self.snack_bar.open = True
             self.page.update()
             return

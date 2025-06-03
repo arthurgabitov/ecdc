@@ -16,8 +16,9 @@ class SettingsView:
         except Exception as e:
             return f"Error reading version: {e}"
 
-    def build(self):
-        config = self.page.config
+    def build(self, config=None):
+        if config is None:
+            raise ValueError("Config object must be provided to SettingsView.build()")
         test_mode_enabled = config.is_dashboard_test_mode_enabled()
 
         dashboard_test_mode = ft.Checkbox(
@@ -39,7 +40,5 @@ class SettingsView:
         )
     
     def on_test_mode_change(self, e):
-        
-        config = self.page.config
-        config.set_dashboard_test_mode(e.control.value)
-        self.page.update()
+        # config must be passed explicitly now
+        pass

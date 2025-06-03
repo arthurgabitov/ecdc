@@ -141,8 +141,7 @@ class OverviewView:
 
         dashboard = ft.Stack(
             controls=station_controls,
-            width=self.page.window.width,
-            height=self.page.window.height,
+            expand=True  # Вместо width=self.page.window.width, height=self.page.window.height
         )
 
         return ft.Column([

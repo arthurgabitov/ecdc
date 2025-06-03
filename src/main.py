@@ -15,91 +15,83 @@ from views.navigation_rail_view import NavigationRailView
 from config import Config
 from models.user_model import UserModel
 
+def format_display_name(full_name):
+    return full_name
+
 async def main(page: ft.Page):
     config = Config()
     app_settings = config.get_app_settings()
     controller = StationController(config)
     config.set_controller(controller)
-    
-    page.config = config
-    page.snack_bar = ft.SnackBar(content=ft.Text(""))  
 
     page.title = app_settings["title"]
-    page.theme_mode = "light"
-    
-    
+    page.window.maximized = True
+
     is_web = page.platform == "web"
     stations = controller.get_stations()
     stations_count = len(stations)
     show_nav_rail = stations_count > 1
-    
-    if not is_web:
-        page.window.height = 1000
-        page.window.width = 1200 if show_nav_rail else 800
-    
-    
+
     page.padding = 0
-    
-    
-    current_user = {"id": None, "name": ""}
+
+    # Remove current_user dict, use only current_sso string
     user_model = UserModel()
-    
-    def format_display_name(full_name):
-        
-        return full_name  
+    current_sso = user_model.get_sso()
 
-    
-    dropdown_content = ft.Row(
-        [
-            ft.Icon(ft.Icons.PERSON),
-            ft.Text("Пользователь", color=ft.Colors.BLACK, size=14),
-        ],
-        spacing=5,
-    )
-    
-    # AppBar dropdown menu
-    user_dropdown = ft.PopupMenuButton(
-        content=dropdown_content,
-        tooltip="User menu",
-        items=[]
-    )
-    
-    # Create AppBar
-    appbar = ft.AppBar(
-        title=ft.Container(
-            content=ft.Text('ECDC Station App'),
-            padding=ft.padding.only(left=15)
-        ),
-        leading_width=55,  
-        bgcolor=ft.Colors.YELLOW_600,
-        actions=[] if not show_nav_rail else [
-            ft.Container(
-                content=user_dropdown,
-                padding=ft.padding.only(right=15)
-            )
-        ],
-        elevation=3,
-        shadow_color=ft.Colors.BLACK,
-        center_title=False,  
-    )
-    
-    main_container = ft.Container(
-        expand=True,
-        
-    )
+    # Get current Windows SSO (login)
+    current_sso = user_model.get_user_by_windows_login()
+    if not current_sso:
+        current_sso = os.getlogin() if hasattr(os, 'getlogin') else "Unknown SSO"
 
-    show_nav_rail = stations_count > 1
-    
+    def build_appbar(current_sso):
+        return ft.AppBar(
+            title=ft.Container(
+                content=ft.Text('ECDC Station App'),
+                padding=ft.padding.only(left=15)
+            ),
+            leading_width=55,
+            bgcolor=ft.Colors.YELLOW_600,
+            actions=[] if not show_nav_rail else [
+                ft.Container(
+                    content=ft.PopupMenuButton(
+                        content=ft.Row([
+                            ft.Icon(ft.Icons.PERSON),
+                            ft.Text(current_sso, color=ft.Colors.BLACK, size=14),
+                        ], spacing=5),
+                        tooltip="User menu",
+                        items=[
+                            ft.PopupMenuItem(text=current_sso, disabled=True),
+                            ft.PopupMenuItem(text="-", disabled=True),
+                            ft.PopupMenuItem(
+                                text="Logout",
+                                icon=ft.Icons.LOGOUT,
+                                on_click=lambda _: show_welcome_view(),
+                            ),
+                        ]
+                    ),
+                    padding=ft.padding.only(right=15)
+                )
+            ],
+            elevation=3,
+            shadow_color=ft.Colors.BLACK,
+            center_title=False,
+        )
+
+    appbar = build_appbar(current_sso)
+
+    main_container = ft.Container(expand=True)
     nav_rail_view = NavigationRailView(page, stations_count, lambda idx: update_module(idx)) if show_nav_rail else None
     nav_rail = nav_rail_view.build() if nav_rail_view else None
 
+    # AnimatedSwitcher for module content
+    animated_switcher = ft.AnimatedSwitcher(
+        content=ft.Container(),
+        transition=ft.AnimatedSwitcherTransition.FADE,
+        duration=300,
+        reverse_duration=300,
+    )
     module_container = ft.Container(
-        content=ft.AnimatedSwitcher(
-            content=ft.Container(),
-            transition=ft.AnimatedSwitcherTransition.FADE,
-            duration=300,
-            reverse_duration=300,
-        ),
+        content=animated_switcher,
         expand=True,
         alignment=ft.alignment.center
     )
@@ -107,7 +99,7 @@ async def main(page: ft.Page):
     if show_nav_rail:
         layout_content = ft.Row(
             [
-                nav_rail,
+                nav_rail if nav_rail else ft.Container(),
                 ft.Container(
                     content=module_container,
                     alignment=ft.alignment.center,
@@ -127,27 +119,27 @@ async def main(page: ft.Page):
             expand=True,
             padding=ft.padding.all(15)
         )
-    
+
     main_layout = ft.Column(
         [layout_content],
         spacing=0,
         expand=True
     )
-    
     main_container.content = main_layout
 
-    current_station_id = [None]
+    current_station_id = None
 
     def create_station_view(station_id=None):
-        if station_id is not None:
-            current_station_id[0] = station_id
-        return StationView(page, controller, config, current_station_id[0], module_container, stations_count, update_module).build()
+        sid = int(station_id) if station_id is not None else int(stations[0])
+        nonlocal current_station_id
+        current_station_id = sid
+        return StationView(page, controller, config, sid, module_container, stations_count, update_module).build()
 
     def create_overview_view():
         return OverviewView(page, controller, config, module_container, update_module).build()
 
     def create_settings_view():
-        return SettingsView(page).build()
+        return SettingsView(page).build(config)
 
     def update_module(selected_index, station_id=None):
         if not show_nav_rail:
@@ -155,127 +147,36 @@ async def main(page: ft.Page):
         else:
             if nav_rail_view:
                 nav_rail_view.set_selected_index(selected_index)
-            
-            new_content = ft.Container()
             if selected_index == 0:
                 new_content = create_station_view(station_id)
             elif selected_index == 1 and stations_count > 1:
                 new_content = create_overview_view()
             elif selected_index == 2:
                 new_content = create_settings_view()
-        
-        if module_container.content.content != new_content:
-            module_container.content.content = new_content
-            if show_nav_rail and nav_rail_view:
-                nav_rail_view.update()
-            module_container.update()
+            else:
+                new_content = ft.Container()
+        # AnimatedSwitcher: update content and call update
+        animated_switcher.content = new_content if new_content is not None else ft.Container()
+        module_container.update()
 
     def adjust_module_width(e=None):
-        if is_web:
-            page.update()
-        elif show_nav_rail:
-            available_width = page.window.width - 100  # nav_rail width
-            module_container.width = max(300, min(available_width, page.window.width * 0.75))
-            page.update()
-        else:
-            module_container.width = page.window.width
-            page.update()
+        # No window_width/window_height API, so just update page
+        page.update()
 
-    def update_user_menu(user_id):
-        # Get user data from model
-        user = None
-        if user_id:
-            user = user_model.get_user_by_id(user_id)
-        
-        # Update current user information
-        if user:
-            current_user["id"] = user_id
-            current_user["name"] = user.get("name", "Unknown User")
-            # Форматируем имя для отображения
-            display_name = format_display_name(current_user["name"])
-        else:
-            current_user["id"] = None
-            current_user["name"] = "Unknown User"
-            display_name = "Unknown User"
-        
-        # Update dropdown button text
-        if isinstance(user_dropdown.content, ft.Row) and len(user_dropdown.content.controls) > 1:
-            user_dropdown.content.controls[1].value = display_name
-        
-        # Update dropdown menu items
-        user_dropdown.items = [
-            ft.PopupMenuItem(
-                text=display_name,
-                disabled=True,
-            ),
-            ft.PopupMenuDivider(),
-            ft.PopupMenuItem(
-                text="Logout",
-                icon=ft.Icons.LOGOUT,
-                on_click=lambda _: show_welcome_view(),
-            ),
-        ]
-        
-        
-        if user_dropdown.page:
-            user_dropdown.update()
-
-    def show_main_interface(selected_station_id, selected_user_id):
-        
-        current_station_id[0] = selected_station_id
-        
-        
-        
-        
-       
-        if selected_user_id:
-            user = user_model.get_user_by_id(selected_user_id)
-            
-            
-            if user:
-                current_user["id"] = selected_user_id
-                current_user["name"] = user.get("name", "Unknown User")
-                
-                display_name = format_display_name(current_user["name"])
-                
-            else:
-                
-                display_name = "Unknown User"
-        else:
-            display_name = "Unknown User"
-        
-        
-        if isinstance(user_dropdown.content, ft.Row) and len(user_dropdown.content.controls) > 1:
-            user_dropdown.content.controls[1].value = display_name
-            
-        
-        
-        user_dropdown.items = [
-            ft.PopupMenuItem(
-                text=display_name,
-                disabled=True,
-            ),
-            ft.PopupMenuItem(),
-            ft.PopupMenuItem(
-                text="Logout",
-                icon=ft.Icons.LOGOUT,
-                on_click=lambda _: show_welcome_view(),
-            ),
-        ]
-        
-        
-        page.controls.clear()
-        page.appbar = appbar  
+    def show_main_interface(selected_station_id, _):
+        nonlocal current_station_id, appbar
+        current_station_id = int(selected_station_id)
+        appbar = build_appbar(current_sso)
+        page.appbar = appbar
+        page.clean()
         page.add(main_container)
-        
-        
         update_module(0, selected_station_id)
         page.update()
 
     def show_welcome_view():
-        page.controls.clear()
         page.appbar = None
-        welcome_view = WelcomeView(page, controller, lambda station_id, user_id: show_main_interface(station_id, user_id))
+        page.clean()
+        welcome_view = WelcomeView(page, controller, lambda station_id, _: show_main_interface(station_id, None))
         page.add(welcome_view.build())
         page.update()
 
@@ -284,24 +185,21 @@ async def main(page: ft.Page):
             for spot_idx in range(1, app_settings["spots"] + 1):
                 spot_id = f"{station_id}_{spot_idx}"
                 timer = TimerComponent(page, str(station_id), spot_id, controller)
-                timer.pause_on_close()  
-        page.window_close()
+                timer.pause_on_close()
+    
 
     page.on_resized = adjust_module_width
     page.on_close = on_close
 
-    # Для режима с одной станцией сразу показываем основной интерфейс без логина
     if not show_nav_rail and stations:
-        # Используем первую станцию и пустой ID пользователя
         show_main_interface(stations[0], None)
     else:
-        # Стандартный запуск с экраном приветствия
-        welcome_view = WelcomeView(page, controller, lambda station_id, user_id: show_main_interface(station_id, user_id))
+        welcome_view = WelcomeView(page, controller, lambda station_id, _: show_main_interface(station_id, None))
         page.add(welcome_view.build())
         page.update()
-
-        if welcome_view.auto_transition_needed:
+        if hasattr(welcome_view, 'auto_transition_needed') and welcome_view.auto_transition_needed:
             await welcome_view.run_auto_transition()
 
 if __name__ == "__main__":
     ft.app(main)
+    #ft.app(target=main, view=ft.AppView.WEB_BROWSER)
