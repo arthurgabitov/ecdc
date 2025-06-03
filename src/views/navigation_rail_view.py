@@ -46,7 +46,7 @@ class NavigationRailView:
             min_extended_width=200,
             width=200,
             #bgcolor=ft.Colors.ON_PRIMARY_CONTAINER,
-            #indicator_color=ft.Colors.WHITE10,
+            #indicator_Color=ft.Colors.WHITE10,
             destinations=destinations,
             on_change=lambda e: self.on_change_callback(e.control.selected_index)
         )

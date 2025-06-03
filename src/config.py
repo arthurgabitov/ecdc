@@ -92,7 +92,7 @@ class Config:
             statuses = copy.deepcopy(self.config_data.get("spot_statuses", default_statuses))
             for status in statuses:
                 if isinstance(status["color"], str):
-                    status["color"] = getattr(ft.colors, status["color"], ft.colors.WHITE60)
+                    status["color"] = getattr(ft.Colors, status["color"], ft.Colors.WHITE60)
             self._cached_statuses = statuses
         return self._cached_statuses
 

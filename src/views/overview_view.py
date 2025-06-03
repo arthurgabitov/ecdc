@@ -71,12 +71,12 @@ class OverviewView:
                 spot_id = f"{station_id}_{spot_idx + 1}"
                 spot_data = self.controller.get_spot_data(station_id, spot_id)
                 status = spot_data["status"]
-                spot_color = next((s["color"] for s in statuses if s["name"] == status), ft.colors.WHITE60)
+                spot_Color = next((s["color"] for s in statuses if s["name"] == status), ft.Colors.WHITE60)
                 spot_controls.append(
                     ft.Container(
                         width=20,
                         height=20,
-                        bgcolor=spot_color,
+                        bgcolor=spot_Color,
                         border_radius=5,
                         margin=ft.margin.all(2)
                     )
@@ -121,7 +121,7 @@ class OverviewView:
                 spacing=5),
                 width=station_width,
                 height=station_height,
-                bgcolor=ft.colors.GREY_200,
+                bgcolor=ft.Colors.GREY_200,
                 border_radius=10,
                 padding=5,
                 data={"id": station_data["id"]}

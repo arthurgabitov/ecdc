@@ -9,9 +9,9 @@ from controllers.ro_customization_tools import ROCustomizationController
 spot_style: dict = {
     "main": {
         "expand": True,
-        "bgcolor": ft.colors.WHITE60,
+        "bgcolor": ft.Colors.WHITE60,
         "border_radius": 20,
-        "border": ft.border.all(width=0.5, color=ft.colors.GREY_500),
+        "border": ft.border.all(width=0.5, color=ft.Colors.GREY_500),
         "ink": True,
     },
 }
@@ -69,11 +69,10 @@ class Spot:
             content=ft.Row([]),
             visible=False
         )
-        
         self.snack_bar = ft.SnackBar(
             content=ft.Text(""), 
             open=False,
-            bgcolor=ft.colors.BLUE_GREY_700,  # More noticeable background color
+            bgcolor=ft.Colors.BLUE_GREY_700,  # More noticeable background color
             duration=5000,  # Increased display time (5 seconds)
         )
         
@@ -195,7 +194,7 @@ class Spot:
                         ],                        spacing=5,
                         horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                         alignment=ft.MainAxisAlignment.CENTER),
-                        bgcolor=ft.colors.with_opacity(0.2, ft.colors.WHITE60),  # Прозрачный черный цвет (20% непрозрачности)
+                        bgcolor=ft.Colors.with_opacity(0.2, ft.Colors.WHITE60),  # Прозрачный черный цвет (20% непрозрачности)
                         border_radius=20,  # Скругленные углы
                         padding=ft.padding.all(10),  # Отступ для содержимого
                     ),
@@ -239,7 +238,7 @@ class Spot:
 
         self.dlg_modal = ft.AlertDialog(
             modal=False,
-            barrier_color=ft.colors.BLACK26,
+            barrier_color=ft.Colors.BLACK26,
             title=ft.Text("Spot Details", text_align=ft.TextAlign.CENTER),
             title_padding=ft.padding.symmetric(horizontal=0, vertical=10),
             content=modal_content,
@@ -273,7 +272,7 @@ class Spot:
         if spot_data.get("wo_number") and len(spot_data["wo_number"]) == 8:
             self.process_wo_number(spot_data["wo_number"])
         
-        self.update_color()
+        self.update_Color()
         self.timer.on_state_change = self.update_spot_state
         
         # Save WO data for use when creating SW
@@ -282,7 +281,7 @@ class Spot:
     def update_status(self, e):
         new_status = e.control.value
         self.controller.set_spot_status(int(self.station_id), self.spot_id, new_status)
-        self.update_color()
+        self.update_Color()
 
     def update_wo_number(self, e):
         wo_number = e.control.value
@@ -534,17 +533,17 @@ class Spot:
         
         # Use enhanced snackbar instead of separate dialog
         if success:
-            self.snack_bar.bgcolor = ft.colors.GREEN_700  # Green for success
+            self.snack_bar.bgcolor = ft.Colors.GREEN_700  # Green for success
             self.snack_bar.content = ft.Text(
                 f"✅ SW Created Successfully: {message}", 
-                color=ft.colors.WHITE,
+                color=ft.Colors.WHITE,
                 weight=ft.FontWeight.BOLD
             )
         else:
-            self.snack_bar.bgcolor = ft.colors.RED_700  # Red for error
+            self.snack_bar.bgcolor = ft.Colors.RED_700  # Red for error
             self.snack_bar.content = ft.Text(
                 f"❌ SW Creation Failed: {message}", 
-                color=ft.colors.WHITE,
+                color=ft.Colors.WHITE,
                 weight=ft.FontWeight.BOLD
             )
         
@@ -622,12 +621,12 @@ class Spot:
         self.update_border()
         
         # Update background color based on status
-        self.update_color()
+        self.update_Color()
         self.page.update()
     
     def update_border(self):
         if self.wo_found:
-            self.container.border = ft.border.all(width=1.5, color=ft.colors.GREEN)
+            self.container.border = ft.border.all(width=1.5, color=ft.Colors.GREEN)
         else:
             self.container.border = spot_style["main"]["border"]
             
@@ -635,12 +634,12 @@ class Spot:
         if self.container.page:
             self.container.update()
 
-    def update_color(self):
+    def update_Color(self):
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         status = spot["status"]
         statuses = self.controller.config.get_spot_statuses()
-        new_color = next((s["color"] for s in statuses if s["name"] == status), ft.colors.WHITE60)
-        self.container.bgcolor = new_color
+        new_Color = next((s["color"] for s in statuses if s["name"] == status), ft.Colors.WHITE60)
+        self.container.bgcolor = new_Color
         if self.container.page:
             self.container.update()
 
@@ -684,7 +683,7 @@ class Spot:
         
         self.timer.reset()
         self.status_dropdown.value = default_status
-        self.update_color()
+        self.update_Color()
         self.page.update()
         
         # Stop USB monitoring
@@ -800,17 +799,17 @@ class Spot:
         
         # Show result with enhanced formatting
         if success:
-            self.snack_bar.bgcolor = ft.colors.GREEN_700
+            self.snack_bar.bgcolor = ft.Colors.GREEN_700
             self.snack_bar.content = ft.Text(
                 f"✅ {message}", 
-                color=ft.colors.WHITE,
+                color=ft.Colors.WHITE,
                 weight=ft.FontWeight.BOLD
             )
         else:
-            self.snack_bar.bgcolor = ft.colors.RED_700
+            self.snack_bar.bgcolor = ft.Colors.RED_700
             self.snack_bar.content = ft.Text(
                 f"❌ {message}", 
-                color=ft.colors.WHITE,
+                color=ft.Colors.WHITE,
                 weight=ft.FontWeight.BOLD
             )
         

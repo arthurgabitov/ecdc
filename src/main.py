@@ -51,8 +51,8 @@ async def main(page: ft.Page):
     
     dropdown_content = ft.Row(
         [
-            ft.Icon(ft.icons.PERSON),
-            ft.Text("Пользователь", color=ft.colors.BLACK, size=14),
+            ft.Icon(ft.Icons.PERSON),
+            ft.Text("Пользователь", color=ft.Colors.BLACK, size=14),
         ],
         spacing=5,
     )

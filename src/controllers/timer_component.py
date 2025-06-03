@@ -14,20 +14,20 @@ class TimerComponent:
 
         self.start_button = ft.FilledButton(
             content=ft.Row([
-                ft.Icon(ft.Icons.PLAY_ARROW, color=ft.colors.WHITE),
-                ft.Text("Start  ", color=ft.colors.WHITE)
+                ft.Icon(ft.Icons.PLAY_ARROW, color=ft.Colors.WHITE),
+                ft.Text("Start  ", color=ft.Colors.WHITE)
             ]),
             on_click=self.start_pause,
-            bgcolor=ft.colors.GREEN_400,
+            bgcolor=ft.Colors.GREEN_400,
         )
 
         self.stop_button = ft.FilledButton(
             content=ft.Row([
-                ft.Icon(ft.Icons.STOP, color=ft.colors.WHITE),
-                ft.Text("Stop  ", color=ft.colors.WHITE)
+                ft.Icon(ft.Icons.STOP, color=ft.Colors.WHITE),
+                ft.Text("Stop  ", color=ft.Colors.WHITE)
             ]),
             on_click=self.stop,
-            bgcolor=ft.colors.RED_400,
+            bgcolor=ft.Colors.RED_400,
         )
 
         spot = self.controller.get_spot_data(int(station_id), spot_id)
@@ -59,16 +59,16 @@ class TimerComponent:
         """Update button appearance based on timer state"""
         if running:
             self.start_button.content = ft.Row([
-                ft.Icon(ft.Icons.PAUSE, color=ft.colors.WHITE),
-                ft.Text("Pause  ", color=ft.colors.WHITE)
+                ft.Icon(ft.Icons.PAUSE, color=ft.Colors.WHITE),
+                ft.Text("Pause  ", color=ft.Colors.WHITE)
             ])
-            self.start_button.bgcolor = ft.colors.ORANGE
+            self.start_button.bgcolor = ft.Colors.ORANGE
         else:
             self.start_button.content = ft.Row([
-                ft.Icon(ft.Icons.PLAY_ARROW, color=ft.colors.WHITE),
-                ft.Text("Start  ", color=ft.colors.WHITE)
+                ft.Icon(ft.Icons.PLAY_ARROW, color=ft.Colors.WHITE),
+                ft.Text("Start  ", color=ft.Colors.WHITE)
             ])
-            self.start_button.bgcolor = ft.colors.GREEN_400
+            self.start_button.bgcolor = ft.Colors.GREEN_400
         if update and self.start_button.page:
             self.start_button.update()
 

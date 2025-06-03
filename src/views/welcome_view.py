@@ -73,13 +73,13 @@ class WelcomeView:
             alignment=ft.MainAxisAlignment.CENTER,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
             spacing=20
-        )
-
+        )        
+        
         self.page_container = ft.Container(
             content=self.content,
             alignment=ft.alignment.center,
             expand=True,
-            bgcolor=ft.colors.WHITE
+            bgcolor=ft.Colors.WHITE
         )
         
         # Загружаем пользователей асинхронно
