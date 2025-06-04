@@ -1,5 +1,7 @@
 import flet as ft
 from views.station_view import StationView
+from .top_bar import TopBar
+from models.user_model import UserModel
 
 class DashboardView:
     def __init__(self, page, controller, config, module_container, update_module):
@@ -8,6 +10,7 @@ class DashboardView:
         self.config = config
         self.module_container = module_container
         self.update_module = update_module
+        self.user_sso = UserModel().get_user_by_windows_login() or "Unknown SSO"
 
     def build(self):
         """Build the dashboard screen with draggable station indicators"""
@@ -97,7 +100,7 @@ class DashboardView:
                 content=ft.Column([
                     ft.Text(
                         station_data["name"],
-                        size=16,
+                        size=22,
                         weight=ft.FontWeight.BOLD
                     ),
                     ft.Column(
@@ -131,7 +134,8 @@ class DashboardView:
             controls=station_controls,
             expand=True  # Вместо width=self.page.window.width, height=self.page.window.height
         )
+        # Только основной контент, без TopBar
         return ft.Column([
-            ft.Text("Stations Dashboard", size=24, weight=ft.FontWeight.BOLD),
+            ft.Text("Stations Dashboard", size=28, weight=ft.FontWeight.BOLD),
             ft.Container(content=dashboard, expand=True)
-        ])
+        ], expand=True)

@@ -1,9 +1,11 @@
 import flet as ft
 import os
+from models.user_model import UserModel
 
 class SettingsView:
     def __init__(self, page: ft.Page):
         self.page = page
+        self.user_sso = UserModel().get_user_by_windows_login() or "Unknown SSO"
         
     def get_version(self):
         version_file_path = os.path.join(os.path.dirname(__file__), '..', '..', 'version.txt')
@@ -30,16 +32,12 @@ class SettingsView:
         self.dashboard_test_mode_checkbox = dashboard_test_mode
 
         version = self.get_version()
-        return ft.Column(
-            [
-                ft.Text("Settings", size=20),
-                ft.Text(f"Current Version: {version}", size=16),
-                dashboard_test_mode,
-            ],
-            spacing=10,
-            alignment=ft.MainAxisAlignment.START,
-            expand=True
-        )
+        # Только основной контент, без TopBar
+        return ft.Column([
+            ft.Text("Settings", size=20),
+            ft.Text(f"Current Version: {version}", size=16),
+            dashboard_test_mode,
+        ], spacing=10, alignment=ft.MainAxisAlignment.START, expand=True)
     
     def on_test_mode_change(self, e, config=None):
         if config is None:

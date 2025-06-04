@@ -8,7 +8,7 @@
     "spot_statuses": [
         {
             "name": "Unblocked",
-            "color": "WHITE60"
+            "color": "GREY"
         },
         {
             "name": "Delievery request",

@@ -13,6 +13,7 @@ spot_style: dict = {
         "border_radius": 20,
         "border": ft.border.all(width=1, color=ft.Colors.GREY_300),
         "ink": True,
+        # "shadow" убран
     },
 }
 
@@ -63,9 +64,7 @@ class Spot:
             width=300,
             keyboard_type=ft.KeyboardType.NUMBER
         )
-        
         self.e_number_label = ft.Text("E-number: Please enter WO-number", size=16, text_align=ft.TextAlign.CENTER)
-        
         self.model_label = ft.Text("Model: Unknown", size=16,  text_align=ft.TextAlign.CENTER)
         
         # E-number and model display label for spot container
@@ -127,32 +126,27 @@ class Spot:
             visible=False,
             on_click=self.on_create_sw_click
         )
-        
         self.create_aoa_button = ft.ElevatedButton(
             text=" Create AOA Folder ",
             width=160,
             visible=False,
             on_click=self.on_create_aoa_click
         )
-        
         self.open_orderfil_button = ft.ElevatedButton(
             text=" Show orderfil on USB ",
             width=160,
             visible=False,
             on_click=self.on_open_orderfil_click
         )
-        
         self.move_backups_button = ft.ElevatedButton(
             text=" Move Backups ",
             width=130,
             visible=False,
             on_click=self.on_move_backups_click
         )
-        
         self.usb_version_label = ft.Text(
             "SW version on USB: Not detected",
-            visible=False,
-            size=14
+            visible=False
         )
         
         
@@ -290,17 +284,17 @@ class Spot:
         self.status_bar = ft.Container(
             width=22,  
             bgcolor=self.status_bar_color,
-            
             expand=False,
             border=None,  # УБРАТЬ border, если был
             margin=0,
             padding=0,
+            border_radius=ft.border_radius.only(top_left=spot_style["main"]["border_radius"], bottom_left=spot_style["main"]["border_radius"]),
         )
         main_content_container = ft.Container(
             content=self.content,
             expand=True,
-            bgcolor=spot_style["main"]["bgcolor"],
-            border_radius=ft.border_radius.only(top_right=20, bottom_right=20),
+            bgcolor=ft.Colors.WHITE,  # Явно белый фон для карточки
+            border_radius=ft.border_radius.only(top_right=spot_style["main"]["border_radius"], bottom_right=spot_style["main"]["border_radius"]),
             ink=spot_style["main"]["ink"],
             on_click=self.open_dialog,
             border=None,  # УБРАТЬ border, если был
@@ -315,9 +309,9 @@ class Spot:
             ], expand=1, spacing=0, tight=True),  
             border=spot_style["main"]["border"],
             border_radius=spot_style["main"]["border_radius"],
+            bgcolor=None,  # убираем фон у общего контейнера
             expand=1,
-            margin=0,
-            padding=0,
+            margin=ft.margin.symmetric(vertical=8, horizontal=0),
         )
         
         # Initialize WO number data when creating the spot
@@ -670,11 +664,8 @@ class Spot:
     
     def update_border(self):
         # Бордер не должен меняться автоматически при запуске таймера или открытии модального окна
-        # Меняем только если найден WO (wo_found)
-        if getattr(self, 'wo_found', False):
-            self.container.border = ft.border.all(width=1.5, color=ft.Colors.GREEN)
-        else:
-            self.container.border = spot_style["main"]["border"]
+        # Больше не меняем цвет бордера в зависимости от wo_found или таймера
+        self.container.border = spot_style["main"]["border"]
         if self.container.page:
             self.container.update()
 
@@ -682,14 +673,13 @@ class Spot:
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         status = spot["status"]
         statuses = self.controller.config.get_spot_statuses()
-        
+        # Цвет для unblocked теперь просто GREY_300
         if status.lower() == "unblocked":
-            new_Color = ft.Colors.GREY_100
+            new_Color = ft.Colors.GREY_300
         else:
             new_Color = next((s["color"] for s in statuses if s["name"] == status), ft.Colors.GREY_500)
         self.status_bar.bgcolor = new_Color
-        
-        self.container.border = ft.border.all(width=2, color=new_Color)
+        # Бордер не меняем, только статус-бар
         self.status_dropdown.visible = self.controller.config.is_dashboard_test_mode_enabled()
         if self.container.page:
             self.status_bar.update()

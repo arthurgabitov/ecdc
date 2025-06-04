@@ -10,7 +10,17 @@ class TimerComponent:
         self.controller = controller
         icon_size = 32
         btn_size = 48
-        self.timer_text = ft.Text("00:00", size=32, color=ft.Colors.GREY, weight=ft.FontWeight.W_300, height=None)
+        self.timer_text = ft.Text(
+            "00:00",
+            size=32,
+            color=ft.Colors.GREY,
+            weight=ft.FontWeight.W_300,
+            height=None,
+            font_family="Consolas",  # Моноширинный шрифт
+            text_align=ft.TextAlign.CENTER,
+            no_wrap=True,  # Запретить перенос
+            max_lines=1
+        )
         self.start_button = ft.IconButton(
             icon=ft.Icons.PLAY_ARROW,
             icon_color=ft.Colors.WHITE,
@@ -94,6 +104,9 @@ class TimerComponent:
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         if spot and not spot["running"]:
             self.controller.start_timer(int(self.station_id), self.spot_id)
+            # --- Auto-set status to 'In Progress' if currently 'Unblocked' ---
+            if spot["status"] == "Unblocked":
+                self.controller.set_spot_status(int(self.station_id), self.spot_id, "In Progress")
             # Принудительно обновляем данные spot после старта
             spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
             self.update_button_state(True)
@@ -151,9 +164,13 @@ class TimerComponent:
     def build_buttons(self):
         """Вернуть только таймер и кнопки управления в одну строку"""
         return ft.Row(
-            [self.timer_text, self.start_button, self.stop_button],
+            [
+                ft.Container(self.timer_text, width=100, alignment=ft.alignment.center, bgcolor=None, padding=0),  # увеличена ширина, убраны лишние стили
+                self.start_button,
+                self.stop_button
+            ],
             alignment=ft.MainAxisAlignment.CENTER,
-            spacing=16
+            spacing=24
         )
 
     def build(self):

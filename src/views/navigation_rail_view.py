@@ -32,7 +32,8 @@ class NavigationRailView:
             min_extended_width=200,
             width=200,
             destinations=destinations,
-            on_change=self._on_change
+            on_change=self._on_change,
+            bgcolor="#F7F7FA"
         )
         
         return self.nav_rail
