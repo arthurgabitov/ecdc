@@ -19,13 +19,15 @@ class SettingsView:
     def build(self, config=None):
         if config is None:
             raise ValueError("Config object must be provided to SettingsView.build()")
+        self.config = config  # сохраняем для on_test_mode_change
         test_mode_enabled = config.is_dashboard_test_mode_enabled()
 
         dashboard_test_mode = ft.Checkbox(
             label="Dashboard test mode",
             value=test_mode_enabled,
-            on_change=self.on_test_mode_change
+            on_change=lambda e: self.on_test_mode_change(e, config)
         )
+        self.dashboard_test_mode_checkbox = dashboard_test_mode
 
         version = self.get_version()
         return ft.Column(
@@ -39,6 +41,12 @@ class SettingsView:
             expand=True
         )
     
-    def on_test_mode_change(self, e):
-        # config must be passed explicitly now
-        pass
+    def on_test_mode_change(self, e, config=None):
+        if config is None:
+            config = getattr(self, 'config', None)
+        if config:
+            config.set_dashboard_test_mode(e.control.value)
+            if hasattr(self.page, 'update_module'):
+                self.page.update_module(0)
+            else:
+                self.page.update()

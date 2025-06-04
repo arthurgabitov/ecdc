@@ -1,7 +1,7 @@
 import flet as ft
 from views.station_view import StationView
 
-class OverviewView:
+class DashboardView:
     def __init__(self, page, controller, config, module_container, update_module):
         self.page = page
         self.controller = controller
@@ -10,11 +10,11 @@ class OverviewView:
         self.update_module = update_module
 
     def build(self):
-        """Build the overview screen with draggable station indicators"""
+        """Build the dashboard screen with draggable station indicators"""
         settings = self.config.get_app_settings()
         num_stations = settings["stations"]
         spots_per_station = settings["spots"]
-        grid_settings = self.config.get_station_overview_grid()
+        grid_settings = self.config.get_station_dashboard_grid()
         columns = max(1, min(spots_per_station, grid_settings["columns"])) 
         station_ids = self.controller.get_stations()
 
@@ -22,12 +22,10 @@ class OverviewView:
         for i, station_id in enumerate(station_ids):
             station_key = f"station_{station_id}"
             station_data = self.controller.get_spot_data(station_id, station_key)
-            
             # Initialize place dictionary if it doesn't exist
             if "place" not in station_data:
                 station_data["place"] = {"x": 0, "y": 0}
                 self.controller.save_spots_state()
-                
             if station_data["place"]["x"] != 0 or station_data["place"]["y"] != 0:
                 x_pos = station_data["place"]["x"]
                 y_pos = station_data["place"]["y"]
@@ -35,7 +33,6 @@ class OverviewView:
                 x_pos = 50 + (i % 4) * 150
                 y_pos = 50 + (i // 2) * 100
                 self.controller.set_spot_coordinates(station_key, x_pos, y_pos)
-
             stations.append({
                 "name": f"Station {station_id}",
                 "x": x_pos,
@@ -81,8 +78,6 @@ class OverviewView:
                         margin=ft.margin.all(2)
                     )
                 )
-
-           
             rows = (spots_per_station + columns - 1) // columns  
             grid_rows = []
             for row in range(rows):
@@ -96,18 +91,14 @@ class OverviewView:
                         spacing=5
                     )
                 )
-
-            
             station_width = 50 + columns * 25  
             station_height = 40 + rows * 25 + 10 
-
             station_container = ft.Container(
                 content=ft.Column([
                     ft.Text(
                         station_data["name"],
                         size=16,
                         weight=ft.FontWeight.BOLD
-                        
                     ),
                     ft.Column(
                         controls=grid_rows,
@@ -117,7 +108,6 @@ class OverviewView:
                     ft.Container(height=10)  
                 ], 
                 alignment=ft.MainAxisAlignment.CENTER,  
-                
                 spacing=5),
                 width=station_width,
                 height=station_height,
@@ -126,7 +116,6 @@ class OverviewView:
                 padding=5,
                 data={"id": station_data["id"]}
             )
-
             detector_ref = ft.Ref[ft.GestureDetector]()
             draggable_container = ft.GestureDetector(
                 ref=detector_ref,
@@ -138,13 +127,11 @@ class OverviewView:
                 on_tap=lambda e, sid=station_data["id"]: open_station_view(self, e, sid),
             )
             station_controls.append(draggable_container)
-
         dashboard = ft.Stack(
             controls=station_controls,
             expand=True  # Вместо width=self.page.window.width, height=self.page.window.height
         )
-
         return ft.Column([
-            ft.Text("Stations Overview", size=24, weight=ft.FontWeight.BOLD),
+            ft.Text("Stations Dashboard", size=24, weight=ft.FontWeight.BOLD),
             ft.Container(content=dashboard, expand=True)
         ])

@@ -31,13 +31,17 @@ class WelcomeView:
         )
 
         if self.stations_count == 1:
-            self.station_selector = ft.Container()  
-            self.auto_transition_needed = True
-            self.station_id = stations[0]
+            self.station_selector = ft.Dropdown(
+                label="Select Station",
+                options=[ft.dropdown.Option(f"Station {station_id}") for station_id in stations] + [ft.dropdown.Option("FTL Station")],
+                on_change=self.handle_station_select,
+                width=200
+            )
+            self.auto_transition_needed = False
         else:
             self.station_selector = ft.Dropdown(
                 label="Select Station",
-                options=[ft.dropdown.Option(f"Station {station_id}") for station_id in stations],
+                options=[ft.dropdown.Option(f"Station {station_id}") for station_id in stations] + [ft.dropdown.Option("FTL Station")],
                 on_change=self.handle_station_select,
                 width=200
             )
@@ -109,9 +113,13 @@ class WelcomeView:
 
     def handle_station_select(self, e):
         """Обработчик выбора станции"""
-        if isinstance(self.station_selector, ft.Dropdown):
-            selected_station_id = int(e.control.value.split()[-1])
-            self.station_id = selected_station_id
+        value = e.control.value
+        if value == "FTL Station":
+            self.station_id = "FTL"
+        else:
+            self.station_id = value.split()[-1]
+        self.continue_button.disabled = False
+        self.page.update()
 
     def handle_continue(self, e):
         """Обработчик нажатия кнопки продолжения"""

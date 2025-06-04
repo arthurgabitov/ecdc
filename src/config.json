@@ -12,15 +12,15 @@
         },
         {
             "name": "Delievery request",
-            "color": "YELLOW_300"
+            "color": "YELLOW_500"
         },
         {
             "name": "In Progress",
-            "color": "GREEN_100"
+            "color": "GREEN_500"
         },
         {
             "name": "Packing",
-            "color": "RED_200"
+            "color": "RED_500"
         },
         {
             "name": "Pickup request",
@@ -30,7 +30,7 @@
     "customization_settings": {
         "search_directory": "\\\\LUECHFS101\\Shared\\European_Customisation\\ECDC-Customised Robot SW Order File"
     },
-    "station_overview_grid": {
+    "station_dashboard_grid": {
         "columns": 2
     }
 }

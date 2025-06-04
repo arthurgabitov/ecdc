@@ -53,7 +53,7 @@ class Config:
                 "customization_settings": {
                     "search_directory": "\\\\LUECHFS101\\Shared\\European_Customisation\\ECDC-Customised Robot SW Order File"
                 },
-                "station_overview_grid": {
+                "station_dashboard_grid": {
                     "columns": 2 
                 }
             }
@@ -110,7 +110,7 @@ class Config:
             "search_directory": "\\\\LUECHFS101\\Shared\\European_Customisation\\ECDC-Customised Robot SW Order File"
         })
 
-    def get_station_overview_grid(self):
-        return self.config_data.get("station_overview_grid", {
+    def get_station_dashboard_grid(self):
+        return self.config_data.get("station_dashboard_grid", {
             "columns": 2  
         })

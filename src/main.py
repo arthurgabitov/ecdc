@@ -10,8 +10,8 @@ from controllers.station_controller import StationController
 from views.station_view import StationView
 from views.welcome_view import WelcomeView
 from views.settings_view import SettingsView
-from views.overview_view import OverviewView
 from views.navigation_rail_view import NavigationRailView
+from views.dashboard_view import DashboardView
 from config import Config
 from models.user_model import UserModel
 
@@ -135,8 +135,8 @@ async def main(page: ft.Page):
         current_station_id = sid
         return StationView(page, controller, config, sid, module_container, stations_count, update_module).build()
 
-    def create_overview_view():
-        return OverviewView(page, controller, config, module_container, update_module).build()
+    def create_dashboard_view():
+        return DashboardView(page, controller, config, module_container, update_module).build()
 
     def create_settings_view():
         return SettingsView(page).build(config)
@@ -150,14 +150,18 @@ async def main(page: ft.Page):
             if selected_index == 0:
                 new_content = create_station_view(station_id)
             elif selected_index == 1 and stations_count > 1:
-                new_content = create_overview_view()
+                new_content = create_dashboard_view()
             elif selected_index == 2:
                 new_content = create_settings_view()
             else:
                 new_content = ft.Container()
         # AnimatedSwitcher: update content and call update
         animated_switcher.content = new_content if new_content is not None else ft.Container()
+        animated_switcher.update()
         module_container.update()
+
+    # Пробрасываем update_module в page для глобального обновления
+    page.update_module = update_module
 
     def adjust_module_width(e=None):
         # No window_width/window_height API, so just update page

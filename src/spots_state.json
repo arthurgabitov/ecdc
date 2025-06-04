@@ -61,12 +61,12 @@
         "running": false,
         "wo_number": "",
         "place": {
-            "x": 188.0,
-            "y": 185.33333333333334
+            "x": 268.0,
+            "y": 52.66666666666666
         }
     },
     "3_5": {
-        "status": "Delievery request",
+        "status": "Unblocked",
         "start_time": 0.0,
         "elapsed_time": 0.0,
         "running": false,
@@ -78,8 +78,8 @@
     },
     "1_4": {
         "status": "Unblocked",
-        "start_time": 1748938750.3945432,
-        "elapsed_time": 12.25468373298645,
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
         "running": false,
         "wo_number": "",
         "place": {
@@ -94,8 +94,8 @@
         "running": false,
         "wo_number": "",
         "place": {
-            "x": 189.33333333333331,
-            "y": 45.33333333333337
+            "x": 160.66666666666652,
+            "y": 51.3333333333334
         }
     },
     "3_6": {
@@ -110,10 +110,10 @@
         }
     },
     "1_1": {
-        "status": "Unblocked",
-        "start_time": 1748938753.0548398,
-        "elapsed_time": 0.3194751739501953,
-        "running": false,
+        "status": "Delievery request",
+        "start_time": 1748960222.419649,
+        "elapsed_time": 0.0,
+        "running": true,
         "wo_number": "",
         "place": {
             "x": 0,
@@ -121,7 +121,7 @@
         }
     },
     "3_1": {
-        "status": "In Progress",
+        "status": "Unblocked",
         "start_time": 0.0,
         "elapsed_time": 0.0,
         "running": false,
@@ -187,7 +187,7 @@
         }
     },
     "3_4": {
-        "status": "In Progress",
+        "status": "Unblocked",
         "start_time": 0.0,
         "elapsed_time": 0.0,
         "running": false,
@@ -1048,5 +1048,145 @@
             "x": 137.9999999999999,
             "y": 591.3333333333335
         }
+    },
+    "0_19": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_2": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_9": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_15": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_7": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_16": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_3": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_13": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_8": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_4": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_1": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_12": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_6": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_14": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_17": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_10": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_20": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_18": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_11": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
+    },
+    "0_5": {
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
+        "running": false,
+        "wo_number": ""
     }
 }

@@ -9,35 +9,21 @@ class NavigationRailView:
 
     def build(self):
         destinations = []
-        
-        destinations.append(
-            ft.NavigationRailDestination(
-                icon=ft.Icon(ft.Icons.HOME, ),
-                selected_icon=ft.Icon(ft.Icons.HOME_FILLED, ),
-                label_content=ft.Text("RO Station", ),
-                label="RO Station"
-            )
-        )
-    
-        if self.stations_count > 1:
+        labels = ["Station", "Dashboard", "Settings"]
+        icons = [
+            (ft.Icons.HOME, ft.Icons.HOME_FILLED),
+            (ft.Icons.DASHBOARD, ft.Icons.DASHBOARD_CUSTOMIZE),
+            (ft.Icons.SETTINGS, ft.Icons.SETTINGS_APPLICATIONS)
+        ]
+        for idx, (label, (icon, selected_icon)) in enumerate(zip(labels, icons)):
             destinations.append(
                 ft.NavigationRailDestination(
-                    icon=ft.Icon(ft.Icons.DASHBOARD, ),
-                    selected_icon=ft.Icon(ft.Icons.DASHBOARD_CUSTOMIZE, ),
-                    label_content=ft.Text("Overview", ),
-                    label="Overview"
+                    icon=ft.Icon(icon),
+                    selected_icon=ft.Icon(selected_icon),
+                    label=label
                 )
             )
     
-        destinations.append(
-            ft.NavigationRailDestination(
-                icon=ft.Icon(ft.Icons.SETTINGS, ),
-                selected_icon=ft.Icon(ft.Icons.SETTINGS_APPLICATIONS, ),
-                label_content=ft.Text("Settings", ),
-                label="Settings"
-            )
-        )
-
         self.nav_rail = ft.NavigationRail(
             extended=True,
             selected_index=0,
@@ -45,19 +31,21 @@ class NavigationRailView:
             min_width=100,
             min_extended_width=200,
             width=200,
-            #bgcolor=ft.Colors.ON_PRIMARY_CONTAINER,
-            #indicator_Color=ft.Colors.WHITE10,
             destinations=destinations,
-            on_change=lambda e: self.on_change_callback(e.control.selected_index)
+            on_change=self._on_change
         )
         
         return self.nav_rail
-    
+
+    def _on_change(self, e):
+        if self.on_change_callback:
+            self.on_change_callback(e.control.selected_index)
+
     def set_selected_index(self, index):
         if self.nav_rail:
             self.nav_rail.selected_index = index
             self.nav_rail.update()
-    
+
     def update(self):
         if self.nav_rail:
             self.nav_rail.update()

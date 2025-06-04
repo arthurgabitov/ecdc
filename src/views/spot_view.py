@@ -11,7 +11,7 @@ spot_style: dict = {
         "expand": True,
         "bgcolor": ft.Colors.WHITE60,
         "border_radius": 20,
-        "border": ft.border.all(width=0.5, color=ft.Colors.GREY_500),
+        "border": ft.border.all(width=1, color=ft.Colors.GREY_300),
         "ink": True,
     },
 }
@@ -23,7 +23,13 @@ class Spot:
         self.spot_id = spot_id
         self.page = page
         self.controller = controller
-        self.timer = TimerComponent(page, station_id, spot_id, controller)
+        self.is_ftl = (station_id == "FTL" or str(station_id) == "0" or station_id == 0)
+        self.timer = None
+        if not self.is_ftl:
+            try:
+                self.timer = TimerComponent(page, station_id, spot_id, controller)
+            except Exception as ex:
+                self.timer = None
         self.label = f"Spot {self.spot_id[-1]}"
         
         # Определяем, запущено ли приложение в браузере
@@ -34,7 +40,11 @@ class Spot:
         self.timer_state = "stopped"  
         self.wo_found = False  
 
-        spot_data = self.controller.get_spot_data(int(station_id), spot_id)
+        # Для FTL station_id не приводим к int
+        if self.station_id == "FTL":
+            spot_data = self.controller.get_spot_data(self.station_id, spot_id)
+        else:
+            spot_data = self.controller.get_spot_data(int(station_id), spot_id)
         # Pass config explicitly
         config = self.controller.config
         self.status_dropdown = ft.Dropdown(
@@ -74,7 +84,7 @@ class Spot:
         self.snack_bar = ft.SnackBar(
             content=ft.Text(""), 
             open=False,
-            bgcolor=ft.Colors.BLUE_GREY_700,  # More noticeable background color
+            bgcolor=ft.Colors.BLUE_GREY_200, 
             duration=5000,  # Increased display time (5 seconds)
         )
         
@@ -98,7 +108,7 @@ class Spot:
             visible=False,
             padding=10,
             border=ft.border.all(width=1, color=ft.Colors.ON_PRIMARY_CONTAINER),
-            border_radius=10,
+            border_radius=20,
             margin=ft.margin.only(top=10, bottom=3)
         )
 
@@ -166,66 +176,92 @@ class Spot:
             visible=False,
             padding=10,
             border=ft.border.all(width=1, color=ft.Colors.ON_PRIMARY_CONTAINER),
-            border_radius=10,
+            border_radius=20,
             margin=ft.margin.only(top=3)        )
         
         self.usb_detection_active = False
         self.usb_thread = None
         
+        # Таймер и кнопки только если self.timer существует и не None
+        timer_controls = []
+        if self.timer is not None:
+            try:
+                timer_controls.append(
+                    ft.Container(
+                        content=ft.Container(
+                            content=ft.Column([
+                                self.timer.build_buttons(),
+                                ft.Container(height=10, visible=False)
+                            ], spacing=5,
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                            alignment=ft.MainAxisAlignment.CENTER),
+                            border_radius=20,
+                            padding=ft.padding.all(10),
+                        ),
+                        expand=0,
+                        alignment=ft.alignment.center,
+                        padding=ft.padding.symmetric(horizontal=40),
+                    )
+                )
+                timer_controls.append(
+                    ft.Container(
+                        content=ft.ElevatedButton(
+                            content=ft.Row([
+                                ft.Icon(ft.Icons.RESTART_ALT, size=20),
+                                ft.Text("Reset", size=15, weight=ft.FontWeight.BOLD),
+                            ], spacing=8, alignment=ft.MainAxisAlignment.CENTER),
+                            on_click=self.reset_spot,
+                            style=ft.ButtonStyle(
+                                padding=ft.padding.symmetric(horizontal=10, vertical=4),
+                            ),
+                            height=26,
+                            width=100,
+                        ),
+                        alignment=ft.alignment.center,
+                        expand=0,
+                        padding=ft.padding.only(bottom=10),
+                    )
+                )
+            except Exception as ex:
+                pass
         self.content = ft.Column(
             controls=[
-                
                 ft.Container(
                     content=ft.Text(self.label, weight=ft.FontWeight.BOLD, size=22, text_align=ft.TextAlign.CENTER),
                     padding=ft.padding.only(top=10),
                     expand=0,
                 ),
-                
                 ft.Container(
                     content=self.spot_e_number_label,
                     expand=1,
                     alignment=ft.alignment.center
-                ),                  # Общий блок для таймера (и текст, и кнопки)
-                ft.Container(
-                    content=ft.Container(
-                        content=ft.Column([
-                            self.timer.build_text(),
-                            self.timer.build_buttons(),
-                            # Добавляем невидимый элемент для увеличения высоты
-                            ft.Container(height=10, visible=False)
-                        ],                        spacing=5,
-                        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                        alignment=ft.MainAxisAlignment.CENTER),
-                        bgcolor=ft.Colors.with_opacity(0.2, ft.Colors.WHITE60),  # Прозрачный черный цвет (20% непрозрачности)
-                        border_radius=20,  # Скругленные углы
-                        padding=ft.padding.all(10),  # Отступ для содержимого
-                    ),
-                    expand=0,  # Убираем расширение, чтобы таймер не сжимался при уменьшении окна
-                    alignment=ft.alignment.center,
-                    padding=ft.padding.symmetric(horizontal=40),  # Отступы слева и справа
                 ),
-                  ft.Container(
-                    content=ft.TextButton("Reset", on_click=self.reset_spot),
-                    alignment=ft.alignment.center,
-                    expand=0,  # Убираем расширение, чтобы кнопка не сжималась
-                    padding=ft.padding.only(bottom=10),  # Отступ снизу
-                ),
-            ],
+            ] + timer_controls,
             expand=1,
             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            spacing=10,  # Увеличиваем отступ между элементами
-            alignment=ft.MainAxisAlignment.START  # Изменяем выравнивание на START
+            spacing=10,
+            alignment=ft.MainAxisAlignment.START
         )
 
         
+        modal_timer_controls = []
+        if self.timer is not None:
+            modal_timer_controls.append(
+                ft.Container(
+                    content=self.timer.build_buttons(),
+                    border_radius=20,
+                    padding=ft.padding.all(10),
+                    alignment=ft.alignment.center,
+                )
+            )
         modal_content = ft.Container(
             content=ft.Column(
                 controls=[
                     ft.Container(content=self.wo_number_field, alignment=ft.alignment.center),
                     ft.Container(content=self.status_dropdown, alignment=ft.alignment.center),
+                ] + modal_timer_controls + [
                     ft.Container(content=self.robot_info_section, alignment=ft.alignment.center),
                     ft.Container(content=self.usb_section, alignment=ft.alignment.center),
-                    
                     ft.Container(content=self.snack_bar, alignment=ft.alignment.center),
                 ],
                 alignment=ft.MainAxisAlignment.START,
@@ -249,26 +285,40 @@ class Spot:
             on_dismiss=self.on_dialog_dismiss,
         )
 
-        # Изменение стиля для веб-версии
-        if self.is_web:
-            self.container = ft.Container(
-                content=self.content,
-                expand=1,  # Используем expand вместо hardcoded размеров
-                bgcolor=spot_style["main"]["bgcolor"],
-                border_radius=spot_style["main"]["border_radius"],
-                border=spot_style["main"]["border"],
-                ink=spot_style["main"]["ink"],
-                on_click=self.open_dialog,
-                # Устанавливаем максимальную ширину для веб-версии
-                max_width=300,
-                min_width=250
-            )
-        else:
-            self.container = ft.Container(
-                content=self.content,
-                **spot_style["main"],
-                on_click=self.open_dialog
-            )
+        # --- status bar (цветная полоса статуса) ---
+        self.status_bar_color = ft.Colors.GREY_100  # default
+        self.status_bar = ft.Container(
+            width=22,  
+            bgcolor=self.status_bar_color,
+            
+            expand=False,
+            border=None,  # УБРАТЬ border, если был
+            margin=0,
+            padding=0,
+        )
+        main_content_container = ft.Container(
+            content=self.content,
+            expand=True,
+            bgcolor=spot_style["main"]["bgcolor"],
+            border_radius=ft.border_radius.only(top_right=20, bottom_right=20),
+            ink=spot_style["main"]["ink"],
+            on_click=self.open_dialog,
+            border=None,  # УБРАТЬ border, если был
+            margin=0,
+            padding=0,
+        )
+        # --- общий border для всего блока (Row) ---
+        self.container = ft.Container(
+            content=ft.Row([
+                self.status_bar,
+                main_content_container
+            ], expand=1, spacing=0, tight=True),  
+            border=spot_style["main"]["border"],
+            border_radius=spot_style["main"]["border_radius"],
+            expand=1,
+            margin=0,
+            padding=0,
+        )
         
         # Initialize WO number data when creating the spot
         if spot_data.get("wo_number") and len(spot_data["wo_number"]) == 8:
@@ -568,33 +618,24 @@ class Spot:
         if not self.dlg_modal.open:
             if self.dlg_modal not in self.page.overlay:
                 self.page.overlay.append(self.dlg_modal)
-            # Use controller.config instead of self.page.config
             self.status_dropdown.visible = self.controller.config.is_dashboard_test_mode_enabled()
-            
-            # Process WO number when opening dialog to update UI
-            self.process_wo_number(self.wo_number_field.value)
-            
-            # Explicitly call USB list update before opening dialog
+            # self.status_dropdown.update()  # УДАЛЕНО, чтобы не было AssertionError
+            # УБРАНО: self.process_wo_number(self.wo_number_field.value)
+            # Explicitly call USB list update перед открытии диалога
             if self.wo_found:
                 drives = self.ro_tools.get_connected_usb_drives()
                 self.update_usb_drives(drives)
-                print(f"Found {len(drives)} USB drives when opening dialog")
-                
-            # Set visibility of necessary sections before opening dialog
+                print(f"Found {len(drives)} USB drives когда открытии диалога")
             self.robot_info_section.visible = self.wo_found
             self.usb_section.visible = self.wo_found
-            
             # Set button visibility based on USB presence
             if not self.usb_dropdown.options or len(self.usb_dropdown.options) == 0:
                 self.create_sw_button.visible = False
                 self.create_aoa_button.visible = False
                 self.open_orderfil_button.visible = False
                 self.move_backups_button.visible = False
-            
             self.dlg_modal.open = True
             self.page.update()
-        
-        # If WO is found, start USB monitoring
         if self.wo_found:
             self.ro_tools.register_usb_detection_callback(self.update_usb_drives_callback)
 
@@ -628,12 +669,12 @@ class Spot:
         self.page.update()
     
     def update_border(self):
-        if self.wo_found:
+        # Бордер не должен меняться автоматически при запуске таймера или открытии модального окна
+        # Меняем только если найден WO (wo_found)
+        if getattr(self, 'wo_found', False):
             self.container.border = ft.border.all(width=1.5, color=ft.Colors.GREEN)
         else:
             self.container.border = spot_style["main"]["border"]
-            
-        # Update container if it's already on the page
         if self.container.page:
             self.container.update()
 
@@ -641,10 +682,18 @@ class Spot:
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         status = spot["status"]
         statuses = self.controller.config.get_spot_statuses()
-        new_Color = next((s["color"] for s in statuses if s["name"] == status), ft.Colors.WHITE60)
-        self.container.bgcolor = new_Color
+        
+        if status.lower() == "unblocked":
+            new_Color = ft.Colors.GREY_100
+        else:
+            new_Color = next((s["color"] for s in statuses if s["name"] == status), ft.Colors.GREY_500)
+        self.status_bar.bgcolor = new_Color
+        
+        self.container.border = ft.border.all(width=2, color=new_Color)
+        self.status_dropdown.visible = self.controller.config.is_dashboard_test_mode_enabled()
         if self.container.page:
-            self.container.update()
+            self.status_bar.update()
+            self.status_dropdown.update()
 
     def reset_spot(self, e):
         default_status = self.controller.config.get_status_names()[0]
@@ -653,7 +702,7 @@ class Spot:
         spot["wo_number"] = ""
         self.wo_number_field.value = ""
         
-        # Clear file buttons and E-number/model info
+        
         self.file_buttons_container.content = ft.Row([])
         self.file_buttons_container.visible = False
         self.e_number_label.value = "E-number: Not found"
