@@ -5,6 +5,8 @@ import time
 import traceback
 from controllers.timer_component import TimerComponent
 from controllers.ro_customization_tools import ROCustomizationController
+from models.db_connector import get_user_wo_numbers
+from models.user_model import UserModel
 
 spot_style: dict = {
     "main": {
@@ -57,12 +59,16 @@ class Spot:
             visible=config.is_dashboard_test_mode_enabled()
         )
 
-        self.wo_number_field = ft.TextField(
+        # --- WO Dropdown instead of TextField ---
+        user_model = UserModel()
+        current_sso = user_model.get_user_by_windows_login()
+        wo_numbers = get_user_wo_numbers(current_sso)
+        self.wo_number_dropdown = ft.Dropdown(
             label="WO Number",
-            value=spot_data["wo_number"],
-            on_change=self.update_wo_number,
+            options=[ft.dropdown.Option(str(wo)) for wo in wo_numbers],
+            on_change=self.update_wo_number_from_dropdown,
             width=300,
-            keyboard_type=ft.KeyboardType.NUMBER
+            visible=True
         )
         self.e_number_label = ft.Text("E-number: Please enter WO-number", size=16, text_align=ft.TextAlign.CENTER)
         self.model_label = ft.Text("Model: Unknown", size=16,  text_align=ft.TextAlign.CENTER)
@@ -248,10 +254,11 @@ class Spot:
                     alignment=ft.alignment.center,
                 )
             )
+        # Заменяем TextField на Dropdown в модальном окне
         modal_content = ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Container(content=self.wo_number_field, alignment=ft.alignment.center),
+                    ft.Container(content=self.wo_number_dropdown, alignment=ft.alignment.center),
                     ft.Container(content=self.status_dropdown, alignment=ft.alignment.center),
                 ] + modal_timer_controls + [
                     ft.Container(content=self.robot_info_section, alignment=ft.alignment.center),
@@ -329,13 +336,11 @@ class Spot:
         self.controller.set_spot_status(int(self.station_id), self.spot_id, new_status)
         self.update_Color()
 
-    def update_wo_number(self, e):
+    def update_wo_number_from_dropdown(self, e):
         wo_number = e.control.value
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         spot["wo_number"] = wo_number
         self.controller.save_spots_state()
-        
-        # Process WO number to find files and update UI
         self.process_wo_number(wo_number)
         
     def process_wo_number(self, wo_number):
@@ -615,6 +620,7 @@ class Spot:
             self.status_dropdown.visible = self.controller.config.is_dashboard_test_mode_enabled()
             # self.status_dropdown.update()  # УДАЛЕНО, чтобы не было AssertionError
             # УБРАНО: self.process_wo_number(self.wo_number_field.value)
+            # Теперь обработка через Dropdown
             # Explicitly call USB list update перед открытии диалога
             if self.wo_found:
                 drives = self.ro_tools.get_connected_usb_drives()
@@ -690,7 +696,7 @@ class Spot:
         self.controller.set_spot_status(int(self.station_id), self.spot_id, default_status)
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         spot["wo_number"] = ""
-        self.wo_number_field.value = ""
+        self.wo_number_dropdown.value = ""
         
         
         self.file_buttons_container.content = ft.Row([])
@@ -770,7 +776,8 @@ class Spot:
             return
         
         # Check that we have WO number and E-number
-        wo_number = self.wo_number_field.value
+        # Заменяем получение WO number на значение из Dropdown
+        wo_number = self.wo_number_dropdown.value
         e_number = None
         
         if "e_number" in self.wo_data and isinstance(self.wo_data["e_number"], dict):

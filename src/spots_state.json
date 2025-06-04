@@ -78,9 +78,9 @@
     },
     "1_4": {
         "status": "In Progress",
-        "start_time": 1749020347.706378,
-        "elapsed_time": 232.4774079322815,
-        "running": true,
+        "start_time": 1749020495.1332343,
+        "elapsed_time": 378.6515657901764,
+        "running": false,
         "wo_number": "",
         "place": {
             "x": 0,
@@ -111,9 +111,9 @@
     },
     "1_1": {
         "status": "In Progress",
-        "start_time": 1749020347.9838371,
-        "elapsed_time": 629.7124869823456,
-        "running": true,
+        "start_time": 1749020488.1498477,
+        "elapsed_time": 769.8785002231598,
+        "running": false,
         "wo_number": "17142216",
         "place": {
             "x": 0,
