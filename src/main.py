@@ -12,6 +12,7 @@ from views.welcome_view import WelcomeView
 from views.settings_view import SettingsView
 from views.navigation_rail_view import NavigationRailView
 from views.dashboard_view import DashboardView
+from views.top_bar import TopBar
 from config import Config
 from models.user_model import UserModel
 
@@ -26,6 +27,10 @@ async def main(page: ft.Page):
 
     page.title = app_settings["title"]
     page.window.maximized = True
+    page.bgcolor = "#F7F7FA"
+
+    # Увеличиваем базовый размер шрифта для всего приложения
+    # page.theme = ft.Theme(font_family=None, font_size=18)  # Удалено: такого параметра нет в Flet
 
     is_web = page.platform == "web"
     stations = controller.get_stations()
@@ -34,56 +39,16 @@ async def main(page: ft.Page):
 
     page.padding = 0
 
-    # Remove current_user dict, use only current_sso string
     user_model = UserModel()
     current_sso = user_model.get_sso()
-
-    # Get current Windows SSO (login)
     current_sso = user_model.get_user_by_windows_login()
     if not current_sso:
         current_sso = os.getlogin() if hasattr(os, 'getlogin') else "Unknown SSO"
 
-    def build_appbar(current_sso):
-        return ft.AppBar(
-            title=ft.Container(
-                content=ft.Text('ECDC Station App'),
-                padding=ft.padding.only(left=15)
-            ),
-            leading_width=55,
-            bgcolor=ft.Colors.YELLOW_600,
-            actions=[] if not show_nav_rail else [
-                ft.Container(
-                    content=ft.PopupMenuButton(
-                        content=ft.Row([
-                            ft.Icon(ft.Icons.PERSON),
-                            ft.Text(current_sso, color=ft.Colors.BLACK, size=14),
-                        ], spacing=5),
-                        tooltip="User menu",
-                        items=[
-                            ft.PopupMenuItem(text=current_sso, disabled=True),
-                            ft.PopupMenuItem(text="-", disabled=True),
-                            ft.PopupMenuItem(
-                                text="Logout",
-                                icon=ft.Icons.LOGOUT,
-                                on_click=lambda _: show_welcome_view(),
-                            ),
-                        ]
-                    ),
-                    padding=ft.padding.only(right=15)
-                )
-            ],
-            elevation=3,
-            shadow_color=ft.Colors.BLACK,
-            center_title=False,
-        )
-
-    appbar = build_appbar(current_sso)
-
-    main_container = ft.Container(expand=True)
+    main_container = ft.Container(expand=True, bgcolor="#F7F7FA")
     nav_rail_view = NavigationRailView(page, stations_count, lambda idx: update_module(idx)) if show_nav_rail else None
     nav_rail = nav_rail_view.build() if nav_rail_view else None
 
-    # AnimatedSwitcher for module content
     animated_switcher = ft.AnimatedSwitcher(
         content=ft.Container(),
         transition=ft.AnimatedSwitcherTransition.FADE,
@@ -96,6 +61,111 @@ async def main(page: ft.Page):
         alignment=ft.alignment.center
     )
 
+    # Состояние для выпадающего списка станции
+    station_dropdown = None
+    current_station_id = None
+    selected_module_index = 0
+
+    def on_station_change(e):
+        nonlocal current_station_id
+        current_station_id = int(e.control.value)
+        update_module(selected_module_index, current_station_id)
+
+    def build_station_dropdown(selected_station_id):
+        # Стилизация как в StationView
+        return ft.Dropdown(
+            label="Station",
+            value=f"Station {selected_station_id}",
+            options=[ft.dropdown.Option(f"Station {station_id}") for station_id in stations],
+            on_change=on_station_change,
+            width=150,
+            text_size=14,
+            content_padding=ft.padding.symmetric(horizontal=12, vertical=6),
+            border_radius=8,
+            tooltip="Change Station"
+        )
+
+    def create_station_view(station_id=None):
+        sid = int(station_id) if station_id is not None else int(stations[0])
+        nonlocal current_station_id
+        current_station_id = sid
+        return StationView(page, controller, config, sid, module_container, stations_count, update_module).build()
+
+    def create_dashboard_view():
+        return DashboardView(page, controller, config, module_container, update_module).build()
+
+    def create_settings_view():
+        return SettingsView(page).build(config)
+
+    def update_topbar(selected_index, station_id=None):
+        nonlocal station_dropdown
+        # Всегда подпись ECDC Station App, dropdown только для StationView
+        if selected_index == 0:
+            station_dropdown = build_station_dropdown(station_id if station_id else stations[0])
+            topbar = TopBar("ECDC Station App", current_sso, dropdown=station_dropdown)
+        else:
+            topbar = TopBar("ECDC Station App", current_sso)
+            station_dropdown = None
+        main_layout.controls[0] = topbar
+        main_layout.update()
+
+    def update_module(selected_index, station_id=None):
+        nonlocal selected_module_index
+        selected_module_index = selected_index
+        if not show_nav_rail:
+            new_content = create_station_view(station_id if station_id else stations[0])
+            update_topbar(0, station_id if station_id else stations[0])
+        else:
+            if nav_rail_view:
+                nav_rail_view.set_selected_index(selected_index)
+            if selected_index == 0:
+                new_content = create_station_view(station_id)
+                update_topbar(0, station_id if station_id else stations[0])
+            elif selected_index == 1 and stations_count > 1:
+                new_content = create_dashboard_view()
+                update_topbar(1)
+            elif selected_index == 2:
+                new_content = create_settings_view()
+                update_topbar(2)
+            else:
+                new_content = ft.Container()
+                update_topbar(-1)
+        animated_switcher.content = new_content if new_content is not None else ft.Container()
+        animated_switcher.update()
+        module_container.update()
+
+    page.update_module = update_module
+
+    def adjust_module_width(e=None):
+        page.update()
+
+    def show_main_interface(selected_station_id, _):
+        nonlocal current_station_id
+        current_station_id = int(selected_station_id)
+        page.clean()
+        page.add(main_container)
+        update_module(0, selected_station_id)
+        page.update()
+
+    def show_welcome_view():
+        page.appbar = None
+        page.clean()
+        welcome_view = WelcomeView(page, controller, lambda station_id, _: show_main_interface(station_id, None))
+        page.add(welcome_view.build())
+        page.update()
+
+    def on_close(e):
+        for station_id in controller.get_stations():
+            for spot_idx in range(1, app_settings["spots"] + 1):
+                spot_id = f"{station_id}_{spot_idx}"
+                timer = TimerComponent(page, str(station_id), spot_id, controller)
+                timer.pause_on_close()
+    
+
+    page.on_resized = adjust_module_width
+    page.on_close = on_close
+
+   
     if show_nav_rail:
         layout_content = ft.Row(
             [
@@ -120,80 +190,14 @@ async def main(page: ft.Page):
             padding=ft.padding.all(15)
         )
 
+
     main_layout = ft.Column(
-        [layout_content],
+        [TopBar("ECDC Station App", current_sso)],  
         spacing=0,
         expand=True
     )
+    main_layout.controls.append(layout_content)
     main_container.content = main_layout
-
-    current_station_id = None
-
-    def create_station_view(station_id=None):
-        sid = int(station_id) if station_id is not None else int(stations[0])
-        nonlocal current_station_id
-        current_station_id = sid
-        return StationView(page, controller, config, sid, module_container, stations_count, update_module).build()
-
-    def create_dashboard_view():
-        return DashboardView(page, controller, config, module_container, update_module).build()
-
-    def create_settings_view():
-        return SettingsView(page).build(config)
-
-    def update_module(selected_index, station_id=None):
-        if not show_nav_rail:
-            new_content = create_station_view(station_id if station_id else stations[0])
-        else:
-            if nav_rail_view:
-                nav_rail_view.set_selected_index(selected_index)
-            if selected_index == 0:
-                new_content = create_station_view(station_id)
-            elif selected_index == 1 and stations_count > 1:
-                new_content = create_dashboard_view()
-            elif selected_index == 2:
-                new_content = create_settings_view()
-            else:
-                new_content = ft.Container()
-        # AnimatedSwitcher: update content and call update
-        animated_switcher.content = new_content if new_content is not None else ft.Container()
-        animated_switcher.update()
-        module_container.update()
-
-    # Пробрасываем update_module в page для глобального обновления
-    page.update_module = update_module
-
-    def adjust_module_width(e=None):
-        # No window_width/window_height API, so just update page
-        page.update()
-
-    def show_main_interface(selected_station_id, _):
-        nonlocal current_station_id, appbar
-        current_station_id = int(selected_station_id)
-        appbar = build_appbar(current_sso)
-        page.appbar = appbar
-        page.clean()
-        page.add(main_container)
-        update_module(0, selected_station_id)
-        page.update()
-
-    def show_welcome_view():
-        page.appbar = None
-        page.clean()
-        welcome_view = WelcomeView(page, controller, lambda station_id, _: show_main_interface(station_id, None))
-        page.add(welcome_view.build())
-        page.update()
-
-    def on_close(e):
-        for station_id in controller.get_stations():
-            for spot_idx in range(1, app_settings["spots"] + 1):
-                spot_id = f"{station_id}_{spot_idx}"
-                timer = TimerComponent(page, str(station_id), spot_id, controller)
-                timer.pause_on_close()
-    
-
-    page.on_resized = adjust_module_width
-    page.on_close = on_close
 
     if not show_nav_rail and stations:
         show_main_interface(stations[0], None)
