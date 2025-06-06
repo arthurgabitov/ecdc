@@ -1,9 +1,10 @@
-
 ## Current version: 
-- 0.1.5 Login function
+- 0.2.1 Windows account detection, external DB, UI and logic updates
 
 
 ## Updates history: 
+- 0.2.1 Added Windows account name detection for user auto-login. Added connection to external database. Updated functions for retrieving WO, E-Number, and Robot model. UI improved, spot status indication added. Bug fixes.
+- 0.1.5 Login function
 - 0.1.3 Single station mode release.
 - 0.1.1 Robot info section in spot modified. SW and backup section in spot updated.
 - 0.0.11 General improvements. Robot info section added in spot. General functions for SW generating added. PyPDF2 added for memorysize parsing. 

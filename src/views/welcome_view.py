@@ -21,7 +21,7 @@ class WelcomeView:
         stations = self.controller.get_stations()
         self.stations_count = len(stations)
         
-        # Создаем выпадающий список пользователей (изначально пустой)
+        # Create user dropdown (initially empty)
         self.user_selector = ft.Dropdown(
             label="Your SSO",
             options=[],
@@ -33,7 +33,7 @@ class WelcomeView:
         if self.stations_count == 1:
             self.station_selector = ft.Dropdown(
                 label="Select Station",
-                options=[ft.dropdown.Option(f"Station {station_id}") for station_id in stations] + [ft.dropdown.Option("FTL Station")],
+                options=[ft.dropdown.Option(f"Station {station_id}") for station_id in stations],
                 on_change=self.handle_station_select,
                 width=200
             )
@@ -41,7 +41,7 @@ class WelcomeView:
         else:
             self.station_selector = ft.Dropdown(
                 label="Select Station",
-                options=[ft.dropdown.Option(f"Station {station_id}") for station_id in stations] + [ft.dropdown.Option("FTL Station")],
+                options=[ft.dropdown.Option(f"Station {station_id}") for station_id in stations],
                 on_change=self.handle_station_select,
                 width=200
             )
@@ -75,7 +75,7 @@ class WelcomeView:
             bgcolor=ft.Colors.WHITE
         )
         
-        # Попытка автоопределения пользователя по Windows-логину
+        # Try to auto-detect user by Windows login
         windows_user = self.user_model.get_user_by_windows_login()
         if windows_user and windows_user != "Unknown SSO":
             self.selected_user_id = windows_user
@@ -83,15 +83,15 @@ class WelcomeView:
                 ft.dropdown.Option(key=windows_user, text=windows_user)
             ]
             self.user_selector.value = windows_user
-            self.user_selector.hint_text = "Пользователь определён автоматически"
+            self.user_selector.hint_text = "User detected automatically"
             self.continue_button.disabled = False
             self.page.update()
         else:
             self.user_selector.options = [
-                ft.dropdown.Option(key="none", text="Пользователь не определён")
+                ft.dropdown.Option(key="none", text="User not detected")
             ]
             self.user_selector.value = "none"
-            self.user_selector.hint_text = "Пользователь не найден. Обратитесь к администратору."
+            self.user_selector.hint_text = "User not found. Contact your administrator."
             self.continue_button.disabled = True
             self.page.update()
 
@@ -100,19 +100,19 @@ class WelcomeView:
         pass
 
     def handle_user_select(self, e):
-        """Обработчик выбора пользователя"""
+        """User selection handler"""
         self.selected_user_id = e.control.value
         
-        # Разрешаем продолжить только если выбран пользователь
+        # Allow continue only if user is selected
         if self.selected_user_id:
             self.continue_button.disabled = False
             if self.stations_count == 1:
-                # Если станция только одна, делаем автопереход
+                # If only one station, enable auto transition
                 self.auto_transition_needed = True
             self.page.update()
 
     def handle_station_select(self, e):
-        """Обработчик выбора станции"""
+        """Station selection handler"""
         value = e.control.value
         if value == "FTL Station":
             self.station_id = "FTL"
@@ -122,13 +122,13 @@ class WelcomeView:
         self.page.update()
 
     def handle_continue(self, e):
-        """Обработчик нажатия кнопки продолжения"""
-        # selected_user_id теперь login, а не id
+        """Continue button handler"""
+        # selected_user_id is now login, not id
         if self.selected_user_id and self.selected_user_id != "none":
-            # Если есть несколько станций, используем выбранную станцию
+            # If multiple stations, use selected station
             if self.stations_count > 1 and hasattr(self, 'station_id'):
                 self.on_complete(self.station_id, self.selected_user_id)
-            # Иначе используем единственную станцию
+            # Otherwise use the only station
             elif self.stations_count == 1:
                 self.on_complete(self.station_id, self.selected_user_id)
 

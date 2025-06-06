@@ -74,10 +74,10 @@ class DashboardView:
                 spot_Color = next((s["color"] for s in statuses if s["name"] == status), ft.Colors.WHITE60)
                 spot_controls.append(
                     ft.Container(
-                        width=20,
-                        height=20,
+                        width=35,
+                        height=35,
                         bgcolor=spot_Color,
-                        border_radius=5,
+                        border_radius=3,
                         margin=ft.margin.all(2)
                     )
                 )
@@ -94,15 +94,17 @@ class DashboardView:
                         spacing=5
                     )
                 )
-            station_width = 50 + columns * 25  
-            station_height = 40 + rows * 25 + 10 
+            station_width = 70 + columns * 25  
+            station_height = 50 + rows * 25 + 60
             station_container = ft.Container(
                 content=ft.Column([
-                    ft.Text(
-                        station_data["name"],
-                        size=22,
-                        weight=ft.FontWeight.BOLD
-                    ),
+                    ft.Row([
+                        ft.Text(
+                            station_data["name"],
+                            size=20,
+                            weight=ft.FontWeight.BOLD,
+                        )
+                    ], alignment=ft.MainAxisAlignment.CENTER),
                     ft.Column(
                         controls=grid_rows,
                         alignment=ft.MainAxisAlignment.CENTER,

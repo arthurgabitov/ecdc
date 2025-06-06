@@ -564,6 +564,8 @@ class Spot:
         if self.dlg_modal.open:
             self.dlg_modal.open = False
             self.page.update()
+        # Отписываемся от callback при закрытии, чтобы не было утечек
+        self.ro_tools.unregister_usb_detection_callback(self.update_usb_drives_callback)
     
     def on_dialog_dismiss(self, e):
         """Dialog close handler"""
