@@ -75,8 +75,8 @@ async def main(page: ft.Page):
         # Стилизация как в StationView
         return ft.Dropdown(
             label="Station",
-            value=f"Station {selected_station_id}",
-            options=[ft.dropdown.Option(f"Station {station_id}") for station_id in stations],
+            value=str(selected_station_id),
+            options=[ft.dropdown.Option(str(station_id), text=f"Station {station_id}") for station_id in stations],
             on_change=on_station_change,
             width=150,
             text_size=14,

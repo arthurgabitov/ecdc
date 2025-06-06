@@ -5,7 +5,7 @@ import time
 import traceback
 from controllers.timer_component import TimerComponent
 from controllers.ro_customization_tools import ROCustomizationController
-from models.db_connector import get_user_wo_numbers
+from models.db_connector import get_user_wo_numbers, get_wo_e_number_and_model
 from models.user_model import UserModel
 
 spot_style: dict = {
@@ -100,6 +100,19 @@ class Spot:
             visible=False
         )
 
+        # Кнопка показать SW на сервере
+        self.show_sw_on_server_button = ft.ElevatedButton(
+            text=" Show SW on Server ",
+            on_click=self.on_show_sw_on_server_click,
+            visible=True
+        )
+        # Кнопка показать BOM
+        self.show_bom_button = ft.ElevatedButton(
+            text=" Show BOM ",
+            on_click=self.on_show_bom_click,
+            visible=True
+        )
+
         # Robot Info section
         self.robot_info_section = ft.Container(
             content=ft.Column([
@@ -107,6 +120,11 @@ class Spot:
                 ft.Divider(),
                 self.e_number_label,
                 self.model_label,
+                ft.Row([
+                    self.find_dt_button,
+                    self.show_sw_on_server_button,
+                    self.show_bom_button
+                ], alignment=ft.MainAxisAlignment.START, spacing=10),
                 ft.Divider(),
                 self.file_buttons_container  
             ]),
@@ -368,131 +386,34 @@ class Spot:
             self.page.update()
             return
             
-        # Search for files
-        result = self.ro_tools.search_wo_files(wo_number)
-        
-        if "error" in result:
-            self.e_number_label.value = "E-number: Not found"
-            self.model_label.value = "Model: Unknown"
-            
-            # Use snackbar for this message
-            self.snack_bar.content = ft.Text(f"SW on Server for WO {wo_number} not found")
-            self.snack_bar.open = True
-            self.page.update()
-            
-            # Hide USB section and Robot Info section
-            self.usb_section.visible = False
-            self.robot_info_section.visible = False
-            
-            self.page.update()
-                
-            # Stop USB monitoring
-            self.ro_tools.unregister_usb_detection_callback(self.update_usb_drives_callback)
-            
-            return
-            
-        self.wo_found = True
-        self.wo_data = result  # Save WO data
-        
-        self.update_border()
-        
-        # Show USB section
-        self.usb_section.visible = True
-        
-        # Show Robot Info section
+        # Получаем e_number и model из базы
+        db_result = get_wo_e_number_and_model(wo_number)
+        e_number_value = db_result.get("e_number") or "Not found"
+        model_value = db_result.get("model") or "Unknown"
+        self.wo_data["e_number"] = {"e_number": e_number_value, "model": model_value}
+        # --- Update UI labels with robot info ---
+        self.e_number_label.value = f"E-number: {e_number_value}"
+        self.model_label.value = f"Model: {model_value}"
+        # --- Update spot card label ---
+        self.spot_e_number_label.value = f"{e_number_value} | {model_value}" if e_number_value != "Not found" else ""
+        self.spot_e_number_label.visible = e_number_value != "Not found"
+        # --- Получаем файлы для robot software section ---
+        file_result = self.ro_tools.search_wo_files(wo_number)
+        if file_result.get("dat_file"):
+            self.wo_data["dat_file"] = file_result["dat_file"]
+        if file_result.get("pdf_file"):
+            self.wo_data["pdf_file"] = file_result["pdf_file"]
+        # --- Показываем секции если есть данные ---
         self.robot_info_section.visible = True
-        
-        # Start USB device monitoring
-        self.ro_tools.register_usb_detection_callback(self.update_usb_drives_callback)
-        
-        # Initiate first update of USB list
-        initial_drives = self.ro_tools.get_connected_usb_drives()
-        self.update_usb_drives(initial_drives)
-        
-        # Set button visibility based on USB presence
-        # Check performed in update_usb_drives method
-        
-        # Update E-number and model display
-        if result.get("e_number") and isinstance(result["e_number"], dict):
-            e_number_data = result["e_number"]
-            # Make sure we have string values, not None
-            e_number_value = e_number_data.get("e_number", "Not found") or "Not found"
-            model_value = e_number_data.get("model", "Unknown") or "Unknown"
-            
-            if e_number_value != "Not found":
-                self.e_number_label.value = f"E-number: {e_number_value}"
-                # Show Find DT button only if E-number is found
-                self.find_dt_button.visible = True
-            else:
-                self.e_number_label.value = "E-number: Not found"
-                self.find_dt_button.visible = False
-                
-            if model_value != "Unknown":
-                self.model_label.value = f"Model: {model_value}"
-            else:
-                self.model_label.value = "Model: Unknown"
-            
-            # Update the spot container label with combined info if both are present
-            if e_number_value != "Not found" or model_value != "Unknown":
-                display_info = []
-                if e_number_value != "Not found" and e_number_value:
-                    display_info.append(str(e_number_value))
-                if model_value != "Unknown" and model_value:
-                    display_info.append(str(model_value))
-                
-                # Check if the list is not empty before joining
-                if display_info:
-                    self.spot_e_number_label.value = " - ".join(display_info)
-                    self.spot_e_number_label.visible = True
-                else:
-                    self.spot_e_number_label.value = ""
-                    self.spot_e_number_label.visible = False
-        else:
-            self.e_number_label.value = "E-number: Not found"
-            self.model_label.value = "Model: Unknown"
-            self.find_dt_button.visible = False
-            
-        # Create file buttons if files were found
-        buttons = []
-        if result.get("dat_file"):
-            buttons.append(
-                ft.ElevatedButton(
-                    text=" Show SW on server ",
-                    on_click=lambda e, f=result["dat_file"]: self.open_file(f)
-                )
-            )
-        
-        if result.get("pdf_file"):
-            buttons.append(
-                ft.ElevatedButton(
-                    text=" Show BOM ",
-                    on_click=lambda e, f=result["pdf_file"]: self.open_file(f)
-                )
-            )
-        
-        # Add Find DT button in the same row of buttons
-        if e_number_value != "Not found":
-            buttons.append(
-                self.find_dt_button
-            )
-            self.find_dt_button.visible = True
-            self.create_aoa_button.visible = True
-            self.open_orderfil_button.visible = True
-            self.move_backups_button.visible = True
-        else:
-            self.find_dt_button.visible = False
-            self.create_aoa_button.visible = False
-            self.open_orderfil_button.visible = False
-            self.move_backups_button.visible = False
-            
-        if buttons:
-            self.file_buttons_container.content = ft.Row(
-                buttons, 
-                spacing=10, 
-                alignment=ft.MainAxisAlignment.CENTER
-            )
-            self.file_buttons_container.visible = True
-            
+        self.usb_section.visible = True
+        self.wo_found = True
+        # --- Показываем кнопку Find DT, если есть E-number ---
+        self.find_dt_button.visible = e_number_value != "Not found"
+        self.update_border()
+        # --- Обновляем USB секцию, если окно уже открыто ---
+        if hasattr(self, 'dlg_modal') and getattr(self.dlg_modal, 'open', False):
+            drives = self.ro_tools.get_connected_usb_drives()
+            self.update_usb_drives(drives)
         self.page.update()
     
     def update_usb_drives_callback(self, drives):
@@ -689,6 +610,7 @@ class Spot:
         self.status_dropdown.visible = self.controller.config.is_dashboard_test_mode_enabled()
         if self.container.page:
             self.status_bar.update()
+        if self.status_dropdown.page:
             self.status_dropdown.update()
 
     def reset_spot(self, e):
@@ -867,3 +789,29 @@ class Spot:
 
     def build(self):
         return self.container
+
+    def on_show_sw_on_server_click(self, e):
+        """Show SW on Server button handler"""
+        wo_number = self.wo_data.get("wo_number")
+        if not wo_number or len(wo_number) != 8:
+            self.snack_bar.content = ft.Text("No valid WO number available")
+            self.snack_bar.open = True
+            self.page.update()
+            return
+        success, message = self.ro_tools.find_and_open_sw_file(wo_number)
+        self.snack_bar.content = ft.Text(message)
+        self.snack_bar.open = True
+        self.page.update()
+
+    def on_show_bom_click(self, e):
+        """Show BOM button handler"""
+        wo_number = self.wo_data.get("wo_number")
+        if not wo_number or len(wo_number) != 8:
+            self.snack_bar.content = ft.Text("No valid WO number available")
+            self.snack_bar.open = True
+            self.page.update()
+            return
+        success, message = self.ro_tools.find_and_open_bom_file(wo_number)
+        self.snack_bar.content = ft.Text(message)
+        self.snack_bar.open = True
+        self.page.update()

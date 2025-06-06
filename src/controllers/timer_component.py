@@ -16,10 +16,10 @@ class TimerComponent:
             color=ft.Colors.GREY,
             weight=ft.FontWeight.W_300,
             height=None,
-            font_family="Consolas",  # Моноширинный шрифт
+            font_family="JetBrains Mono, Fira Mono, Consolas, monospace",  # Современный моноширинный шрифт
             text_align=ft.TextAlign.CENTER,
-            no_wrap=True,  # Запретить перенос
-            max_lines=1
+            no_wrap=False,  # Разрешить перенос
+            max_lines=2     # До двух строк
         )
         self.start_button = ft.IconButton(
             icon=ft.Icons.PLAY_ARROW,
@@ -66,10 +66,12 @@ class TimerComponent:
         # Если таймер остановлен и показывается Labor time, скрываем кнопки
         if hasattr(self, 'show_labor_time') and self.show_labor_time:
             self.timer_text.value = self.labor_time_text
+            self.timer_text.size = 24  # Меньше размер для длинного текста
             self.start_button.visible = False
             self.stop_button.visible = False
         else:
             self.timer_text.value = f"{minutes:02d}:{seconds:02d}"
+            self.timer_text.size = 32  # Обычный размер для таймера
             if spot and spot["running"]:
                 self.timer_text.color = ft.Colors.BLACK
             else:
@@ -162,23 +164,23 @@ class TimerComponent:
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
 
     def build_buttons(self):
-        """Вернуть только таймер и кнопки управления в одну строку"""
+        """Вернуть только таймер и кнопки управления в одну строку, с адаптивной шириной и переносом"""
         return ft.Row(
             [
-                ft.Container(self.timer_text, width=100, alignment=ft.alignment.center, bgcolor=None, padding=0),  # увеличена ширина, убраны лишние стили
+                ft.Container(self.timer_text, width=270, alignment=ft.alignment.center, bgcolor=None, padding=ft.padding.only(right=8)),  # увеличена ширина
                 self.start_button,
                 self.stop_button
             ],
-            alignment=ft.MainAxisAlignment.CENTER,
-            spacing=24
+            alignment=ft.MainAxisAlignment.START,
+            spacing=12,
+            wrap=True  # разрешаем перенос
         )
 
     def build(self):
-        
         return ft.Container(
             content=self.build_buttons(),
-            alignment=ft.alignment.center,
+            alignment=ft.alignment.center_left,
             expand=True,
             padding=ft.padding.all(0),
-            bgcolor=None,  # Прозрачный фон таймера
+            bgcolor=None,
         )

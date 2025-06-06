@@ -800,3 +800,43 @@ class ROCustomizationController:
             print(f"Error opening orderfil.dat: {e}")
             traceback.print_exc()
             return False, f"Error opening orderfil.dat: {str(e)}"
+        
+    def find_and_open_sw_file(self, wo_number):
+        """Find and open SW txt file for the specified WO number in the shared directory"""
+        import glob
+        import os
+        sw_dir = r"\\fanuc\fs\Shared\European_Customisation\ECDC-Customised Robot SW Order File"
+        pattern = os.path.join(sw_dir, f"*{wo_number}*.dat")
+        found_files = glob.glob(pattern)
+        if not found_files:
+            return False, f"No SW file found for WO {wo_number}"
+        file_to_open = found_files[0]
+        try:
+            if os.name == 'nt':
+                os.startfile(file_to_open)
+            else:
+                import subprocess
+                subprocess.call(('xdg-open', file_to_open))
+            return True, f"Opening SW file: {os.path.basename(file_to_open)}"
+        except Exception as ex:
+            return False, f"Failed to open file: {ex}"
+
+    def find_and_open_bom_file(self, wo_number):
+        """Find and open BOM PDF file for the specified WO number in the shared directory"""
+        import glob
+        import os
+        sw_dir = r"\\fanuc\fs\Shared\European_Customisation\ECDC-Customised Robot SW Order File"
+        pattern = os.path.join(sw_dir, f"*{wo_number}*.pdf")
+        found_files = glob.glob(pattern)
+        if not found_files:
+            return False, f"No BOM PDF found for WO {wo_number}"
+        file_to_open = found_files[0]
+        try:
+            if os.name == 'nt':
+                os.startfile(file_to_open)
+            else:
+                import subprocess
+                subprocess.call(('xdg-open', file_to_open))
+            return True, f"Opening BOM PDF: {os.path.basename(file_to_open)}"
+        except Exception as ex:
+            return False, f"Failed to open file: {ex}"
