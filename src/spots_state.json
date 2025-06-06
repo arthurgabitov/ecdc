@@ -45,8 +45,8 @@
     },
     "1_5": {
         "status": "Unblocked",
-        "start_time": 1749019447.1252944,
-        "elapsed_time": 0.5846941471099854,
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
         "running": false,
         "wo_number": "",
         "place": {
@@ -77,9 +77,9 @@
         }
     },
     "1_4": {
-        "status": "In Progress",
-        "start_time": 1749020495.1332343,
-        "elapsed_time": 378.6515657901764,
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
         "running": false,
         "wo_number": "",
         "place": {
@@ -94,8 +94,8 @@
         "running": false,
         "wo_number": "",
         "place": {
-            "x": 160.66666666666652,
-            "y": 51.3333333333334
+            "x": 155.99999999999983,
+            "y": 192.00000000000009
         }
     },
     "3_6": {
@@ -110,11 +110,11 @@
         }
     },
     "1_1": {
-        "status": "In Progress",
-        "start_time": 1749020488.1498477,
-        "elapsed_time": 769.8785002231598,
+        "status": "Unblocked",
+        "start_time": 0.0,
+        "elapsed_time": 0.0,
         "running": false,
-        "wo_number": "17142216",
+        "wo_number": "",
         "place": {
             "x": 0,
             "y": 0
