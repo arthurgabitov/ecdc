@@ -77,11 +77,11 @@
         }
     },
     "1_4": {
-        "status": "In Progress",
+        "status": "Unblocked",
         "start_time": 0.0,
-        "elapsed_time": 1874.4012804031372,
+        "elapsed_time": 0.0,
         "running": false,
-        "wo_number": "17142216",
+        "wo_number": "",
         "place": {
             "x": 0,
             "y": 0
