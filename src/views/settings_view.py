@@ -1,6 +1,7 @@
 import flet as ft
 import os
 from models.user_model import UserModel
+from styles import FONT_SIZE_MEDIUM, FONT_SIZE_NORMAL
 
 class SettingsView:
     def __init__(self, page: ft.Page):

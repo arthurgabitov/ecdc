@@ -4,6 +4,7 @@ from controllers.timer_component import TimerComponent
 from .spot_view import Spot
 from .top_bar import TopBar
 from models.user_model import UserModel
+from styles import FONT_SIZE_CARD_TITLE, FONT_WEIGHT_BOLD
 
 
 class StationView:
@@ -29,13 +30,11 @@ class StationView:
 
         if self.selected_station_id is not None:
             selected_station = self.controller.get_station_by_id(self.selected_station_id)
-            station_title = ft.Text(selected_station["name"], size=22, weight=ft.FontWeight.BOLD)
-            
+            # station_title = ft.Text(selected_station["name"], size=22, weight=ft.FontWeight.BOLD)  # Удалено: не выводим название станции наверху
             spots = [
                 Spot(f"Spot {i + 1}", str(self.selected_station_id), f"{self.selected_station_id}_{i + 1}", self.page, self.controller).build()
                 for i in range(spots_count)
             ]
-            
             columns = []
             spot_index = 0
             for i in range(columns_count):
@@ -44,19 +43,16 @@ class StationView:
                 spot_index += current_column_spots
                 column = ft.Column(controls=column_spots, expand=True, spacing=10)
                 columns.append(column)
-
             row = ft.Row(controls=columns, expand=True, spacing=10)
-
             if not self.station_container:
                 controls = []
-                controls.append(station_title)
+                # controls.append(station_title)  # Удалено: не выводим название станции наверху
                 controls.append(row)
                 self.station_container = ft.Column(
                     controls=controls,
                     expand=True,
                     spacing=10
                 )
-
             return self.station_container
 
     def on_station_change(self, e):

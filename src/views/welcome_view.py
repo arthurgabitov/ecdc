@@ -2,6 +2,7 @@ import flet as ft
 import asyncio
 from controllers.station_controller import StationController
 from models.user_model import UserModel
+from styles import BG_CARD, FONT_SIZE_XL, FONT_WEIGHT_BOLD
 
 class WelcomeView:
     def __init__(self, page: ft.Page, controller: StationController, on_complete):

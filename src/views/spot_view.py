@@ -7,6 +7,7 @@ from controllers.timer_component import TimerComponent
 from controllers.ro_customization_tools import ROCustomizationController
 from models.db_connector import get_user_wo_numbers, get_wo_e_number_and_model
 from models.user_model import UserModel
+from styles import BG_CARD, BG_CARD_ALT, BG_STATUS_BAR_DEFAULT, BG_SNACKBAR_SUCCESS, BG_SNACKBAR_ERROR, FONT_SIZE_LARGE, FONT_SIZE_MEDIUM, FONT_SIZE_NORMAL, FONT_SIZE_SMALL, FONT_SIZE_XL, FONT_SIZE_CARD_TITLE, FONT_SIZE_BUTTON, FONT_WEIGHT_BOLD, FONT_WEIGHT_NORMAL, BORDER_RADIUS_MAIN, PADDING_CARD, PADDING_BUTTON, TEXT_DEFAULT, TEXT_SECONDARY, SHADOW_CARD
 
 spot_style: dict = {
     "main": {
@@ -208,17 +209,18 @@ class Spot:
                     ft.Container(
                         content=ft.Container(
                             content=ft.Column([
-                                self.timer.build_buttons(),
+                                ft.Row([
+                                    self.timer.build_buttons()
+                                ], alignment=ft.MainAxisAlignment.CENTER),
                                 ft.Container(height=10, visible=False)
                             ], spacing=5,
                             horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                             alignment=ft.MainAxisAlignment.CENTER),
                             border_radius=20,
                             padding=ft.padding.all(10),
+                            alignment=ft.alignment.center
                         ),
-                        expand=0,
-                        alignment=ft.alignment.center,
-                        padding=ft.padding.symmetric(horizontal=40),
+                        alignment=ft.alignment.center
                     )
                 )
                 timer_controls.append(
@@ -248,6 +250,7 @@ class Spot:
                     content=ft.Text(self.label, weight=ft.FontWeight.BOLD, size=22, text_align=ft.TextAlign.CENTER),
                     padding=ft.padding.only(top=10),
                     expand=0,
+                    alignment=ft.alignment.center
                 ),
                 ft.Container(
                     content=self.spot_e_number_label,
@@ -276,21 +279,25 @@ class Spot:
         modal_content = ft.Container(
             content=ft.Column(
                 controls=[
-                    ft.Container(content=self.wo_number_dropdown, alignment=ft.alignment.center),
-                    ft.Container(content=self.status_dropdown, alignment=ft.alignment.center),
-                ] + modal_timer_controls + [
-                    ft.Container(content=self.robot_info_section, alignment=ft.alignment.center),
-                    ft.Container(content=self.usb_section, alignment=ft.alignment.center),
-                    ft.Container(content=self.snack_bar, alignment=ft.alignment.center),
+                    ft.Container(content=self.wo_number_dropdown, alignment=ft.alignment.center, padding=ft.padding.only(right=12)),
+                    ft.Container(content=self.status_dropdown, alignment=ft.alignment.center, padding=ft.padding.only(right=12)),
+                ] + (
+                    [ft.Container(content=self.timer.build_buttons(), border_radius=20, alignment=ft.alignment.center, padding=ft.padding.only(right=12, top=10, left=10, bottom=10))] if self.timer is not None else []
+                ) + [
+                    ft.Container(content=self.robot_info_section, alignment=ft.alignment.center, padding=ft.padding.only(right=12)),
+                    ft.Container(content=self.usb_section, alignment=ft.alignment.center, padding=ft.padding.only(right=12)),
+                    ft.Container(content=self.snack_bar, alignment=ft.alignment.center, padding=ft.padding.only(right=12)),
                 ],
                 alignment=ft.MainAxisAlignment.START,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 spacing=20,
-                tight=True,  
+                tight=True,
+                scroll=ft.ScrollMode.AUTO,
             ),
             padding=0,
-            height=None,  
-            width=500,    
+            height=None,
+            width=500,
+            expand=False,
         )
 
         self.dlg_modal = ft.AlertDialog(
@@ -307,7 +314,7 @@ class Spot:
         # --- status bar (цветная полоса статуса) ---
         self.status_bar_color = ft.Colors.GREY_100  # default
         self.status_bar = ft.Container(
-            width=22,  
+            width=28,  
             bgcolor=self.status_bar_color,
             expand=False,
             border=None,  # УБРАТЬ border, если был
@@ -324,7 +331,7 @@ class Spot:
             on_click=self.open_dialog,
             border=None,  # УБРАТЬ border, если был
             margin=0,
-            padding=0,
+            padding=0
         )
         # --- общий border для всего блока (Row) ---
         self.container = ft.Container(
@@ -337,6 +344,7 @@ class Spot:
             bgcolor=None,  # убираем фон у общего контейнера
             expand=1,
             margin=ft.margin.symmetric(vertical=8, horizontal=0),
+            shadow=SHADOW_CARD
         )
         
         # Initialize WO number data when creating the spot

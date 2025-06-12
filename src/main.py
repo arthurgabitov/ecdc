@@ -6,6 +6,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import flet as ft
 from controllers.station_controller import StationController
+from styles import BG_MAIN, BG_CONTAINER, PADDING_MAIN, BORDER_RADIUS_DROPDOWN, FONT_SIZE_SMALL, PADDING_DROPDOWN
 
 from views.station_view import StationView
 from views.welcome_view import WelcomeView
@@ -27,7 +28,7 @@ async def main(page: ft.Page):
 
     page.title = app_settings["title"]
     page.window.maximized = True
-    page.bgcolor = "#F7F7FA"
+    page.bgcolor = BG_MAIN
 
     # Увеличиваем базовый размер шрифта для всего приложения
     # page.theme = ft.Theme(font_family=None, font_size=18)  # Удалено: такого параметра нет в Flet
@@ -45,7 +46,7 @@ async def main(page: ft.Page):
     if not current_sso:
         current_sso = os.getlogin() if hasattr(os, 'getlogin') else "Unknown SSO"
 
-    main_container = ft.Container(expand=True, bgcolor="#F7F7FA")
+    main_container = ft.Container(expand=True, bgcolor=BG_CONTAINER)
     nav_rail_view = NavigationRailView(page, stations_count, lambda idx: update_module(idx)) if show_nav_rail else None
     nav_rail = nav_rail_view.build() if nav_rail_view else None
 
@@ -72,16 +73,15 @@ async def main(page: ft.Page):
         update_module(selected_module_index, current_station_id)
 
     def build_station_dropdown(selected_station_id):
-        # Стилизация как в StationView
         return ft.Dropdown(
             label="Station",
             value=str(selected_station_id),
             options=[ft.dropdown.Option(str(station_id), text=f"Station {station_id}") for station_id in stations],
             on_change=on_station_change,
             width=150,
-            text_size=14,
-            content_padding=ft.padding.symmetric(horizontal=12, vertical=6),
-            border_radius=8,
+            text_size=FONT_SIZE_SMALL,
+            content_padding=PADDING_DROPDOWN,
+            border_radius=BORDER_RADIUS_DROPDOWN,
             tooltip="Change Station"
         )
 
@@ -174,7 +174,7 @@ async def main(page: ft.Page):
                     content=module_container,
                     alignment=ft.alignment.center,
                     expand=True,
-                    padding=ft.padding.all(15)
+                    padding=PADDING_MAIN
                 )
             ],
             expand=True,
@@ -187,7 +187,7 @@ async def main(page: ft.Page):
             content=module_container,
             alignment=ft.alignment.center,
             expand=True,
-            padding=ft.padding.all(15)
+            padding=PADDING_MAIN
         )
 
 

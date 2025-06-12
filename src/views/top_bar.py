@@ -1,11 +1,12 @@
 import flet as ft
+from styles import BG_TOP_BAR, BORDER_RADIUS_TOPBAR, PADDING_TOPBAR, FONT_WEIGHT_BOLD, FONT_SIZE_MEDIUM, TEXT_ACCENT, TEXT_DEFAULT, FONT_SIZE_NORMAL
 
 def TopBar(title, user_sso, dropdown=None, right_controls=None):
     
     LEFT_BLOCK_WIDTH = 340  
     TOPBAR_HEIGHT = 65     
     left_controls = [
-        ft.Text(title, weight=ft.FontWeight.BOLD, size=20),
+        ft.Text(title, weight=FONT_WEIGHT_BOLD, size=FONT_SIZE_MEDIUM),
     ]
     if dropdown is not None:
         left_controls.append(ft.Container(width=16))
@@ -28,8 +29,8 @@ def TopBar(title, user_sso, dropdown=None, right_controls=None):
             ),
             ft.Row([
                 *(right_controls or []),
-                ft.Icon(ft.Icons.PERSON, color=ft.Colors.YELLOW_700),
-                ft.Text(user_sso, color=ft.Colors.BLACK, size=16),
+                ft.Icon(ft.Icons.PERSON, color=TEXT_ACCENT),
+                ft.Text(user_sso, color=TEXT_DEFAULT, size=FONT_SIZE_NORMAL),
             ], alignment=ft.MainAxisAlignment.END, height=TOPBAR_HEIGHT)
         ],
         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
@@ -39,8 +40,8 @@ def TopBar(title, user_sso, dropdown=None, right_controls=None):
     )
     return ft.Container(
         content=row,
-        padding=ft.padding.only(left=24, right=24, top=12, bottom=0),  # отступ сверху
-        bgcolor="#F7F7FA",
-        border_radius=ft.border_radius.only(top_left=16, top_right=16),
+        padding=PADDING_TOPBAR,  # отступ сверху
+        bgcolor=BG_TOP_BAR,
+        border_radius=ft.border_radius.only(top_left=BORDER_RADIUS_TOPBAR, top_right=BORDER_RADIUS_TOPBAR),
         height=TOPBAR_HEIGHT,  # фиксированная высота для всего TopBar
     )

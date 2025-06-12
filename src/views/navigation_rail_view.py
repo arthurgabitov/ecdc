@@ -1,4 +1,5 @@
 import flet as ft
+from styles import BG_NAV_RAIL
 
 class NavigationRailView:
     def __init__(self, page, stations_count, on_change_callback):
@@ -33,7 +34,7 @@ class NavigationRailView:
             width=200,
             destinations=destinations,
             on_change=self._on_change,
-            bgcolor="#F7F7FA"
+            bgcolor=BG_NAV_RAIL
         )
         
         return self.nav_rail

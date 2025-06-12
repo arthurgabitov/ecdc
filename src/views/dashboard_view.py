@@ -2,6 +2,7 @@ import flet as ft
 from views.station_view import StationView
 from .top_bar import TopBar
 from models.user_model import UserModel
+from styles import BG_CARD, BORDER_RADIUS_DASHBOARD, FONT_SIZE_LARGE, FONT_WEIGHT_BOLD
 
 class DashboardView:
     def __init__(self, page, controller, config, module_container, update_module):
@@ -116,8 +117,8 @@ class DashboardView:
                 spacing=5),
                 width=station_width,
                 height=station_height,
-                bgcolor=ft.Colors.GREY_200,
-                border_radius=10,
+                bgcolor=BG_CARD,
+                border_radius=BORDER_RADIUS_DASHBOARD,
                 padding=5,
                 data={"id": station_data["id"]}
             )
