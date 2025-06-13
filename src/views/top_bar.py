@@ -29,7 +29,15 @@ def TopBar(title, user_sso, dropdown=None, right_controls=None):
             ),
             ft.Row([
                 *(right_controls or []),
-                ft.Icon(ft.Icons.PERSON, color=TEXT_ACCENT),
+                ft.Container(
+                    ft.Icon(ft.Icons.PERSON, color=TEXT_ACCENT, size=24),
+                    width=32,
+                    height=32,
+                    bgcolor=ft.Colors.ON_SURFACE_VARIANT,
+                    border_radius=16,
+                    alignment=ft.alignment.center,
+                    margin=ft.margin.only(right=8)
+                ),
                 ft.Text(user_sso, color=TEXT_DEFAULT, size=FONT_SIZE_NORMAL, font_family="Roboto-Light"),
             ], alignment=ft.MainAxisAlignment.END, height=TOPBAR_HEIGHT)
         ],
