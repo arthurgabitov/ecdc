@@ -55,65 +55,88 @@ class Spot:
             visible=config.is_dashboard_test_mode_enabled()
         )
 
+        # --- UI elements initialization (must be before any logic that uses them) ---
+        self.file_buttons_container = ft.Container(content=ft.Row([]), visible=False)
+        self.e_number_label = ft.Text("E-number: Please enter WO-number", size=FONT_SIZE_NORMAL)
+        self.model_label = ft.Text("Model: Unknown", size=FONT_SIZE_NORMAL)
+        self.spot_e_number_label = ft.Text("", size=FONT_SIZE_NORMAL, visible=False)
+        self.robot_info_section = ft.Container(visible=False)
+        self.find_dt_button = ft.ElevatedButton("Find DT", visible=False)
+        self.create_aoa_button = ft.ElevatedButton("Create AOA Folder", visible=False)
+        self.open_orderfil_button = ft.ElevatedButton("Open orderfil.dat", visible=False)
+        self.move_backups_button = ft.ElevatedButton("Move Backups", visible=False)
+        self.usb_section = ft.Container(visible=False)
+        self.snack_bar = ft.SnackBar(content=ft.Text(""), open=False)
+        self.generate_dt_button = ft.ElevatedButton("Generate DT", visible=False)
         
+        # Restore WO number if present
         user_model = UserModel()
         current_sso = user_model.get_user_by_windows_login()
         wo_numbers = get_user_wo_numbers(current_sso)
-        self.wo_number_dropdown = ft.Dropdown(
-            label="WO Number",
-            options=[ft.dropdown.Option(str(wo)) for wo in wo_numbers],
-            on_change=self.update_wo_number_from_dropdown,
-            width=300,
-            visible=True
-        )
-        self.e_number_label = ft.Text("E-number: Please enter WO-number", size=16, text_align=ft.TextAlign.CENTER)
-        self.model_label = ft.Text("Model: Unknown", size=16,  text_align=ft.TextAlign.CENTER)
+        saved_wo = spot_data.get("wo_number", "")
+        # Новый алгоритм: если сохранённый WO есть в списке с сервера, просто выбрать его, иначе сбросить спот
+        if saved_wo and saved_wo in wo_numbers:
+            self.wo_number_dropdown = ft.Dropdown(
+                label="WO Number",
+                options=[ft.dropdown.Option(str(wo)) for wo in wo_numbers],
+                value=saved_wo,
+                on_change=self.update_wo_number_from_dropdown,
+                width=300,
+                visible=True
+            )
+        else:
+            # Если сохранённого WO нет в списке, сбросить спот
+            self.wo_number_dropdown = ft.Dropdown(
+                label="WO Number",
+                options=[ft.dropdown.Option(str(wo)) for wo in wo_numbers],
+                value="",
+                on_change=self.update_wo_number_from_dropdown,
+                width=300,
+                visible=True
+            )
+            # Сбросить все секции, если WO невалидный
+            self.file_buttons_container.content = ft.Row([])
+            self.file_buttons_container.visible = False
+            self.e_number_label.value = "E-number: Please enter WO-number"
+            self.model_label.value = "Model: Unknown"
+            self.spot_e_number_label.value = ""
+            self.spot_e_number_label.visible = False
+            self.robot_info_section.visible = False
+            self.find_dt_button.visible = False
+            self.create_aoa_button.visible = False
+            self.open_orderfil_button.visible = False
+            self.move_backups_button.visible = False
+            self.usb_section.visible = False
+            self.wo_found = False
         
-       
-        self.spot_e_number_label = ft.Text(
-            "", 
-            size=18, 
-            text_align=ft.TextAlign.CENTER, 
-            visible=False
-        )
-        
-        self.file_buttons_container = ft.Container(
-            content=ft.Row([]),
-            visible=False
-        )
-        self.snack_bar = ft.SnackBar(
-            content=ft.Text(""), 
-            open=False,
-            bgcolor=ft.Colors.BLUE_GREY_200, 
-            duration=5000,  
-        )
-        
-        self.find_dt_button = ft.ElevatedButton(
-            text=" Find DT ",
-            on_click=self.on_find_dt_click,
-            visible=False
-        )
-        # Generate DT button
-        self.generate_dt_button = ft.ElevatedButton(
-            text=" Generate DT ",
-            on_click=self.on_generate_dt_click,
-            visible=False
-        )
 
-        # Show SW on Server button
         self.show_sw_on_server_button = ft.ElevatedButton(
             text=" Show SW on Server ",
             on_click=self.on_show_sw_on_server_click,
             visible=True
         )
-        # Show BOM button
+        
         self.show_bom_button = ft.ElevatedButton(
             text=" Show BOM ",
             on_click=self.on_show_bom_click,
             visible=True
         )
 
-        # Robot Info section
+        self.find_dt_button = ft.ElevatedButton(
+            text=" Find DT ",
+            on_click=self.on_find_dt_click,
+            visible=False
+        )
+        
+        self.generate_dt_button = ft.ElevatedButton(
+            text=" Generate DT ",
+            on_click=self.on_generate_dt_click,
+            visible=False
+        )
+        
+
+
+
         self.robot_info_section = ft.Container(
             content=ft.Column([
                 ft.Text("Robot Information", size=16, weight=ft.FontWeight.BOLD),
@@ -135,6 +158,7 @@ class Spot:
             border_radius=20,
             margin=ft.margin.only(top=10, bottom=3)
         )
+
 
         # USB devices section
         self.usb_dropdown = ft.Dropdown(
@@ -171,13 +195,14 @@ class Spot:
         )
         self.usb_version_label = ft.Text(
             "SW version on USB: Not detected",
-            visible=False
+            visible=False,
+            font_family="Roboto-Light"
         )
         
         
         self.usb_section = ft.Container(
             content=ft.Column([
-                ft.Text(" Robot Software and Backups ", size=16, weight=ft.FontWeight.BOLD),
+                ft.Text(" Robot Software and Backups ", size=16, weight=ft.FontWeight.BOLD, font_family="Roboto-Light"),
                 ft.Divider(),
                 ft.Row([
                     self.usb_dropdown,
@@ -228,7 +253,7 @@ class Spot:
                         content=ft.ElevatedButton(
                             content=ft.Row([
                                 ft.Icon(ft.Icons.RESTART_ALT, size=20),
-                                ft.Text("Reset", size=15, weight=ft.FontWeight.BOLD),
+                                ft.Text("Reset", size=15, weight=ft.FontWeight.BOLD, font_family="Roboto-Light"),
                             ], spacing=8, alignment=ft.MainAxisAlignment.CENTER),
                             on_click=self.reset_spot,
                             style=ft.ButtonStyle(
@@ -247,7 +272,7 @@ class Spot:
         self.content = ft.Column(
             controls=[
                 ft.Container(
-                    content=ft.Text(self.label, weight=ft.FontWeight.BOLD, size=22, text_align=ft.TextAlign.CENTER),
+                    content=ft.Text(self.label, weight=ft.FontWeight.BOLD, size=22, text_align=ft.TextAlign.CENTER, font_family="Roboto-Light"),
                     padding=ft.padding.only(top=10),
                     expand=0,
                     alignment=ft.alignment.center
@@ -271,7 +296,7 @@ class Spot:
                 ft.Container(
                     content=self.timer.build_buttons(),
                     border_radius=20,
-                    padding=ft.padding.all(10),
+                    padding=ft.padding.all(0),
                     alignment=ft.alignment.center,
                 )
             )
@@ -288,7 +313,7 @@ class Spot:
                 ,
                 alignment=ft.MainAxisAlignment.START,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                spacing=20,
+                spacing=5,
                 tight=True,
                 scroll=ft.ScrollMode.AUTO,
             ),
@@ -301,7 +326,7 @@ class Spot:
         self.dlg_modal = ft.AlertDialog(
             modal=False,
             barrier_color=ft.Colors.BLACK26,
-            title=ft.Text("Spot Details", text_align=ft.TextAlign.CENTER),
+            title=ft.Text("Spot Details", text_align=ft.TextAlign.CENTER, font_family="Roboto-Light"),
             title_padding=ft.padding.symmetric(horizontal=0, vertical=10),
             content=modal_content,
             actions_alignment=ft.MainAxisAlignment.CENTER,
@@ -341,19 +366,51 @@ class Spot:
             border_radius=spot_style["main"]["border_radius"],
             bgcolor=None,  # remove background from the general container
             expand=1,
-            margin=ft.margin.symmetric(vertical=8, horizontal=0),
+            margin=ft.margin.symmetric(vertical=0, horizontal=0),
             shadow=SHADOW_CARD
         )
-        
-        # Initialize WO number data when creating the spot
-        if spot_data.get("wo_number") and len(spot_data["wo_number"]) == 8:
-            self.process_wo_number(spot_data["wo_number"])
+        # После создания всех UI-элементов:
+        if saved_wo and len(saved_wo) == 8:
+            self.wo_number_dropdown.value = saved_wo
+            self.process_wo_number(saved_wo)
         
         self.update_Color()
         self.timer.on_state_change = self.update_spot_state
         
         # Save WO data for use when creating SW
         self.wo_data = {}
+        # Восстановить UI полностью из состояния контроллера
+        self.restore_ui_from_state()
+
+    def restore_ui_from_state(self):
+        spot_data = self.controller.get_spot_data(int(self.station_id), self.spot_id)
+        # Восстановить статус
+        self.status_dropdown.value = spot_data.get("status", self.controller.config.get_status_names()[0])
+        # Восстановить WO
+        wo = spot_data.get("wo_number", "")
+        self.wo_number_dropdown.value = wo
+        if wo and len(wo) == 8 and wo.isdigit():
+            self.process_wo_number(wo)
+        else:
+            # Сбросить все секции, если WO невалидный
+            self.file_buttons_container.content = ft.Row([])
+            self.file_buttons_container.visible = False
+            self.e_number_label.value = "E-number: Please enter WO-number"
+            self.model_label.value = "Model: Unknown"
+            self.spot_e_number_label.value = ""
+            self.spot_e_number_label.visible = False
+            self.robot_info_section.visible = False
+            self.find_dt_button.visible = False
+            self.create_aoa_button.visible = False
+            self.open_orderfil_button.visible = False
+            self.move_backups_button.visible = False
+            self.usb_section.visible = False
+            self.wo_found = False
+        # Восстановить цвет и таймер
+        self.update_Color()
+        if self.timer:
+            self.timer.restore_from_state()
+        self.page.update()
 
     def update_status(self, e):
         new_status = e.control.value
@@ -496,14 +553,14 @@ class Spot:
     def on_create_sw_click(self, e):
         if not self.usb_dropdown.value:
             # Use snackbar for notification
-            self.snack_bar.content = ft.Text("Please select a USB drive first")
+            self.snack_bar.content = ft.Text("Please select a USB drive first", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
         
         if not self.wo_data.get("dat_file"):
             # Use snackbar for notification
-            self.snack_bar.content = ft.Text("No SW file available for copying")
+            self.snack_bar.content = ft.Text("No SW file available for copying", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
@@ -537,7 +594,7 @@ class Spot:
         success = self.ro_tools.open_file(file_path)
         if not success:
             # Use snackbar for notification
-            self.snack_bar.content = ft.Text("Failed to open the file")
+            self.snack_bar.content = ft.Text("Failed to open the file", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
 
@@ -670,7 +727,7 @@ class Spot:
         """Find DT button handler"""
         if "e_number" not in self.wo_data or not isinstance(self.wo_data["e_number"], dict):
             # Use snackbar for notification
-            self.snack_bar.content = ft.Text("No E-number information available")
+            self.snack_bar.content = ft.Text("No E-number information available", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
@@ -678,7 +735,7 @@ class Spot:
         e_number = self.wo_data["e_number"].get("e_number")
         if not e_number:
             # Use snackbar for notification
-            self.snack_bar.content = ft.Text("No E-number found")
+            self.snack_bar.content = ft.Text("No E-number found", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
@@ -686,14 +743,14 @@ class Spot:
         success, message = self.ro_tools.find_and_open_dt_file(e_number)
         
         # Use snackbar for notification
-        self.snack_bar.content = ft.Text(message)
+        self.snack_bar.content = ft.Text(message, font_family="Roboto-Light")
         self.snack_bar.open = True
         self.page.update()
 
     def on_create_aoa_click(self, e):
         if not self.usb_dropdown.value:
             # Use snackbar for notification
-            self.snack_bar.content = ft.Text("Please select a USB drive first")
+            self.snack_bar.content = ft.Text("Please select a USB drive first", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
@@ -707,13 +764,13 @@ class Spot:
             e_number = self.wo_data["e_number"].get("e_number")
         
         if not wo_number or len(wo_number) != 8:
-            self.snack_bar.content = ft.Text("Valid WO number is required")
+            self.snack_bar.content = ft.Text("Valid WO number is required", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
                 
         if not e_number:
-            self.snack_bar.content = ft.Text("No E-number found for this WO")
+            self.snack_bar.content = ft.Text("No E-number found for this WO", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
@@ -722,20 +779,20 @@ class Spot:
         success, message = self.ro_tools.create_aoa_folder(self.usb_dropdown.value, wo_number, e_number)
         
         # Use snackbar for notification
-        self.snack_bar.content = ft.Text(message)
+        self.snack_bar.content = ft.Text(message, font_family="Roboto-Light")
         self.snack_bar.open = True
         self.page.update()
 
     def on_move_backups_click(self, e):
         if not self.usb_dropdown.value:
             # Use snackbar for notification
-            self.snack_bar.content = ft.Text("Please select a USB drive first")
+            self.snack_bar.content = ft.Text("Please select a USB drive first", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
         
         # Show message that moving process has started
-        self.snack_bar.content = ft.Text("Moving backup folders, please wait...")
+        self.snack_bar.content = ft.Text("Moving backup folders, please wait...", font_family="Roboto-Light")
         self.snack_bar.open = True
         self.page.update()
         
@@ -744,7 +801,7 @@ class Spot:
             success, message = self.ro_tools.move_backup_folders(self.usb_dropdown.value)
             
             # Show operation result
-            self.snack_bar.content = ft.Text(message)
+            self.snack_bar.content = ft.Text(message, font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             
@@ -753,7 +810,7 @@ class Spot:
             traceback.print_exc()
                 
             # Show error message
-            self.snack_bar.content = ft.Text(f"Error moving backups: {str(ex)}")
+            self.snack_bar.content = ft.Text(f"Error moving backups: {str(ex)}", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
 
@@ -761,7 +818,7 @@ class Spot:
         """Open orderfil.dat button handler"""
         if not self.usb_dropdown.value:
             # Use snackbar for notification
-            self.snack_bar.content = ft.Text("Please select a USB drive first")
+            self.snack_bar.content = ft.Text("Please select a USB drive first", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
@@ -795,12 +852,12 @@ class Spot:
         """Show SW on Server button handler"""
         wo_number = self.wo_data.get("wo_number")
         if not wo_number or len(wo_number) != 8:
-            self.snack_bar.content = ft.Text("No valid WO number available")
+            self.snack_bar.content = ft.Text("No valid WO number available", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
         success, message = self.ro_tools.find_and_open_sw_file(wo_number)
-        self.snack_bar.content = ft.Text(message)
+        self.snack_bar.content = ft.Text(message, font_family="Roboto-Light")
         self.snack_bar.open = True
         self.page.update()
 
@@ -808,12 +865,12 @@ class Spot:
         """Show BOM button handler"""
         wo_number = self.wo_data.get("wo_number")
         if not wo_number or len(wo_number) != 8:
-            self.snack_bar.content = ft.Text("No valid WO number available")
+            self.snack_bar.content = ft.Text("No valid WO number available", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
         success, message = self.ro_tools.find_and_open_bom_file(wo_number)
-        self.snack_bar.content = ft.Text(message)
+        self.snack_bar.content = ft.Text(message, font_family="Roboto-Light")
         self.snack_bar.open = True
         self.page.update()
 
@@ -825,22 +882,22 @@ class Spot:
         if "e_number" in self.wo_data and isinstance(self.wo_data["e_number"], dict):
             e_number = self.wo_data["e_number"].get("e_number")
         if not wo_number or len(wo_number) != 8:
-            self.snack_bar.content = ft.Text("Valid WO number is required")
+            self.snack_bar.content = ft.Text("Valid WO number is required", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
         if not e_number:
-            self.snack_bar.content = ft.Text("No E-number found for this WO")
+            self.snack_bar.content = ft.Text("No E-number found for this WO", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
         if not usb_path:
-            self.snack_bar.content = ft.Text("Please select a USB drive first")
+            self.snack_bar.content = ft.Text("Please select a USB drive first", font_family="Roboto-Light")
             self.snack_bar.open = True
             self.page.update()
             return
         generator = DTGenerator(self.controller.config)
         success, message = generator.generate_dt(wo_number, e_number, usb_path, self.ro_tools, self.snack_bar)
-        self.snack_bar.content = ft.Text(message)
+        self.snack_bar.content = ft.Text(message, font_family="Roboto-Light")
         self.snack_bar.open = True
         self.page.update()

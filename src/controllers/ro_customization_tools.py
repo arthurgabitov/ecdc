@@ -90,6 +90,10 @@ class ROCustomizationController:
                         match = re.search(r'IND\.ROBOT\s+([A-Z0-9]+(?:[A-Z0-9-/]*[A-Z0-9]+)?)', config_line, re.IGNORECASE)
                         if match:
                             model = match.group(1)
+                        # Remove 'IND.ROBOT' from model name if present
+                        model = config_line.replace('IND.ROBOT', '').strip()
+                        # Remove extra spaces and dashes if any
+                        model = re.sub(r'^[-\s]+', '', model)
                     
                     if not model and "STARTING CONFIGURATION" in line:
                         config_line = line.strip()
@@ -101,6 +105,11 @@ class ROCustomizationController:
                         break
         except Exception as e:
             print(f"Error parsing file data: {e}")
+        
+        # If model still contains 'IND.ROBOT', remove it (fallback)
+        if model and 'IND.ROBOT' in model:
+            model = model.replace('IND.ROBOT', '').strip()
+            model = re.sub(r'^[-\s]+', '', model)
         
         return {
             "e_number": e_number,

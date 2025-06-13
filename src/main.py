@@ -29,7 +29,7 @@ async def main(page: ft.Page):
     page.title = app_settings["title"]
     #page.window.maximized = True
     page.bgcolor = BG_MAIN
-    page.window.height = 740
+    page.window.height = 760
     page.window.width = 700
 
 
@@ -154,6 +154,7 @@ async def main(page: ft.Page):
         page.update()
 
     def on_close(e):
+        controller.save_spots_state()
         for station_id in controller.get_stations():
             for spot_idx in range(1, app_settings["spots"] + 1):
                 spot_id = f"{station_id}_{spot_idx}"
@@ -164,6 +165,9 @@ async def main(page: ft.Page):
     page.on_resized = adjust_module_width
     page.on_close = on_close
 
+    page.fonts = {
+        "Roboto-Light": "src/fonts/ttf/Roboto-Light.ttf",
+    }
    
     if show_nav_rail:
         layout_content = ft.Row(

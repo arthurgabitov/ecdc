@@ -4,10 +4,10 @@
 import flet as ft
 
 # Colors
-BG_MAIN = "#F9FCFF"
-BG_CONTAINER = "#F9FCFF"
-BG_NAV_RAIL = "#F9FCFF"
-BG_TOP_BAR = "#F9FCFF"
+BG_MAIN = "#F1F1F1"
+BG_CONTAINER = "#F1F1F1"
+BG_NAV_RAIL = "#F1F1F1"
+BG_TOP_BAR = "#F1F1F1"
 BG_CARD = ft.Colors.WHITE
 BG_CARD_ALT = ft.Colors.WHITE60
 BG_STATUS_BAR_DEFAULT = ft.Colors.GREY_100
@@ -35,6 +35,9 @@ FONT_SIZE_BUTTON = 15
 # Font weights
 FONT_WEIGHT_BOLD = ft.FontWeight.BOLD
 FONT_WEIGHT_NORMAL = ft.FontWeight.W_300
+
+# Font family
+FONT_FAMILY_INCONSOLATA_LIGHT = "Inconsolata-Light"
 
 # Border radius
 BORDER_RADIUS_MAIN = 20

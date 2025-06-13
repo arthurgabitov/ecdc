@@ -41,9 +41,9 @@ class StationView:
                 current_column_spots = spots_count // columns_count + (1 if i < spots_count % columns_count else 0)
                 column_spots = spots[spot_index:spot_index + current_column_spots]
                 spot_index += current_column_spots
-                column = ft.Column(controls=column_spots, expand=True, spacing=10)
+                column = ft.Column(controls=column_spots, expand=True, spacing=5)
                 columns.append(column)
-            row = ft.Row(controls=columns, expand=True, spacing=20)
+            row = ft.Row(controls=columns, expand=True, spacing=10)
             if not self.station_container:
                 controls = []
                 # controls.append(station_title)
@@ -51,7 +51,7 @@ class StationView:
                 self.station_container = ft.Column(
                     controls=controls,
                     expand=True,
-                    spacing=10
+                    spacing=0
                 )
             return self.station_container
 

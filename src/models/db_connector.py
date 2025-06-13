@@ -1,4 +1,5 @@
 import pyodbc
+import re
 
 def get_user_wo_numbers(waan_sa: str):
     conn = pyodbc.connect('DSN=CNC_HW_Details_id;Trusted_Connection=yes;')
@@ -15,7 +16,6 @@ def get_user_wo_numbers(waan_sa: str):
     return result
 
 def get_wo_e_number_and_model(wo_number: str):
-
     conn = pyodbc.connect('DSN=CNC_HW_Details_id;Trusted_Connection=yes;')
     cursor = conn.cursor()
     cursor.execute('''
@@ -33,6 +33,10 @@ def get_wo_e_number_and_model(wo_number: str):
                 e_number = val
         if row.WADL01 and not model:
             model = str(row.WADL01)
+            # Remove 'IND.ROBOT' and extra spaces/dashes if present
+            if 'IND.ROBOT' in model:
+                model = model.replace('IND.ROBOT', '').strip()
+                model = re.sub(r'^[-\s]+', '', model)
     conn.close()
     return {"e_number": e_number, "model": model}
 

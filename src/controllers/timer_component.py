@@ -17,7 +17,7 @@ class TimerComponent:
             color=TEXT_SECONDARY,
             weight=FONT_WEIGHT_NORMAL,
             height=None,
-            font_family="Fira Code",  # Use modern monospace font
+            font_family="Roboto-Light",  # Use Roboto-Light for timer
             text_align=ft.TextAlign.CENTER,
             no_wrap=False,  # Allow text wrapping
             max_lines=2     # Limit to two lines
@@ -89,9 +89,9 @@ class TimerComponent:
             self._task = self.page.run_task(self.update_timer)    
     def update_display(self, elapsed_time):
         """Update timer display with formatted time"""
-        total_elapsed = elapsed_time
-        minutes = int(total_elapsed // 60)
-        seconds = int(total_elapsed % 60)
+        total_elapsed = int(elapsed_time)
+        hours = total_elapsed // 3600
+        minutes = (total_elapsed % 3600) // 60
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         # If timer is stopped and labor time is shown, hide all buttons
         if hasattr(self, 'show_labor_time') and self.show_labor_time:
@@ -106,7 +106,7 @@ class TimerComponent:
             if hasattr(self, 'mini_stop_button'):
                 self.mini_stop_button.visible = False
         else:
-            self.timer_text.value = f"{minutes:02d}:{seconds:02d}"
+            self.timer_text.value = f"{hours:02d}:{minutes:02d}"
             self.timer_text.size = FONT_SIZE_LARGE  # Use normal font size for timer
             if spot and spot["running"]:
                 self.timer_text.color = ft.Colors.BLACK
@@ -282,3 +282,11 @@ class TimerComponent:
             padding=ft.padding.all(0),
             bgcolor=None,
         )
+
+    def restore_from_state(self):
+        spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
+        self.update_button_state(spot["running"], update=True)
+        self.update_display(spot["elapsed_time"])
+        # Не запускать update_timer автоматически, только если running
+        # (иначе таймеры будут тикать после рестарта, если не нужно)
+        # Кнопки и текст всегда будут в актуальном состоянии

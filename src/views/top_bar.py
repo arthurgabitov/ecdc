@@ -6,7 +6,7 @@ def TopBar(title, user_sso, dropdown=None, right_controls=None):
     LEFT_BLOCK_WIDTH = 340  
     TOPBAR_HEIGHT = 65     
     left_controls = [
-        ft.Text(title, weight=FONT_WEIGHT_BOLD, size=FONT_SIZE_MEDIUM),
+        ft.Text(title, weight=FONT_WEIGHT_BOLD, size=FONT_SIZE_MEDIUM, font_family="Roboto-Light"),
     ]
     if dropdown is not None:
         left_controls.append(ft.Container(width=16))
@@ -30,7 +30,7 @@ def TopBar(title, user_sso, dropdown=None, right_controls=None):
             ft.Row([
                 *(right_controls or []),
                 ft.Icon(ft.Icons.PERSON, color=TEXT_ACCENT),
-                ft.Text(user_sso, color=TEXT_DEFAULT, size=FONT_SIZE_NORMAL),
+                ft.Text(user_sso, color=TEXT_DEFAULT, size=FONT_SIZE_NORMAL, font_family="Roboto-Light"),
             ], alignment=ft.MainAxisAlignment.END, height=TOPBAR_HEIGHT)
         ],
         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,

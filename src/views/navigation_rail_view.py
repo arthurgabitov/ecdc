@@ -21,7 +21,7 @@ class NavigationRailView:
                 ft.NavigationRailDestination(
                     icon=ft.Icon(icon),
                     selected_icon=ft.Icon(selected_icon),
-                    label=label
+                    label=ft.Text(label, font_family="Roboto-Light")
                 )
             )
     
