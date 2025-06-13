@@ -74,7 +74,7 @@ async def main(page: ft.Page):
 
     def build_station_dropdown(selected_station_id):
         return ft.Dropdown(
-            label="Station",
+            label="Station selection",
             value=str(selected_station_id),
             options=[ft.dropdown.Option(str(station_id), text=f"Station {station_id}") for station_id in stations],
             on_change=on_station_change,
