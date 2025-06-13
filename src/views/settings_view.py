@@ -22,7 +22,7 @@ class SettingsView:
     def build(self, config=None):
         if config is None:
             raise ValueError("Config object must be provided to SettingsView.build()")
-        self.config = config  # сохраняем для on_test_mode_change
+        self.config = config  
         test_mode_enabled = config.is_dashboard_test_mode_enabled()
 
         dashboard_test_mode = ft.Checkbox(
@@ -33,7 +33,7 @@ class SettingsView:
         self.dashboard_test_mode_checkbox = dashboard_test_mode
 
         version = self.get_version()
-        # Только основной контент, без TopBar
+        
         return ft.Column([
             ft.Text("Settings", size=20),
             ft.Text(f"Current Version: {version}", size=16),

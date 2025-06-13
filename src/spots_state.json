@@ -110,10 +110,10 @@
         }
     },
     "1_1": {
-        "status": "Unblocked",
-        "start_time": 0.0,
-        "elapsed_time": 0.0,
-        "running": false,
+        "status": "In Progress",
+        "start_time": 1749798277.9335952,
+        "elapsed_time": 33.94413495063782,
+        "running": true,
         "wo_number": "",
         "place": {
             "x": 0,

@@ -1,12 +1,8 @@
-"""
-Модель для работы с пользователями локально (без SharePoint)
-"""
-
 import os
 from typing import List
 
 class UserModel:
-    """Модель для работы с пользователями: только определение по Windows-логину или ручной ввод."""
+    # Model for working with users: only detection by Windows login or manual input.
     def get_user_by_windows_login(self) -> str:
         try:
             return os.getlogin().lower()
@@ -14,11 +10,11 @@ class UserModel:
             return "Unknown SSO"
 
     def get_user_by_id(self, user_id: str) -> str:
-        # Для совместимости: просто возвращаем user_id как SSO
+        # For compatibility: just return user_id as SSO
         return user_id if user_id else "Unknown SSO"
 
     def get_default_users(self) -> list:
-        # Только текущий пользователь SSO в виде списка
+        # Return only the current SSO user as a list
         try:
             username = os.getlogin().lower()
         except Exception:

@@ -14,7 +14,7 @@ class DashboardView:
         self.user_sso = UserModel().get_user_by_windows_login() or "Unknown SSO"
 
     def build(self):
-        """Build the dashboard screen with draggable station indicators"""
+        # Build the dashboard screen with draggable station indicators
         settings = self.config.get_app_settings()
         num_stations = settings["stations"]
         spots_per_station = settings["spots"]
@@ -45,7 +45,7 @@ class DashboardView:
             })
 
         def on_pan_update(self, e: ft.DragUpdateEvent, detector):
-            """Update station position during drag"""
+            # Update station position during drag
             detector.left = max(0, min(self.page.window.width - detector.content.width, detector.left + e.delta_x))
             detector.top = max(0, min(self.page.window.height - detector.content.height, detector.top + e.delta_y))
             station_id = detector.content.data["id"]
@@ -54,13 +54,13 @@ class DashboardView:
             detector.update()
 
         def on_pan_end(self, e: ft.DragEndEvent, station_id):
-            """Save station position when drag ends"""
+            # Save station position when drag ends
             station_key = f"station_{station_id}"
             self.controller.save_spots_state()
             print(f"Saved position for {station_key} after drag end")
 
         def open_station_view(self, e, station_id):
-            """Open station view when station is clicked"""
+            # Open station view when station is clicked
             self.update_module(0, station_id=station_id)
 
         station_controls = []

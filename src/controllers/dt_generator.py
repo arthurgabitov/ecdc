@@ -1,5 +1,5 @@
 # dt_generator.py
-# Контроллер для генерации DT файлов
+# Controller for generating DT files
 
 import os
 import subprocess
@@ -18,16 +18,16 @@ class DTGenerator:
         self.config = config
 
     def generate_dt(self, wo_number, e_number, usb_path, ro_tools, snack_bar=None):
-        # 1. Найти папку на флешке
+        # 1. Find the folder on the USB drive
         folder_name = f"{wo_number}_{e_number}"
         folder_path = os.path.join(usb_path, folder_name)
         if not os.path.exists(folder_path):
             return False, f"Folder not found: {folder_path}"
-        # 2. Найти sysmast.sv
+        # 2. Find sysmast.sv
         sv_path = os.path.join(folder_path, "sysmast.sv")
         if not os.path.exists(sv_path):
             return False, f"sysmast.sv not found in {folder_path}"
-        # 3. Конвертировать sv в txt
+        # 3. Convert sv to txt
         txt_path = os.path.splitext(sv_path)[0] + ".txt"
         try:
             command = [KCONVARS_PATH, sv_path, txt_path]
@@ -36,7 +36,7 @@ class DTGenerator:
                 return False, f"Failed to convert sysmast.sv: {proc.stderr or proc.stdout}"
         except Exception as ex:
             return False, f"Error running kconvars: {ex}"
-        # 4. Извлечь массив из txt
+        # 4. Extract array from txt
         try:
             with open(txt_path, encoding="utf-8", errors="ignore") as f:
                 lines = f.readlines()
@@ -45,7 +45,7 @@ class DTGenerator:
             for i, line in enumerate(lines):
                 if "Field: $DMR_GRP[1].$MASTER_COUN" in line:
                     arr_start = True
-                    # Начинаем собирать 9 следующих строк
+                    # Start collecting the next 9 lines
                     for j in range(1, 10):
                         if i + j < len(lines):
                             match = re.search(r"\[\d+\]\s*=\s*(-?\d+)", lines[i + j])
@@ -56,7 +56,7 @@ class DTGenerator:
                 return False, "Could not extract 9 values from $DMR_GRP[1].$MASTER_COUN"
         except Exception as ex:
             return False, f"Error reading txt: {ex}"
-        # 5. Найти DT-файл через ro_tools
+        # 5. Find DT file via ro_tools
         dt_path = None
         try:
             found, msg = ro_tools.find_dt_file_path(e_number)
@@ -65,7 +65,7 @@ class DTGenerator:
             dt_path = msg
         except Exception as ex:
             return False, f"Error finding DT file: {ex}"
-        # 6. Открыть DT-файл, заменить значения, сохранить в целевую папку (через Excel COM)
+        # 6. Open DT file, replace values, save to target folder (via Excel COM)
         try:
             import win32com.client
             base_name = os.path.basename(dt_path)
@@ -73,19 +73,15 @@ class DTGenerator:
             excel = win32com.client.Dispatch("Excel.Application")
             excel.Visible = False
             wb = excel.Workbooks.Open(dt_path)
-            ws = wb.Worksheets(1)  # Первый лист
+            ws = wb.Worksheets(1)  # First sheet
             for idx, val in enumerate(arr_values):
                 ws.Range(f"F{22+idx}").Value = val
             wb.SaveAs(save_path)
             wb.Close(False)
             excel.Quit()
-            # Открыть готовый файл в Excel
+            # Open the ready file in Excel
             os.startfile(save_path)
         except Exception as ex:
             return False, f"Error editing/saving Excel via COM: {ex}"
         return True, f"DT file updated and saved to {save_path} (opened in Excel)"
 
-# Для поиска пути к DT-файлу через ro_tools (добавить метод в ro_customization_tools.py):
-# def find_dt_file_path(self, e_number):
-#     ...
-#     return True, file_path  # вместо открытия файла

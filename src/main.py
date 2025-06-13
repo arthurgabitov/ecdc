@@ -27,11 +27,11 @@ async def main(page: ft.Page):
     config.set_controller(controller)
 
     page.title = app_settings["title"]
-    page.window.maximized = True
+    #page.window.maximized = True
     page.bgcolor = BG_MAIN
+    page.window.height = 740
+    page.window.width = 700
 
-    # Увеличиваем базовый размер шрифта для всего приложения
-    # page.theme = ft.Theme(font_family=None, font_size=18)  # Удалено: такого параметра нет в Flet
 
     is_web = page.platform == "web"
     stations = controller.get_stations()
@@ -62,7 +62,7 @@ async def main(page: ft.Page):
         alignment=ft.alignment.center
     )
 
-    # Состояние для выпадающего списка станции
+
     station_dropdown = None
     current_station_id = None
     selected_module_index = 0
@@ -99,7 +99,6 @@ async def main(page: ft.Page):
 
     def update_topbar(selected_index, station_id=None):
         nonlocal station_dropdown
-        # Всегда подпись ECDC Station App, dropdown только для StationView
         if selected_index == 0:
             station_dropdown = build_station_dropdown(station_id if station_id else stations[0])
             topbar = TopBar("ECDC Station App", current_sso, dropdown=station_dropdown)

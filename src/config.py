@@ -6,23 +6,23 @@ import sys
 
 def get_app_data_path():
     """
-    Получает правильный путь к директории данных приложения, 
-    работает как в режиме разработки, так и в упакованном приложении
+    Get the correct path to the application data directory.
+    Works both in development mode and in a packaged application.
     """
-    # Определяем, запущено ли приложение как frozen (упакованным PyInstaller)
+    # Determine if the application is running as frozen (packaged with PyInstaller)
     if getattr(sys, 'frozen', False):
-        # Если приложение упаковано, используем директорию, где находится исполняемый файл
+        # If the application is packaged, use the directory where the executable is located
         app_dir = os.path.dirname(sys.executable)
-        # Создаем директорию data рядом с исполняемым файлом если её нет
+        # Create a data directory next to the executable if it does not exist
         data_dir = os.path.join(app_dir, 'data')
         if not os.path.exists(data_dir):
             try:
                 os.makedirs(data_dir)
             except Exception:
-                # Если не можем создать директорию, используем директорию исполняемого файла
+                # If unable to create the directory, use the executable directory
                 data_dir = app_dir
     else:
-        # В режиме разработки используем текущую директорию скрипта
+        # In development mode, use the current script directory
         data_dir = os.path.dirname(os.path.abspath(__file__))
     
     return data_dir
@@ -57,12 +57,12 @@ class Config:
                     "columns": 2 
                 }
             }
-            # Сохраняем дефолтную конфигурацию, если файл не найден
+            # Save the default configuration if the file is not found
             try:
                 with open(config_path, 'w') as config_file:
                     json.dump(self.config_data, config_file, indent=4)
             except Exception:
-                # Если не удалось сохранить, просто продолжаем работу
+                # If unable to save, just continue
                 pass
                 
         self.controller = None

@@ -3,7 +3,7 @@ import pyodbc
 def get_user_wo_numbers(waan_sa: str):
     conn = pyodbc.connect('DSN=CNC_HW_Details_id;Trusted_Connection=yes;')
     cursor = conn.cursor()
-    # Получаем только те WO, где WAANSA совпадает и WASRST в (36, 48, 50)
+    # Select only those WO where WAANSA matches and WASRST is in (36, 48, 50)
     cursor.execute('''
         SELECT DISTINCT WADOCO
         FROM PartsList_Robotics
@@ -15,10 +15,7 @@ def get_user_wo_numbers(waan_sa: str):
     return result
 
 def get_wo_e_number_and_model(wo_number: str):
-    """
-    Получить Е-номер (WMLOTN) и модель робота (WADL01) для данного WO из базы данных.
-    Возвращает словарь: {"e_number": ..., "model": ...}
-    """
+
     conn = pyodbc.connect('DSN=CNC_HW_Details_id;Trusted_Connection=yes;')
     cursor = conn.cursor()
     cursor.execute('''
@@ -29,7 +26,7 @@ def get_wo_e_number_and_model(wo_number: str):
     e_number = None
     model = None
     for row in cursor.fetchall():
-        # Ищем подходящий формат Е-номера
+        # Find a valid E-number format
         if row.WMLOTN:
             val = str(row.WMLOTN)
             if val.startswith(('E', 'E-', 'F', 'F-')):

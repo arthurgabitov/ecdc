@@ -25,12 +25,12 @@ class StationView:
         spots_count = app_settings["spots"]
         columns_count = app_settings["columns"]
 
-        # Удаляем station_dropdown из StationView
+        # Remove station_dropdown from StationView
         self.station_dropdown = None
 
         if self.selected_station_id is not None:
             selected_station = self.controller.get_station_by_id(self.selected_station_id)
-            # station_title = ft.Text(selected_station["name"], size=22, weight=ft.FontWeight.BOLD)  # Удалено: не выводим название станции наверху
+            # station_title = ft.Text(selected_station["name"], size=22, weight=ft.FontWeight.BOLD)  # Removed: do not display station name at the top
             spots = [
                 Spot(f"Spot {i + 1}", str(self.selected_station_id), f"{self.selected_station_id}_{i + 1}", self.page, self.controller).build()
                 for i in range(spots_count)
@@ -43,10 +43,10 @@ class StationView:
                 spot_index += current_column_spots
                 column = ft.Column(controls=column_spots, expand=True, spacing=10)
                 columns.append(column)
-            row = ft.Row(controls=columns, expand=True, spacing=10)
+            row = ft.Row(controls=columns, expand=True, spacing=20)
             if not self.station_container:
                 controls = []
-                # controls.append(station_title)  # Удалено: не выводим название станции наверху
+                # controls.append(station_title)
                 controls.append(row)
                 self.station_container = ft.Column(
                     controls=controls,

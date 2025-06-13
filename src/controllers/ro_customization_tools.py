@@ -51,7 +51,7 @@ class ROCustomizationController:
         }
 
     def parse_e_number(self, dat_file_path: str):
-        """Extract E-number and model information from DAT file"""
+        
         e_number = None
         model = None
         ref_line = None
@@ -77,7 +77,7 @@ class ROCustomizationController:
                 if file_lines is None:
                     file_lines = content.decode('latin1', errors='replace').splitlines()
                 
-                # Process lines
+                # Iterate through lines to extract E-number and model
                 for line in file_lines:
                     if "!SOF Ref6:" in line and "Robot F/E No" in line:
                         ref_line = line.strip()
@@ -397,9 +397,7 @@ class ROCustomizationController:
                     memory_info = pdf_memory_info
                     print(f"Extracted memory info from PDF: {memory_info}")
             
-            # Определяем путь для копирования файла в зависимости от версии
-            # Для версий P9 и ниже (V9) файл должен быть в корне USB
-            # Для более новых версий - в папке config/p1
+            
             if version.startswith("V9") or version.startswith("9") or version == "Unknown":
                 target_file = os.path.join(usb_path, "orderfil.dat")
                 print(f"Using root path for version {version}")
@@ -409,27 +407,25 @@ class ROCustomizationController:
                 target_file = os.path.join(target_dir, "orderfil.dat")
                 print(f"Using config/p1 path for version {version}")
             
-            # Копируем файл
+            
             try:
-                # Safely create modified content
+                
                 if memory_info and content:
-                    # Если нашли строку Mem Detail, модифицируем её
+                    
                     if mem_detail_line_index >= 0:
                         line = content[mem_detail_line_index]
                         print(f"Modifying line: {line.strip()}")
-                        # Проверяем формат строки
+                        
                         if "-" in line:
-                            # Формат: !SOF Ref8: Mem Detail - ЗНАЧЕНИЕ
-                            
+                            # Format: !SOF Ref8: Mem Detail - VALUE
                             base_part = line.split("-")[0]
                             content[mem_detail_line_index] = f"{base_part}- {memory_info}\n"
                             print(f"Modified to: {content[mem_detail_line_index].strip()}")
                         elif ":" in line:
-                            # Формат: !SOF Ref8: Mem Detail: ЗНАЧЕНИЕ
-                            
+                            # Format: !SOF Ref8: Mem Detail: VALUE
                             parts = line.split(":", 2)
                             if len(parts) >= 2:
-                                # Восстанавливаем оригинальную строку до двоеточия, добавляем тире и значение
+                                # Restore the original string up to the colon, add dash and value
                                 prefix_part = parts[0] + ":"
                                 if "Mem Detail" in parts[1]:
                                     detail_part = parts[1].split("Mem Detail")[0] + "Mem Detail"
@@ -440,32 +436,31 @@ class ROCustomizationController:
                                 content[mem_detail_line_index] = f"{line.rstrip()} - {memory_info}\n"
                             print(f"Modified to: {content[mem_detail_line_index].strip()}")
                         else:
-                            # Неизвестный формат, добавляем в конец строки
+                            # Unknown format, add to the end of the line
                             content[mem_detail_line_index] = f"{line.rstrip()} - {memory_info}\n"
                             print(f"Modified to: {content[mem_detail_line_index].strip()}")
                     else:
-                        # Если не нашли строку, ищем другие строки с !SOF Ref для определения регистра
-                        sof_ref_format = "!SOF Ref"  # По умолчанию
+                        # If the line was not found, search for other !SOF Ref lines to determine the register
+                        sof_ref_format = "!SOF Ref"  # Default
                         sof_ref_indices = []
                         for i, line in enumerate(content):
                             if re.search(r'![Ss][Oo][Ff] [Rr]ef\d+:', line):
                                 sof_ref_indices.append(i)
-                                # Определяем формат используемый в файле
+                                # Determine the format used in the file
                                 sof_match = re.search(r'(![Ss][Oo][Ff] [Rr]ef)\d+:', line)
                                 if sof_match:
                                     sof_ref_format = sof_match.group(1)
                                     break
-                        
-                        # Создаем строку в правильном регистре
+                        # Create a line in the correct register
                         new_mem_detail_line = f"{sof_ref_format}8: Mem Detail - {memory_info}\n"
                         print(f"Creating new line: {new_mem_detail_line.strip()}")
                         
                         if sof_ref_indices:
-                            # Если есть другие !SOF Ref строки, вставляем после последней
+                            # If there are other !SOF Ref lines, insert after the last one
                             insert_index = max(sof_ref_indices) + 1
                             content.insert(insert_index, new_mem_detail_line)
                         else:
-                            # Если нет !SOF Ref строк, вставляем в начало
+                            # If there are no !SOF Ref lines, insert at the beginning
                             content.insert(0, new_mem_detail_line)
                     
                     # Write the modified file with the same encoding as we read it
@@ -661,44 +656,79 @@ class ROCustomizationController:
             traceback.print_exc()
             return False, f"Error finding DT file: {str(e)}"
 
+    def find_dt_file_path(self, e_number):
+        """Find DT file path for the specified E-number (no open, just path)"""
+        try:
+            clean_e_number = e_number.strip().upper()
+            if clean_e_number.startswith("E-"):
+                clean_e_number = "E" + clean_e_number[2:]
+            elif not clean_e_number.startswith("E"):
+                clean_e_number = "E" + clean_e_number
+            match = re.match(r'E(\d{3})(\d{3})', clean_e_number)
+            if not match:
+                return False, f"Invalid E-number format: {e_number}"
+            first_part = match.group(1)
+            range_folder = f"E{first_part}000-E{first_part}999"
+            base_path = r"\\fanuc\FS\Corporate\Products\Data_Sheets_MD"
+            dt_path = os.path.join(base_path, range_folder, "DT")
+            regular_path = os.path.join(base_path, range_folder)
+            e_number_dash = clean_e_number.replace('E', 'E-')
+            patterns = [
+                f"*{e_number_dash}*.xls",   
+                f"*{e_number_dash}*.xlsx",  
+                f"*{e_number_dash}*.xlsm",  
+                f"*{clean_e_number}*.xls",  
+                f"*{clean_e_number}*.xlsx", 
+                f"*{clean_e_number}*.xlsm", 
+            ]
+            found_files = []
+            for pattern in patterns:
+                if os.path.exists(dt_path):
+                    dt_search = os.path.join(dt_path, pattern)
+                    found_files.extend(glob.glob(dt_search))
+                if os.path.exists(regular_path):
+                    regular_search = os.path.join(regular_path, pattern)
+                    found_files.extend(glob.glob(regular_search))
+            found_files = list(set(found_files))
+            if not found_files:
+                return False, f"No DT file found for {e_number}"
+            return True, found_files[0]
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return False, f"Error finding DT file: {str(e)}"
+
     def create_aoa_folder(self, usb_path, wo_number, e_number):
         """Create an AOA folder on USB drive"""
         try:
-            # Проверяем, что USB существует и доступен для записи
+            # Check if the USB exists and is writable
             if not os.path.exists(usb_path) or not os.access(usb_path, os.W_OK):
                 return False, "USB drive not found or not writable"
-            
-            # Проверяем, что у нас есть номер WO и E-number
+            # Check if WO number is provided
             if not wo_number:
                 return False, "WO number is required to create AOA folder"
-            
+            # Check if E-number is provided
             if not e_number:
                 return False, "E-number is required to create AOA folder"
-            
-            # Форматируем E-number, удаляя возможный дефис
+            # Format E-number by removing possible dash
             if e_number.startswith("E-"):
                 e_number = "E" + e_number[2:]
-                
-            # Создаем имя папки в формате "12345678_Е123456"
+            # Create folder name in the format "12345678_E123456"
             folder_name = f"{wo_number}_{e_number}"
             folder_path = os.path.join(usb_path, folder_name)
-            
-            # Проверяем, существует ли уже папка
+            # Check if the folder already exists
             if os.path.exists(folder_path):
                 return False, f"Folder '{folder_name}' already exists"
-            
-            # Создаем папку
+            # Create the folder
             os.makedirs(folder_path)
-            
             return True, f"Created AOA folder: {folder_path}"
-            
         except Exception as e:
             print(f"Error creating AOA folder: {e}")
             traceback.print_exc()
             return False, f"Error creating AOA folder: {str(e)}"
 
     def move_backup_folders(self, usb_path):
-        """Move backup folders from USB to desktop"""
+        # Move backup folders from USB to desktop
         try:
             # Check that USB exists and is readable
             if not os.path.exists(usb_path) or not os.access(usb_path, os.R_OK):
@@ -771,17 +801,15 @@ class ROCustomizationController:
     def open_orderfil_from_usb(self, usb_path):
         """Open orderfil.dat file from USB drive"""
         try:
-            # Проверяем, что USB существует
+            # Check that the USB exists
             if not os.path.exists(usb_path):
                 return False, "USB drive not found"
-            
-            # Определяем возможные пути к файлу orderfil.dat
-            # Для версии P9 и ниже файл находится в корне
+            # Determine possible paths to the orderfil.dat file
+            # For version P9 and below, the file is in the root
             root_path = os.path.join(usb_path, "orderfil.dat")
-            # Для более новых версий файл находится в папке config/p1
+            # For newer versions, the file is in the config/p1 folder
             config_path = os.path.join(usb_path, "config", "p1", "orderfil.dat")
-            
-            # Проверяем, существует ли файл по одному из путей
+            # Check if the file exists at one of the paths
             if os.path.exists(root_path):
                 success = self.open_file(root_path)
                 path_display = root_path
@@ -790,12 +818,10 @@ class ROCustomizationController:
                 path_display = config_path
             else:
                 return False, "orderfil.dat not found on this USB drive"
-            
             if success:
                 return True, f"Opened orderfil.dat from {path_display}"
             else:
                 return False, f"Failed to open orderfil.dat"
-                
         except Exception as e:
             print(f"Error opening orderfil.dat: {e}")
             traceback.print_exc()

@@ -16,7 +16,7 @@ spot_style: dict = {
         "border_radius": 20,
         "border": ft.border.all(width=1, color=ft.Colors.GREY_300),
         "ink": True,
-        # "shadow" убран
+        # "shadow" removed
     },
 }
 
@@ -27,16 +27,15 @@ class Spot:
         self.spot_id = spot_id
         self.page = page
         self.controller = controller
-        self.is_ftl = (station_id == "FTL" or str(station_id) == "0" or station_id == 0)
+        
         self.timer = None
-        if not self.is_ftl:
-            try:
-                self.timer = TimerComponent(page, station_id, spot_id, controller)
-            except Exception as ex:
-                self.timer = None
+        try:
+            self.timer = TimerComponent(page, station_id, spot_id, controller)
+        except Exception as ex:
+            self.timer = None
         self.label = f"Spot {self.spot_id[-1]}"
         
-        # Определяем, запущено ли приложение в браузере
+        # Determine if the app is running in a browser
         self.is_web = page.platform == "web"
         
         self.ro_tools = ROCustomizationController(controller.config)
@@ -44,12 +43,8 @@ class Spot:
         self.timer_state = "stopped"  
         self.wo_found = False  
 
-        # Для FTL station_id не приводим к int
-        if self.station_id == "FTL":
-            spot_data = self.controller.get_spot_data(self.station_id, spot_id)
-        else:
-            spot_data = self.controller.get_spot_data(int(station_id), spot_id)
-        # Pass config explicitly
+        # Get spot data BEFORE using spot_data
+        spot_data = self.controller.get_spot_data(int(station_id), spot_id)
         config = self.controller.config
         self.status_dropdown = ft.Dropdown(
             label="Status",
@@ -60,7 +55,7 @@ class Spot:
             visible=config.is_dashboard_test_mode_enabled()
         )
 
-        # --- WO Dropdown instead of TextField ---
+        
         user_model = UserModel()
         current_sso = user_model.get_user_by_windows_login()
         wo_numbers = get_user_wo_numbers(current_sso)
@@ -74,13 +69,12 @@ class Spot:
         self.e_number_label = ft.Text("E-number: Please enter WO-number", size=16, text_align=ft.TextAlign.CENTER)
         self.model_label = ft.Text("Model: Unknown", size=16,  text_align=ft.TextAlign.CENTER)
         
-        # E-number and model display label for spot container
+       
         self.spot_e_number_label = ft.Text(
             "", 
             size=18, 
             text_align=ft.TextAlign.CENTER, 
-            visible=False,
-            height=20  # Fixed height to prevent shifting
+            visible=False
         )
         
         self.file_buttons_container = ft.Container(
@@ -91,23 +85,28 @@ class Spot:
             content=ft.Text(""), 
             open=False,
             bgcolor=ft.Colors.BLUE_GREY_200, 
-            duration=5000,  # Increased display time (5 seconds)
+            duration=5000,  
         )
         
-        # Find DT button
         self.find_dt_button = ft.ElevatedButton(
             text=" Find DT ",
             on_click=self.on_find_dt_click,
             visible=False
         )
+        # Generate DT button
+        self.generate_dt_button = ft.ElevatedButton(
+            text=" Generate DT ",
+            on_click=self.on_generate_dt_click,
+            visible=False
+        )
 
-        # Кнопка показать SW на сервере
+        # Show SW on Server button
         self.show_sw_on_server_button = ft.ElevatedButton(
             text=" Show SW on Server ",
             on_click=self.on_show_sw_on_server_click,
             visible=True
         )
-        # Кнопка показать BOM
+        # Show BOM button
         self.show_bom_button = ft.ElevatedButton(
             text=" Show BOM ",
             on_click=self.on_show_bom_click,
@@ -123,6 +122,7 @@ class Spot:
                 self.model_label,
                 ft.Row([
                     self.find_dt_button,
+                    self.generate_dt_button,
                     self.show_sw_on_server_button,
                     self.show_bom_button
                 ], alignment=ft.MainAxisAlignment.START, spacing=10),
@@ -201,7 +201,7 @@ class Spot:
         self.usb_detection_active = False
         self.usb_thread = None
         
-        # Таймер и кнопки только если self.timer существует и не None
+        # Timer and buttons only if self.timer exists and is not None
         timer_controls = []
         if self.timer is not None:
             try:
@@ -275,19 +275,17 @@ class Spot:
                     alignment=ft.alignment.center,
                 )
             )
-        # Заменяем TextField на Dropdown в модальном окне
+        
         modal_content = ft.Container(
             content=ft.Column(
                 controls=[
                     ft.Container(content=self.wo_number_dropdown, alignment=ft.alignment.center, padding=ft.padding.only(right=12)),
                     ft.Container(content=self.status_dropdown, alignment=ft.alignment.center, padding=ft.padding.only(right=12)),
-                ] + (
-                    [ft.Container(content=self.timer.build_buttons(), border_radius=20, alignment=ft.alignment.center, padding=ft.padding.only(right=12, top=10, left=10, bottom=10))] if self.timer is not None else []
-                ) + [
+                
                     ft.Container(content=self.robot_info_section, alignment=ft.alignment.center, padding=ft.padding.only(right=12)),
                     ft.Container(content=self.usb_section, alignment=ft.alignment.center, padding=ft.padding.only(right=12)),
-                    ft.Container(content=self.snack_bar, alignment=ft.alignment.center, padding=ft.padding.only(right=12)),
-                ],
+                    ft.Container(content=self.snack_bar, alignment=ft.alignment.center, padding=ft.padding.only(right=12)), ]
+                ,
                 alignment=ft.MainAxisAlignment.START,
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 spacing=20,
@@ -311,13 +309,13 @@ class Spot:
             on_dismiss=self.on_dialog_dismiss,
         )
 
-        # --- status bar (цветная полоса статуса) ---
+        # --- status bar (colored status stripe) ---
         self.status_bar_color = ft.Colors.GREY_100  # default
         self.status_bar = ft.Container(
             width=28,  
             bgcolor=self.status_bar_color,
             expand=False,
-            border=None,  # УБРАТЬ border, если был
+            border=None,  # REMOVE border if present
             margin=0,
             padding=0,
             border_radius=ft.border_radius.only(top_left=spot_style["main"]["border_radius"], bottom_left=spot_style["main"]["border_radius"]),
@@ -325,15 +323,15 @@ class Spot:
         main_content_container = ft.Container(
             content=self.content,
             expand=True,
-            bgcolor=ft.Colors.WHITE,  # Явно белый фон для карточки
+            bgcolor=ft.Colors.WHITE,  # Explicit white background for the card
             border_radius=ft.border_radius.only(top_right=spot_style["main"]["border_radius"], bottom_right=spot_style["main"]["border_radius"]),
             ink=spot_style["main"]["ink"],
             on_click=self.open_dialog,
-            border=None,  # УБРАТЬ border, если был
+            border=None,  # REMOVE border if present
             margin=0,
             padding=0
         )
-        # --- общий border для всего блока (Row) ---
+        # --- general border for the whole block (Row) ---
         self.container = ft.Container(
             content=ft.Row([
                 self.status_bar,
@@ -341,7 +339,7 @@ class Spot:
             ], expand=1, spacing=0, tight=True),  
             border=spot_style["main"]["border"],
             border_radius=spot_style["main"]["border_radius"],
-            bgcolor=None,  # убираем фон у общего контейнера
+            bgcolor=None,  # remove background from the general container
             expand=1,
             margin=ft.margin.symmetric(vertical=8, horizontal=0),
             shadow=SHADOW_CARD
@@ -394,7 +392,7 @@ class Spot:
             self.page.update()
             return
             
-        # Получаем e_number и model из базы
+        # Get e_number and model from the database
         db_result = get_wo_e_number_and_model(wo_number)
         e_number_value = db_result.get("e_number") or "Not found"
         model_value = db_result.get("model") or "Unknown"
@@ -405,20 +403,21 @@ class Spot:
         # --- Update spot card label ---
         self.spot_e_number_label.value = f"{e_number_value} | {model_value}" if e_number_value != "Not found" else ""
         self.spot_e_number_label.visible = e_number_value != "Not found"
-        # --- Получаем файлы для robot software section ---
+        # --- Get files for robot software section ---
         file_result = self.ro_tools.search_wo_files(wo_number)
         if file_result.get("dat_file"):
             self.wo_data["dat_file"] = file_result["dat_file"]
         if file_result.get("pdf_file"):
             self.wo_data["pdf_file"] = file_result["pdf_file"]
-        # --- Показываем секции если есть данные ---
+        # --- Show sections if data is available ---
         self.robot_info_section.visible = True
         self.usb_section.visible = True
         self.wo_found = True
-        # --- Показываем кнопку Find DT, если есть E-number ---
+        # --- Show Find DT button if E-number is found ---
         self.find_dt_button.visible = e_number_value != "Not found"
+        self.generate_dt_button.visible = e_number_value != "Not found"
         self.update_border()
-        # --- Обновляем USB секцию, если окно уже открыто ---
+        # --- Update USB section if dialog is already open ---
         if hasattr(self, 'dlg_modal') and getattr(self.dlg_modal, 'open', False):
             drives = self.ro_tools.get_connected_usb_drives()
             self.update_usb_drives(drives)
@@ -547,16 +546,14 @@ class Spot:
             if self.dlg_modal not in self.page.overlay:
                 self.page.overlay.append(self.dlg_modal)
             self.status_dropdown.visible = self.controller.config.is_dashboard_test_mode_enabled()
-            # self.status_dropdown.update()  # УДАЛЕНО, чтобы не было AssertionError
-            # УБРАНО: self.process_wo_number(self.wo_number_field.value)
-            # Теперь обработка через Dropdown
-            # Explicitly call USB list update перед открытии диалога
+            
             if self.wo_found:
                 drives = self.ro_tools.get_connected_usb_drives()
                 self.update_usb_drives(drives)
-                print(f"Found {len(drives)} USB drives когда открытии диалога")
+                
             self.robot_info_section.visible = self.wo_found
             self.usb_section.visible = self.wo_found
+            self.generate_dt_button.visible = self.wo_found and ("e_number" in self.wo_data and isinstance(self.wo_data["e_number"], dict) and self.wo_data["e_number"].get("e_number", "Not found") != "Not found")
             # Set button visibility based on USB presence
             if not self.usb_dropdown.options or len(self.usb_dropdown.options) == 0:
                 self.create_sw_button.visible = False
@@ -572,7 +569,7 @@ class Spot:
         if self.dlg_modal.open:
             self.dlg_modal.open = False
             self.page.update()
-        # Отписываемся от callback при закрытии, чтобы не было утечек
+        # Unsubscribe from callback on close to avoid leaks
         self.ro_tools.unregister_usb_detection_callback(self.update_usb_drives_callback)
     
     def on_dialog_dismiss(self, e):
@@ -600,8 +597,8 @@ class Spot:
         self.page.update()
     
     def update_border(self):
-        # Бордер не должен меняться автоматически при запуске таймера или открытии модального окна
-        # Больше не меняем цвет бордера в зависимости от wo_found или таймера
+        # Border should not change automatically when starting the timer or opening the modal window
+        # No longer change border color depending on wo_found or timer
         self.container.border = spot_style["main"]["border"]
         if self.container.page:
             self.container.update()
@@ -610,13 +607,13 @@ class Spot:
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         status = spot["status"]
         statuses = self.controller.config.get_spot_statuses()
-        # Цвет для unblocked теперь просто GREY_300
+        # Color for unblocked is now just GREY_300
         if status.lower() == "unblocked":
             new_Color = ft.Colors.GREY_300
         else:
             new_Color = next((s["color"] for s in statuses if s["name"] == status), ft.Colors.GREY_500)
         self.status_bar.bgcolor = new_Color
-        # Бордер не меняем, только статус-бар
+        # Do not change border, only status bar
         self.status_dropdown.visible = self.controller.config.is_dashboard_test_mode_enabled()
         if self.container.page:
             self.status_bar.update()
@@ -641,23 +638,17 @@ class Spot:
         
         # Hide Robot Info section
         self.robot_info_section.visible = False
-        
         # Hide Find DT button
         self.find_dt_button.visible = False
-        
         # Hide Create AOA Folder button
         self.create_aoa_button.visible = False
-            
         # Hide Open orderfil.dat button
         self.open_orderfil_button.visible = False
-        
         # Hide Move Backups button
         self.move_backups_button.visible = False
-        
         # Reset WO found flag and timer state
         self.wo_found = False
         self.timer_state = "stopped"
-        
         # Return border to initial state
         self.container.border = spot_style["main"]["border"]
         
@@ -822,6 +813,34 @@ class Spot:
             self.page.update()
             return
         success, message = self.ro_tools.find_and_open_bom_file(wo_number)
+        self.snack_bar.content = ft.Text(message)
+        self.snack_bar.open = True
+        self.page.update()
+
+    def on_generate_dt_click(self, e):
+        from controllers.dt_generator import DTGenerator
+        wo_number = self.wo_number_dropdown.value
+        e_number = None
+        usb_path = self.usb_dropdown.value
+        if "e_number" in self.wo_data and isinstance(self.wo_data["e_number"], dict):
+            e_number = self.wo_data["e_number"].get("e_number")
+        if not wo_number or len(wo_number) != 8:
+            self.snack_bar.content = ft.Text("Valid WO number is required")
+            self.snack_bar.open = True
+            self.page.update()
+            return
+        if not e_number:
+            self.snack_bar.content = ft.Text("No E-number found for this WO")
+            self.snack_bar.open = True
+            self.page.update()
+            return
+        if not usb_path:
+            self.snack_bar.content = ft.Text("Please select a USB drive first")
+            self.snack_bar.open = True
+            self.page.update()
+            return
+        generator = DTGenerator(self.controller.config)
+        success, message = generator.generate_dt(wo_number, e_number, usb_path, self.ro_tools, self.snack_bar)
         self.snack_bar.content = ft.Text(message)
         self.snack_bar.open = True
         self.page.update()

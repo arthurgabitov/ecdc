@@ -9,12 +9,12 @@ class StationController:
         self.config.set_controller(self)
         self.stations = self.load_stations()
         
-        # Используем функцию get_app_data_path для правильного определения пути
+        # Use get_app_data_path to determine the correct data directory
         data_dir = get_app_data_path()
         self.state_file = os.path.join(data_dir, 'spots_state.json')
         
         self.spots = self.load_spots_state()
-        self._dirty_spots = set()  
+        self._dirty_spots = set()  # Track modified spots
         self.initialize_spots()
 
     def load_stations(self):
@@ -77,13 +77,13 @@ class StationController:
                 "wo_number": "",
                 
             }
-            self._dirty_spots.add(spot_id)  # Новый спот считается изменённым
+            self._dirty_spots.add(spot_id)  # Mark new spot as modified
         spot = self.spots[spot_id]
         if spot["running"] and not spot_id.startswith("station_"):
             current_time = time.time()
             spot["elapsed_time"] += current_time - spot["start_time"]
             spot["start_time"] = current_time
-            self._dirty_spots.add(spot_id)  # Помечаем как изменённый
+            self._dirty_spots.add(spot_id)  # Mark as modified
         return spot
 
     def get_timer_value(self, station_id: int, spot_id: str):

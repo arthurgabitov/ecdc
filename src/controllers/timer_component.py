@@ -17,10 +17,10 @@ class TimerComponent:
             color=TEXT_SECONDARY,
             weight=FONT_WEIGHT_NORMAL,
             height=None,
-            font_family="JetBrains Mono, Fira Mono, Consolas, monospace",  # Современный моноширинный шрифт
+            font_family="Fira Code",  # Use modern monospace font
             text_align=ft.TextAlign.CENTER,
-            no_wrap=False,  # Разрешить перенос
-            max_lines=2     # До двух строк
+            no_wrap=False,  # Allow text wrapping
+            max_lines=2     # Limit to two lines
         )
         self.start_button = ft.IconButton(
             icon=ft.Icons.PLAY_ARROW,
@@ -52,11 +52,11 @@ class TimerComponent:
             tooltip="Stop"
         )
 
-        # Создаем мини-кнопки только один раз
+        # Create mini-buttons only once
         self.mini_start_button = ft.IconButton(
-            icon=None,  # будет установлен в build_buttons
+            icon=None,  # Set in build_buttons
             icon_color=ft.Colors.WHITE,
-            bgcolor=None,  # будет установлен в build_buttons
+            bgcolor=None,  # Set in build_buttons
             icon_size=20,
             width=32,
             height=32,
@@ -93,37 +93,33 @@ class TimerComponent:
         minutes = int(total_elapsed // 60)
         seconds = int(total_elapsed % 60)
         spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
-        # Если таймер остановлен и показывается Labor time, скрываем кнопки
+        # If timer is stopped and labor time is shown, hide all buttons
         if hasattr(self, 'show_labor_time') and self.show_labor_time:
             self.timer_text.value = self.labor_time_text
-            self.timer_text.size = FONT_SIZE_NORMAL  # Меньше размер для длинного текста
-            # Скрываем основные кнопки
+            self.timer_text.size = FONT_SIZE_NORMAL  # Use smaller font for long text
+            # Hide main buttons
             self.start_button.visible = False
             self.stop_button.visible = False
-            
-            # Скрываем мини-кнопки, если они существуют
+            # Hide mini-buttons if they exist
             if hasattr(self, 'mini_start_button'):
                 self.mini_start_button.visible = False
             if hasattr(self, 'mini_stop_button'):
                 self.mini_stop_button.visible = False
         else:
             self.timer_text.value = f"{minutes:02d}:{seconds:02d}"
-            self.timer_text.size = FONT_SIZE_LARGE  # Обычный размер для таймера
+            self.timer_text.size = FONT_SIZE_LARGE  # Use normal font size for timer
             if spot and spot["running"]:
                 self.timer_text.color = ft.Colors.BLACK
             else:
                 self.timer_text.color = TEXT_SECONDARY
-                
-            # Показываем основные кнопки
+            # Show main buttons
             self.start_button.visible = True
             self.stop_button.visible = True
-            
-            # Показываем мини-кнопки, если они существуют
+            # Show mini-buttons if they exist
             if hasattr(self, 'mini_start_button'):
                 self.mini_start_button.visible = True
             if hasattr(self, 'mini_stop_button'):
                 self.mini_stop_button.visible = True
-                
         if self.page:
             self.page.update()
 
@@ -142,20 +138,19 @@ class TimerComponent:
         if running:
             self.start_button.icon = ft.Icons.PAUSE
             self.start_button.bgcolor = BG_BUTTON_ORANGE
-            # Обновляем также мини-кнопку, если она существует
+            # Update mini-button appearance if it exists
             if hasattr(self, 'mini_start_button'):
                 self.mini_start_button.icon = ft.Icons.PAUSE
                 self.mini_start_button.bgcolor = BG_BUTTON_ORANGE
         else:
             self.start_button.icon = ft.Icons.PLAY_ARROW
             self.start_button.bgcolor = BG_BUTTON_GREEN
-            # Обновляем также мини-кнопку, если она существует
+            # Update mini-button appearance if it exists
             if hasattr(self, 'mini_start_button'):
                 self.mini_start_button.icon = ft.Icons.PLAY_ARROW
                 self.mini_start_button.bgcolor = BG_BUTTON_GREEN
-
         if update:
-            # Обновляем все кнопки, если они добавлены на страницу
+            # Update all buttons if they are added to the page
             if self.start_button.page:
                 self.start_button.update()
             if hasattr(self, 'mini_start_button') and self.mini_start_button.page:
@@ -168,11 +163,11 @@ class TimerComponent:
             # --- Auto-set status to 'In Progress' if currently 'Unblocked' ---
             if spot["status"] == "Unblocked":
                 self.controller.set_spot_status(int(self.station_id), self.spot_id, "In Progress")
-            # Принудительно обновляем данные spot после старта
+            # Force update spot data after start
             spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
             self.update_button_state(True)
             self.update_display(spot["elapsed_time"])
-            # Всегда запускаем update_timer
+            # Always start update_timer
             self._task = self.page.run_task(self.update_timer)
         elif spot:
             self.controller.pause_timer(int(self.station_id), self.spot_id)
@@ -180,7 +175,7 @@ class TimerComponent:
             elapsed_time = self.controller.get_timer_value(int(self.station_id), self.spot_id)
             self.update_display(elapsed_time)
 
-        # Принудительно обновляем UI компоненты
+        # Force update of UI components
         if hasattr(self, 'mini_start_button') and self.mini_start_button.page:
             self.mini_start_button.update()
         if hasattr(self, 'mini_stop_button') and self.mini_stop_button.page:
@@ -200,16 +195,14 @@ class TimerComponent:
             self.timer_text.value = self.labor_time_text
             self.timer_text.color = ft.Colors.BLACK  # Always show labor time in black
 
-            # Скрываем основные кнопки
+            # Hide main buttons
             self.start_button.visible = False
             self.stop_button.visible = False
-
-            # Скрываем мини-кнопки, если они существуют
+            # Hide mini-buttons if they exist
             if hasattr(self, 'mini_start_button'):
                 self.mini_start_button.visible = False
                 if self.mini_start_button.page:
                     self.mini_start_button.update()
-
             if hasattr(self, 'mini_stop_button'):
                 self.mini_stop_button.visible = False
                 if self.mini_stop_button.page:
@@ -230,7 +223,7 @@ class TimerComponent:
             elapsed_time = self.controller.get_timer_value(int(self.station_id), self.spot_id)
             self.update_display(elapsed_time)
 
-            # Обновляем мини-кнопки, если они существуют
+            # Update mini-buttons if they exist
             if hasattr(self, 'mini_start_button') and self.mini_start_button.page:
                 self.mini_start_button.update()
             if hasattr(self, 'mini_stop_button') and self.mini_stop_button.page:
@@ -246,12 +239,11 @@ class TimerComponent:
         self.show_labor_time = False
         self.labor_time_text = ""
 
-        # Показываем мини-кнопки, если они существуют
+        # Show mini-buttons if they exist
         if hasattr(self, 'mini_start_button'):
             self.mini_start_button.visible = True
             if self.mini_start_button.page:
                 self.mini_start_button.update()
-
         if hasattr(self, 'mini_stop_button'):
             self.mini_stop_button.visible = True
             if self.mini_stop_button.page:
@@ -262,10 +254,10 @@ class TimerComponent:
             self.on_state_change()
 
     def build_buttons(self):
-        # Синхронизируем иконку и цвет мини-кнопки с основной
+        # Synchronize mini-button icon and color with the main button
         self.mini_start_button.icon = self.start_button.icon
         self.mini_start_button.bgcolor = self.start_button.bgcolor
-        # Таймер и кнопки всегда в одну строку, элементы уменьшаются при сжатии
+        # Timer and buttons are always in one row, elements shrink when compressed
         return ft.Row(
             [
                 ft.Container(
@@ -279,7 +271,7 @@ class TimerComponent:
             ],
             alignment=ft.MainAxisAlignment.START,
             spacing=4,
-            wrap=False  # всегда в одну строку
+            wrap=False  # Always in one row
         )
 
     def build(self):

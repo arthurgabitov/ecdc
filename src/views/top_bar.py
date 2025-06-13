@@ -13,7 +13,7 @@ def TopBar(title, user_sso, dropdown=None, right_controls=None):
         left_controls.append(
             ft.Container(
                 dropdown,
-                width=180,  # Фиксированная ширина для выпадающего списка
+                width=180,  
                 alignment=ft.alignment.center_left,
             )
         )
@@ -23,9 +23,9 @@ def TopBar(title, user_sso, dropdown=None, right_controls=None):
         [
             ft.Container(
                 ft.Row(left_controls, alignment=ft.MainAxisAlignment.START, expand=True),
-                width=LEFT_BLOCK_WIDTH,  # всегда одинаковая ширина для левой части
+                width=LEFT_BLOCK_WIDTH,  
                 alignment=ft.alignment.center_left,
-                height=TOPBAR_HEIGHT,   # фиксированная высота
+                height=TOPBAR_HEIGHT,   
             ),
             ft.Row([
                 *(right_controls or []),
@@ -36,12 +36,12 @@ def TopBar(title, user_sso, dropdown=None, right_controls=None):
         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
         vertical_alignment=ft.CrossAxisAlignment.CENTER,
         expand=True,
-        height=TOPBAR_HEIGHT,  # фиксированная высота для всей строки
+        height=TOPBAR_HEIGHT,  
     )
     return ft.Container(
         content=row,
-        padding=PADDING_TOPBAR,  # отступ сверху
+        padding=PADDING_TOPBAR, 
         bgcolor=BG_TOP_BAR,
         border_radius=ft.border_radius.only(top_left=BORDER_RADIUS_TOPBAR, top_right=BORDER_RADIUS_TOPBAR),
-        height=TOPBAR_HEIGHT,  # фиксированная высота для всего TopBar
+        height=TOPBAR_HEIGHT,  
     )
