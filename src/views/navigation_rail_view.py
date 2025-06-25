@@ -21,17 +21,15 @@ class NavigationRailView:
                 ft.NavigationRailDestination(
                     icon=ft.Icon(icon),
                     selected_icon=ft.Icon(selected_icon),
-                    label=ft.Text(label, font_family="Roboto-Light")
+                    label_content=ft.Text(labels[idx], font_family="Roboto-Light")
                 )
             )
     
         self.nav_rail = ft.NavigationRail(
-            extended=True,
+            extended=False,
             selected_index=0,
             label_type=ft.NavigationRailLabelType.ALL,
-            min_width=100,
-            min_extended_width=200,
-            width=200,
+            
             destinations=destinations,
             on_change=self._on_change,
             bgcolor=BG_NAV_RAIL

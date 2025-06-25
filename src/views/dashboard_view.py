@@ -14,7 +14,7 @@ class DashboardView:
         self.user_sso = UserModel().get_user_by_windows_login() or "Unknown SSO"
 
     def build(self):
-        # Build the dashboard screen with draggable station indicators
+        
         settings = self.config.get_app_settings()
         num_stations = settings["stations"]
         spots_per_station = settings["spots"]
@@ -36,7 +36,8 @@ class DashboardView:
             else:
                 x_pos = 50 + (i % 4) * 150
                 y_pos = 50 + (i // 2) * 100
-                self.controller.set_spot_coordinates(station_key, x_pos, y_pos)
+                
+                self.controller.set_spot_coordinates(station_id, station_key, x_pos, y_pos)
             stations.append({
                 "name": f"Station {station_id}",
                 "x": x_pos,
@@ -45,12 +46,13 @@ class DashboardView:
             })
 
         def on_pan_update(self, e: ft.DragUpdateEvent, detector):
-            # Update station position during drag
+           
             detector.left = max(0, min(self.page.window.width - detector.content.width, detector.left + e.delta_x))
             detector.top = max(0, min(self.page.window.height - detector.content.height, detector.top + e.delta_y))
             station_id = detector.content.data["id"]
             station_key = f"station_{station_id}"
-            self.controller.set_spot_coordinates(station_key, detector.left, detector.top)
+            
+            self.controller.set_spot_coordinates(station_id, station_key, detector.left, detector.top)
             detector.update()
 
         def on_pan_end(self, e: ft.DragEndEvent, station_id):
@@ -137,7 +139,7 @@ class DashboardView:
             controls=station_controls,
             expand=True  # Вместо width=self.page.window.width, height=self.page.window.height
         )
-        # Только основной контент, без TopBar
+        
         return ft.Column([
             ft.Text("Stations Dashboard", size=28, weight=ft.FontWeight.BOLD),
             ft.Container(content=dashboard, expand=True)
