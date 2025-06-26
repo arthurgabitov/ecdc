@@ -1,0 +1,5 @@
+tb_cart 1           -- cartesian 1. cycle priority 2. path priority
+tb_jnt 1            -- joint 1. cycle priority 2. path priority
+cabinet 1 -- Generated Automatically
+payload 315  -- max payload
+ENDOFL              -- end of the file

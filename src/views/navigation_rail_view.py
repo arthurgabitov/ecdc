@@ -19,8 +19,12 @@ class NavigationRailView:
         for idx, (label, (icon, selected_icon)) in enumerate(zip(labels, icons)):
             destinations.append(
                 ft.NavigationRailDestination(
+                    
+
+
                     icon=ft.Icon(icon),
-                    selected_icon=ft.Icon(selected_icon),
+                    selected_icon=ft.Icon(selected_icon, color=ft.Colors.YELLOW_700),
+                    
                     label_content=ft.Text(labels[idx], font_family="Roboto-Light")
                 )
             )
@@ -29,6 +33,7 @@ class NavigationRailView:
             extended=False,
             selected_index=0,
             label_type=ft.NavigationRailLabelType.ALL,
+            indicator_color=ft.Colors.ON_SURFACE_VARIANT,
             
             destinations=destinations,
             on_change=self._on_change,

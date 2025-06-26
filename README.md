@@ -1,5 +1,5 @@
 ## Current version:
-- 0.2.2 Added DT file generation function with Excel formatting preservation
+- 0.2.3 UI/UX improvements for DT generation modal, bugfixes
 
 ## Updates history:
 - 0.2.2 Added a new function for generating DT files with full formatting preservation using Excel COM. The "Generate DT" button in the spot card extracts an integer array from sysmast.sv, writes values to the DT Excel file, and opens the result automatically.

@@ -369,7 +369,7 @@ class Spot:
             margin=ft.margin.symmetric(vertical=0, horizontal=0),
             shadow=SHADOW_CARD
         )
-        # После создания всех UI-элементов:
+        
         if saved_wo and len(saved_wo) == 8:
             self.wo_number_dropdown.value = saved_wo
             self.process_wo_number(saved_wo)
@@ -377,10 +377,29 @@ class Spot:
         self.update_Color()
         self.timer.on_state_change = self.update_spot_state
         
-        # Save WO data for use when creating SW
+        
         self.wo_data = {}
-        # Восстановить UI полностью из состояния контроллера
+        
         self.restore_ui_from_state()
+
+       
+        # Кастомный оверлей для прогресса без AlertDialog
+        self.progress_modal = ft.AlertDialog(
+            modal=True,
+            title=None,
+            actions=[],
+            content=ft.Container(
+                content=ft.ProgressRing(),
+                width=90,
+                height=90,
+                border_radius=20,
+                alignment=ft.alignment.center,
+                expand=False,
+                padding=0,
+                margin=0
+            ),
+            content_padding=0
+        )
 
     def restore_ui_from_state(self):
         spot_data = self.controller.get_spot_data(int(self.station_id), self.spot_id)
@@ -875,6 +894,7 @@ class Spot:
         self.page.update()
 
     def on_generate_dt_click(self, e):
+        import threading
         from controllers.dt_generator import DTGenerator
         wo_number = self.wo_number_dropdown.value
         e_number = None
@@ -896,8 +916,19 @@ class Spot:
             self.snack_bar.open = True
             self.page.update()
             return
-        generator = DTGenerator(self.controller.config)
-        success, message = generator.generate_dt(wo_number, e_number, usb_path, self.ro_tools, self.snack_bar)
-        self.snack_bar.content = ft.Text(message, font_family="Roboto-Light")
-        self.snack_bar.open = True
+        def run_dt():
+            generator = DTGenerator(self.controller.config)
+            success, message = generator.generate_dt(wo_number, e_number, usb_path, self.ro_tools, self.snack_bar)
+            def close_modal():
+                self.progress_modal.open = False
+                self.page.update()
+                self.snack_bar.content = ft.Text(message, font_family="Roboto-Light")
+                self.snack_bar.open = True
+                self.page.update()
+            close_modal()
+        # Добавляем прогресс-диалог в overlay, если его там нет
+        if self.progress_modal not in self.page.overlay:
+            self.page.overlay.append(self.progress_modal)
+        self.progress_modal.open = True
         self.page.update()
+        threading.Thread(target=run_dt).start()

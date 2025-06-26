@@ -1,0 +1,2288 @@
+Recovering from C:\Users\94500062\AppData\Local\Temp\tmp2CE6
+----- Copying Personality Files -----
+Copied frvirt.dat
+Copied orderfil.dat
+Copied backdate.dt
+Copied M4C3.DT
+Copied PANEL1.DT
+Copied PANEL2.DT
+Copied PANEL3.DT
+Copied PANEL4.DT
+Copied POS2.DT
+----- Copying Auto-Update Files -----
+Created dummy C:\Users\94500062\Documents\My Workcells\HandlingPRO34\Robot_1\MC\00\TEMP\FNOREST.COM
+-- Obtaining FRVRC path information.
+-- Creating FRVRC local tempoary folder name.
+-- Creating FRVRC local temporary recovery folder.
+-- Copying recovery information into local recovery folder.
+----- Creating MC:\00\TEMP to support AUTOCOLD.COM -----
+Created dummy C:\Users\94500062\Documents\My Workcells\HandlingPRO34\Robot_1\MC\00\TEMP\IOSTATUS.CM
+Created dummy C:\Users\94500062\Documents\My Workcells\HandlingPRO34\Robot_1\MC\00\TEMP\RENAME.COM
+Created dummy C:\Users\94500062\Documents\My Workcells\HandlingPRO34\Robot_1\MC\00\TEMP\TUIDATA.COM
+---------- Copy of logfile.txt follows ---------
+Memory Allocation Address for retained CMOS = 40500000
+Loading ROS task DLLs
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\SYIN.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\KSMON.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\SYNTITP.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\NTSERV.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\OSPPSERV.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\OSPPCONS.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\NTPORT.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\ERLOG.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\MMMEMO.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\MMMPTC.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\VMMAIN.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\VMPVAR.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\VMUTIL.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\FRSY.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\DOSFILE4.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\CHND.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\CHIF.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\SYTIMQUE.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\PMGR.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\PGPX.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\APAX.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\APAMGR.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\MGMMGR.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\MPPLAN.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\MIINTR.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\MFFLTR.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\STPMPT.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\STSRIF.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\OSTCHP.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\OSTKEY.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\TPMAIN.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\WDVD.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\WDWM.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\WDKY.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\MJOG.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\IOSCAN.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\SYSHELL.DLL
+Loading C:\Program Files (x86)\FANUC\Shared\Off Line\FRVRC\V9.30\bin\DRASKER.DLL
+[ntinit] Current locale is C
+[ntinit] Set locale to English_United States.1252
+Switching states: old = STARTUP   new = STARTUP 
+[ntinit] TmpWrk  BaseAddress: 0x08C50000 RegionSize:  27648KB Protections: 0x00000004
+[ntinit] TmpWrk2 BaseAddress: 0x34200000 RegionSize: 122880KB Protections: 0x00000004
+[ntinit] TmpWrk3 BaseAddress: 0x1D000000 RegionSize: 378880KB Protections: 0x00000004
+[NTINIT] Frequency 10000000, Ticks/ms 10000 BusClock 40000000
+[IEWTQ] Count = 0 add to head/tail task: 199  cnt: 24  pri: 10
+[osppc] Virtual Clock timer device resolution discovery suceeded, min res: 1 ms
+[NTPORT] Ready for connections at 9100
+[NTPORT] Ready for connections at 9101
+[NTPORT] Ready for connections at 9102
+[NTPORT] Ready for connections at 9103
+[OSSERV] VIRTUAL not doing multi-processing service
+[mktskmem] use static 1024 pages for tid: 159
+main bus clock 40
+main PCB version 4
+[ostkinit] TPWDOG_CHK $0
+[DSFL] No cache/B:\OS st=255
+[DSFL] No cache/B:\OS st=255
+[DSFL] No cache/B:\OS st=255
+[DSFL] MAIN V8.90 PCMCIA-ATA USB RD@0x0 (0) dfdevtbl@0x4CB5EA69
+[ksinitsk] syin continues
+[nt_get_device_default_path] 'MC' default path is 'C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\MC
+Updated $MC_PATH = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\MC
+Updated $MED_PATH to = C:\ProgramData\FANUC\FRVRC Media\V9.30
+[nt_get_device_default_path] 'UD1' default path is 'C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UD1
+Updated $UD1_PATH to = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UD1
+[nt_get_device_default_path] 'UD2' default path is 'C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UD2
+Updated $UD2_PATH to = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UD2
+[nt_get_device_default_path] 'UT1' default path is 'C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UT1
+Updated $UT1_PATH to = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UT1
+[syinit] bootrom time: 73134 ms
+[syinit] ** INITIAL START **
+[syinit] System Version V9.30259      9/14/2023
+[ERLOG] Waiting for UIF to start up
+[syinisb0]VIRTUAL case,setting master_p->initializing to FALSE
+[DSFL] Fat type check Failed: 0x100006
+[syinisb0] Load table id=0x31 typ=0x1D baud=0x31
+[syinisb0] osxsndpkt F_INIT packet 0x0
+[ostkinit] ID $31 type 1D baud 31 version P
+[ostkinit] TP Baud Rate 19200
+[ostkinit] sending F_WRIT to 201
+[ostkinit] TPWDOG_CHK+2 $1000
+[ostkinit] sending F_READ to 201
+[syinisb0] F_INIT complete 0x0
+[syinit] ** INITIAL START **
+[NTPORT] accept connection
+[spinit] featuremod ptrs
+[dpinit] setting cur lang to NULL
+[dpsetlng] setting cur lang to DEFAULT     
+[tppascon_config] wait for EVB_SPINITDONE
+[syinit] start at 14:3:42:
+[SYINISB0] Delete MEMO, VMGR, and DICT files ... 
+[sycfgmen] alloc cfgmenu_t @ 0x407C4CE4
+[sycfgmen] cfgmenu_p 0x407C4CE4
+[syinisb0] tpid check ltp = 0x5CB2C00, tpid = 49
+[NTSYIN_STEP] Startup Step #1
+VMGR for R-30iB V8.30
+[mktskmem] use static 2000 pages for tid:  52
+[mktskmem] use static 2405 pages for tid: 322
+[vmshadow_periodic] Normal power shutdown state = 0
+[vminit] Loading 4 temp 153020388 remaining of 154052600
+[vminit_loadctx] Loading all files (VMGR/PVAR Suspended)
+[vminit_loadctx] Done Loading Time = 475us
+[vminit] after 4 temp 153020388 remaining of 154052600, took 0ms
+[NTSYIN_STEP] Startup Step #2
+[syinisb0] $device set to PATH:
+BMON =config\\
+R573 NOT ordered
+Calculated F No: F00000    
+FANUC Serial No: 88340     
+[syinisb0] running @MED:autoinit.com
+[SPRUNCMDF] status = 2000E; "ADDUPLOG MED:\00\TEMP\TEMP_MEMORY_STAT.DG" : FRS:\UPDTLOG.LS
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\TEMP_MEMORY_STAT.DG" : FRS:\UPDTLOG.LS
+[spruncmdf] +++ no abort
+[sycopsys] running @MED:init1
+"init1.com for V9.30P/32 (FD V9.30216)"
+"Checking Language"
+"Checking Tool"
+"Checking Robot Library"
+"Checking H521 (English Dictionary) "
+"Checking H510 (Kernel + Basic S/W) "
+"Conditionally Checking CMSP (Common softpanel) "
+"Checking J517 (Program Adjust) "
+"Checking J539 (KAREL Run-Time Env) "
+"Checking PRST (Program Status) "
+"Conditionally Checking CLIO (Cell I/O) "
+"Checking MASK (Group Mask Exchange) "
+"Checking J921 (Touch Skip) "
+"Checking ATUI (ZDT EOAT Setup) "
+"Checking J542 (I/O Interconnect 2) "
+"Checking J520 (TCP Auto Set) "
+"Checking CNRE (Control Reliable) "
+"Checking MDSW (Mode Switch) "
+"Checking R651 (FRL Params) "
+"Checking H930 (Robot Servo Code) "
+"Checking J507 (Print Function) "
+"Checking J510 (Incr Instruction) "
+"Checking J513 (Hour Meter) "
+"Checking J514 (Position Registers) "
+"Checking J516 (FCTN Menu Save) "
+"Conditionally Checking R645 (Common shell) "
+"Checking SEND (PC Send Macros) "
+"Checking R631 (Data Acquisition) "
+"Checking J503 (MACROs, Skip/Offset) "
+"Checking J505 (Program Shift) "
+"Checking SMLB (Shift and Mirror Lib) "
+"Checking SHLB (Shift Library) "
+"Checking J506 (Mirror Shift) "
+"Checking J509 (Tool Offset) "
+"Checking J616 (Background Editing) "
+"Checking J604 (Enhanced User Frame) "
+"Checking UFRM (User Frame) "
+"Checking J716 (FTP Interface) "
+"Checking HTCP (TCP/IP Interface) "
+"Checking HOCO (Host Communications) "
+"Checking FRDM (RDM Robot Discovery) "
+"Checking TELN (Telnet Interface) "
+"Checking HTTP (Web Server) "
+"Checking TMIL (TMILIB Interface) "
+"Checking J650 (KAREL Cmd. Language) "
+"Checking EIOC (Ext. DIO Config) "
+"Checking TPAC (TP Menu Accounting) "
+"Checking CGTP (iPendant) "
+"Checking TPTX (TPTX) "
+"Checking IGUI (iPendant Grid Display) "
+"Checking IPGS (iPendant Setup) "
+"Checking ESET (External DI BWD) "
+"Checking J627 (High-Speed Skip) "
+"Checking J628 (Condition Monitor) "
+"Checking OPLG (LogBook(System)) "
+"Checking R637 (Motion logger) "
+"Checking PSLG (MMR Motion log) "
+"Checking CRIM (CnrRndImp) "
+"Checking DCSU (Dual Check Safety UIF) "
+"Checking J545 (Automatic Backup) "
+"Checking SNBA (SNPX basic) "
+"Checking LCHK (License Checker) "
+"Checking UECK (Unexcepted motn Check) "
+"Checking J957 (USB port on iPendant) "
+"Checking H550 (Analog I/O) "
+"Checking J600 (Multi-Tasking) "
+"Checking ATUP (Auto Software Update) "
+"Checking J554 (Mixed logic) "
+"Checking J515 (Prog Num Selection) "
+"Checking R542 (Extended Error Log) "
+"Checking VIPL (Vision Library) "
+"Checking IRCL (iRCalib. Standard) "
+"Checking VCOR (Vision Core) "
+"Checking FVRC (Virtual Robot) "
+"Checking VCCM (VCalibration Common) "
+"Checking WEBP (Web Plus) "
+"Checking CSUI (Vision SP CSUI) "
+"Checking CSCX (Vision SP CSCX) "
+"Checking VCAM (Camera I/F) "
+"Checking CSGE (Vision SP CSGE) "
+"Checking R681 (GigE Interface) "
+"Checking CUIF (Common calib UIF) "
+"Checking MCSP (MechStop Protection) "
+"Checking RSCH (Diagnostic log) "
+"Checking J697 (Program Viewer) "
+"Checking MDCO (Motion Diag. Core) "
+"Checking R636 (Socket Messaging) "
+"Checking J958 (Trouble Diag. & Prev.) "
+"Checking OPCO (Motion Optm. Core) "
+"Checking J882 (Torque Simulator I/F) "
+"Checking PCMF (PCM function) "
+"Checking MPRO (Motion Profiler) "
+"Checking J614 (Angle Shift) "
+"Checking R000 (Position Checking) "
+"Checking R882 (ZDT Application) "
+"Checking R610 (SNTP Client) "
+"Checking MRST (MR Standard) "
+"Checking J771 (Maintenance Reminder) "
+"Checking R854 (Zero Down Time Option) "
+"Checking DGCO (iRDiag Core) "
+"Checking FREQ (Realtime Freq Anlys) "
+"Checking J637 (Incremental Jog) "
+"Checking LICE (Displaying License) "
+"Checking JNN7 (Email Client) "
+"Checking J618 (CE Mark) "
+"Checking SVMO (Aux Servo Code) "
+"Checking J601 (Multi-Group Motion) "
+"Checking CPRQ (Requires CP) "
+"Checking R663 (Constant Path) "
+"Checking FCSP (Func stup) "
+"Checking H552 (HandlingTool) "
+"Checking MHCR (MH Core) "
+"Checking R765 (iRDiagnostics) "
+"Checking J541 (Password Protection) "
+"Checking R769 (Demo Control) "
+"Checking J609 (Space Check) "
+"Checking ETSS (SSPC error text) "
+"Checking R641 (PC Interface) "
+"Checking IPNL (istdpnl) "
+"Checking R553 (HMI Device (SNPX)) "
+"Checking OPCU (OPC-UA) "
+"Checking R680 (Enhanced T1 Mode) "
+"Checking R528 (Disp 2nd analog port) "
+"Checking TCPE (TCPP Extention) "
+"Checking OPIS (OPT TP Ins) "
+"Checking R535 (EGD Ethernet I/O) "
+"Checking R793 (EGD I/O) "
+"Checking R603 (ROS Ethernet Packets) "
+"Checking R694 (Jog in Auto Mode) "
+"Checking J568 (DCS Safe I/O connect) "
+"Checking R558 (Internet Conn/Custo) "
+"Checking R626 (Web Svr Enhancements) "
+"Checking PRXY (HTTP Proxy Svr) "
+"Checking J755 (Domain Name Serv.) "
+"Checking R526 (DHCP) "
+"Checking JNN8 (EMAIL Enhancements) "
+"Checking R679 (Real Simple Syn.(RSS)) "
+"Checking R677 (SMB Client) "
+"Checking R782 (4D Standard) "
+"Checking DOCV (Document Viewer) "
+"Checking H632 (M-410iC/315) "
+"Checking R696 (Extended User Frames) "
+"Checking R834 (Dual Chan. Profinet) "
+"Checking MOBO (Motherboard driver) "
+"Checking J744 (PROFINET CP16XX FW.) "
+"Checking J931 (PROFINET Safety) "
+"Checking OLSP (OLPC Support files) "
+"Checking R534 (Collision Guard) "
+"Checking R781 (Touch Panel) "
+"Checking R843 (Remote iPendant) "
+"Checking JCGT (Include Remote TP) "
+"Checking D064 (64MB DRAM) "
+"Checking F064 (64MB FROM) "
+"Checking R507 (Ascii Upload) "
+"Checking R796 (Ascii Program Loader) "
+"Checking J611 (Torque Limit) "
+"Checking J548 (Smooth Stop Upgrade) "
+"Checking SMSC (Smooth Stop common) "
+"Checking J567 (DCS Pos./Speed check) "
+"Checking DCSC (DCS Pos./speed common) "
+"Checking H896 (Basic Positioner) "
+"Checking J766 (Maint Reminder Plus) "
+"Checking J684 (Collision Guard Pack) "
+"Checking J523 (Cycle Time Priority) "
+"Checking R640 (MROT Instruction) "
+"Checking R675 (Servo Tool) "
+"Checking R789 (TP Firmware) "
+"Checking RMCN (Remote Conn Standard) "
+"Checking R868 (Prod Status Display) "
+"Checking J508 (Customer Reg) "
+"Checking R869 (Enhanced UIF) "
+"Checking TUTO (Tutorial) "
+"Checking F128 (128MB FROM) "
+"Checking UEVT (USR EVNT) "
+"Conditionally Checking CMSC (Common shell core) "
+"Conditionally Checking STYL (Common style select) "
+"Conditionally Checking ORSR (Enhanced Rob Serv Req) "
+"Conditionally Checking SRSR (Robot Service Request) "
+"Checking RLCM (Robot Library Setup) "
+"Checking CTOP (Cycle time Opt.) "
+"Checking N100 (Positioner Utilities) "
+"Configuration is Valid"
+"Default Language is ENGLISH
+"Copying System Files"
+"Copying H521 (English Dictionary) "
+"Copying H510 (Kernel + Basic S/W) "
+[spflload] Ignore 'FRSY-008 file already exists' frcopy PRODUCT\H510\ROBINIT.PC FRS:\ROBINIT.PC
+"sftpanel\init1.com for V9.30P/32 (FD V9.30216)"
+"Copying CMSP (Common softpanel) "
+"Copying J517 (Program Adjust) "
+"Copying J539 (KAREL Run-Time Env) "
+"Copying PRST (Program Status) "
+"cellio\init1.com for V9.30P/32 (FD V9.30216)"
+"Copying CLIO (Cell I/O) "
+"Copying MASK (Group Mask Exchange) "
+"Copying J921 (Touch Skip) "
+"Copying ATUI (ZDT EOAT Setup) "
+"Copying J542 (I/O Interconnect 2) "
+"Copying J520 (TCP Auto Set) "
+"Copying CNRE (Control Reliable) "
+"Copying MDSW (Mode Switch) "
+"Copying R651 (FRL Params) "
+"Copying H930 (Robot Servo Code) "
+"Copying J507 (Print Function) "
+"Copying J510 (Incr Instruction) "
+"Copying J513 (Hour Meter) "
+"Copying J514 (Position Registers) "
+"Copying J516 (FCTN Menu Save) "
+"cmshell\init1.com for V9.30P/32 (FD V9.30216)"
+"Copying R645 (Common shell) "
+"Copying SEND (PC Send Macros) "
+"Copying R631 (Data Acquisition) "
+"Copying J503 (MACROs, Skip/Offset) "
+"Copying J505 (Program Shift) "
+"Copying SMLB (Shift and Mirror Lib) "
+"Copying SHLB (Shift Library) "
+"Copying J506 (Mirror Shift) "
+"Copying J509 (Tool Offset) "
+"Copying J616 (Background Editing) "
+"Copying J604 (Enhanced User Frame) "
+"Copying UFRM (User Frame) "
+"Copying J716 (FTP Interface) "
+"Copying HTCP (TCP/IP Interface) "
+"Copying HOCO (Host Communications) "
+"Copying FRDM (RDM Robot Discovery) "
+"Copying TELN (Telnet Interface) "
+"Copying HTTP (Web Server) "
+"Copying TMIL (TMILIB Interface) "
+"Copying J650 (KAREL Cmd. Language) "
+"Copying EIOC (Ext. DIO Config) "
+"Copying TPAC (TP Menu Accounting) "
+"Copying CGTP (iPendant) "
+"Copying TPTX (TPTX) "
+"Copying IGUI (iPendant Grid Display) "
+"Copying IPGS (iPendant Setup) "
+"Copying ESET (External DI BWD) "
+"Copying J627 (High-Speed Skip) "
+"Copying J628 (Condition Monitor) "
+"Copying OPLG (LogBook(System)) "
+"Copying R637 (Motion logger) "
+"Copying PSLG (MMR Motion log) "
+"Copying CRIM (CnrRndImp) "
+"Copying DCSU (Dual Check Safety UIF) "
+"Copying J545 (Automatic Backup) "
+"Copying SNBA (SNPX basic) "
+"Copying LCHK (License Checker) "
+"Copying UECK (Unexcepted motn Check) "
+"Copying J957 (USB port on iPendant) "
+"Copying H550 (Analog I/O) "
+"Copying J600 (Multi-Tasking) "
+"Copying ATUP (Auto Software Update) "
+"Copying J554 (Mixed logic) "
+"j515\init1.com for V9.30P/32 (FD V9.30216)"
+"Copying J515 (Prog Num Selection) "
+"Copying R542 (Extended Error Log) "
+"Copying VIPL (Vision Library) "
+"Copying IRCL (iRCalib. Standard) "
+"Copying VCOR (Vision Core) "
+"Copying FVRC (Virtual Robot) "
+"Copying VCCM (VCalibration Common) "
+"Copying WEBP (Web Plus) "
+"Copying CSUI (Vision SP CSUI) "
+"Copying CSCX (Vision SP CSCX) "
+"Copying VCAM (Camera I/F) "
+"Copying CSGE (Vision SP CSGE) "
+"Copying R681 (GigE Interface) "
+"Copying CUIF (Common calib UIF) "
+"Copying MCSP (MechStop Protection) "
+"Copying RSCH (Diagnostic log) "
+"Copying J697 (Program Viewer) "
+"Copying MDCO (Motion Diag. Core) "
+"Copying R636 (Socket Messaging) "
+"Copying J958 (Trouble Diag. & Prev.) "
+"Copying OPCO (Motion Optm. Core) "
+"Copying J882 (Torque Simulator I/F) "
+"Copying PCMF (PCM function) "
+"Copying MPRO (Motion Profiler) "
+"Copying J614 (Angle Shift) "
+"Copying R000 (Position Checking) "
+"Copying R882 (ZDT Application) "
+"Copying R610 (SNTP Client) "
+"mrstnd\init1.com for V9.30P/32 (FD V9.30216)"
+"Copying MRST (MR Standard) "
+"Copying J771 (Maintenance Reminder) "
+"Copying R854 (Zero Down Time Option) "
+[spflload] Ignore 'FRSY-008 file already exists' frcopy PRODUCT\R854\RCMCFG_ZDT.XML FRU:\RCMCFG.XML
+[spflload] Ignore 'FRSY-008 file already exists' frcopy PRODUCT\R854\VARCHG.XML FRU:\VARCHG.XML
+"Copying DGCO (iRDiag Core) "
+"Copying FREQ (Realtime Freq Anlys) "
+"Copying J637 (Incremental Jog) "
+"Copying LICE (Displaying License) "
+"Copying JNN7 (Email Client) "
+"Copying J618 (CE Mark) "
+"Copying SVMO (Aux Servo Code) "
+"Copying J601 (Multi-Group Motion) "
+"Copying CPRQ (Requires CP) "
+"Copying R663 (Constant Path) "
+"Copying FCSP (Func stup) "
+"Copying H552 (HandlingTool) "
+"Copying MHCR (MH Core) "
+"Copying R765 (iRDiagnostics) "
+"Copying J541 (Password Protection) "
+"Copying R769 (Demo Control) "
+"Copying J609 (Space Check) "
+"Copying ETSS (SSPC error text) "
+"Copying R641 (PC Interface) "
+"Copying IPNL (istdpnl) "
+"Copying R553 (HMI Device (SNPX)) "
+"Copying OPCU (OPC-UA) "
+"Copying R680 (Enhanced T1 Mode) "
+"Copying R528 (Disp 2nd analog port) "
+"Copying TCPE (TCPP Extention) "
+"Copying OPIS (OPT TP Ins) "
+"Copying R535 (EGD Ethernet I/O) "
+"Copying R793 (EGD I/O) "
+"Copying R603 (ROS Ethernet Packets) "
+"Copying R694 (Jog in Auto Mode) "
+"Copying J568 (DCS Safe I/O connect) "
+"Copying R558 (Internet Conn/Custo) "
+"Copying R626 (Web Svr Enhancements) "
+"Copying PRXY (HTTP Proxy Svr) "
+"Copying J755 (Domain Name Serv.) "
+"Copying R526 (DHCP) "
+"Copying JNN8 (EMAIL Enhancements) "
+"Copying R679 (Real Simple Syn.(RSS)) "
+"Copying R677 (SMB Client) "
+"Copying R782 (4D Standard) "
+"Copying DOCV (Document Viewer) "
+"Copying H632 (M-410iC/315) "
+[spflload] Ignore 'FRSY-008 file already exists' frcopy PRODUCT\H632\H632.DT FRSU:\M4C3.DT
+"Copying R696 (Extended User Frames) "
+"Copying R834 (Dual Chan. Profinet) "
+"Copying MOBO (Motherboard driver) "
+"Copying J744 (PROFINET CP16XX FW.) "
+"Copying J931 (PROFINET Safety) "
+"Copying OLSP (OLPC Support files) "
+"Copying R534 (Collision Guard) "
+"Copying R781 (Touch Panel) "
+"Copying R843 (Remote iPendant) "
+"Copying JCGT (Include Remote TP) "
+"Copying D064 (64MB DRAM) "
+"Copying F064 (64MB FROM) "
+"Copying R507 (Ascii Upload) "
+"Copying R796 (Ascii Program Loader) "
+"Copying J611 (Torque Limit) "
+"Copying J548 (Smooth Stop Upgrade) "
+"Copying SMSC (Smooth Stop common) "
+"Copying J567 (DCS Pos./Speed check) "
+"Copying DCSC (DCS Pos./speed common) "
+"Copying H896 (Basic Positioner) "
+"Copying J766 (Maint Reminder Plus) "
+"Copying J684 (Collision Guard Pack) "
+"Copying J523 (Cycle Time Priority) "
+"Copying R640 (MROT Instruction) "
+"Copying R675 (Servo Tool) "
+"Copying R789 (TP Firmware) "
+"Copying RMCN (Remote Conn Standard) "
+"Copying R868 (Prod Status Display) "
+"Copying J508 (Customer Reg) "
+"Copying R869 (Enhanced UIF) "
+[osppc] Timer sync timeout! tid: 159
+"Copying TUTO (Tutorial) "
+"Copying UEVT (USR EVNT) "
+"cmshcore\init1.com for V9.30P/32 (FD V9.30216)"
+"Copying CMSC (Common shell core) "
+"style\init1.com for V9.30P/32 (FD V9.30216)"
+"Copying STYL (Common style select) "
+"sysrsr\init1.com for V9.30P/32 (FD V9.30216)"
+"Copying ORSR (Enhanced Rob Serv Req) "
+"syrsr\init1.com for V9.30P/32 (FD V9.30216)"
+"Copying SRSR (Robot Service Request) "
+"Copying RLCM (Robot Library Setup) "
+[spflload] Ignore 'FRSY-008 file already exists' frcopy PRODUCT\RLCOMMON\DCSETUP.PC FRS:\DCSETUP.PC
+"Copying CTOP (Cycle time Opt.) "
+"Copying N100 (Positioner Utilities) "
+"init1cus.com complete"
+"init1.com complete"
+"Meas LAC: 1324"
+" Media check Passes..."
+[DSFL] Fat type check Failed: 0x100006
+[NTFRCPY] Did not load \TMILIB.DLL
+[NTSYIN_STEP] Startup Step #3
+[dpimage_restctx] Loading  dictionaries pool_avail = 152973992
+[dpimage_restctx] Ref time cached:120ms nocache:620ms, Numfiles = 0 Time 0ms
+[dpimage_restctx] Dictionaries loaded pool_avail = 152973992
+[NTSYIN_STEP] Startup Step #4
+[SYINISB0] Loading main system softparts please wait ...
+[NTFRCPY] Did not load \TPFICD.DLL
+[NTFRCPY] Did not load \IOSLCTSK.DLL
+[NTFRCPY] Did not load \PBCTLRUN.DLL
+[NTFRCPY] Did not load \DCSTSK.DLL
+[NTFRCPY] Did not load \UECK.DLL
+[NTFRCPY] Did not load \PWMAINSP.DLL
+[NTFRCPY] Did not load \SNTP.DLL
+[NTFRCPY] Did not load \DNS.DLL
+[NTFRCPY] Did not load \DHCP.DLL
+[osppc] Timer sync timeout! tid: 187
+[NTFRCPY] Did not load \PBMPMIO.DLL
+[NTFRCPY] Did not load \MBTASKSP.DLL
+[NTFRCPY] Did not load \MBCASESP.DLL
+[NTFRCPY] Did not load \MBSMONSP.DLL
+[NTFRCPY] Did not load \SFCUMON.DLL
+[NTFRCPY] Did not load \SYUSRCPY.DLL
+[SYSINISB0] spspload reference time 44355 ms, This Time 3835ms
+[NTSYIN_STEP] Startup Step #5
+[SYINISB)] total time 10463
+[NTSYIN_STEP] Startup Step #6
+[NTSYIN_STEP] Startup Step #7
+[SYINISUB] Saving user device PATH:
+Updated $CUSTO_PATH to = 
+[syinisub] RTC 5AC4707A 5AC4707A check1 0 0 
+[SYINISUB] RTC not initialzed -- RESETTING to 0
+[NTSYIN_STEP] Startup Step #8
+[NTSYIN_STEP] Startup Step #9
+[syinit] : calling iosetup
+[iospcall] Error !!!! stat:100006 fc:A0001 idx:5
+[EGDMN] EGD Producer Task V6.2012 @0x4D1D1000
+[PMTK] looping for INITSTART
+[iobldacc] $MAX_DIG_PRT read error.
+[NTSYIN_STEP] Startup Step #10
+[NTSYIN_STEP] Startup Step #11
+syinit - mmmakmem size = $FA000, stat = $0
+[syinisub] Memory manager started
+[NTSYIN_STEP] Startup Step #12
+[NTSYIN_STEP] Startup Step #13
+[NTSYIN_STEP] Startup Step #14
+"init2.com for V9.30P/32 (FD V9.30216)"
+"Loading H510 (Kernel + Basic S/W, Part I) "
+[VMLOAD] NO SAVE VAR =$AIMAGE_BACK not loaded
+[VMLOAD] NO SAVE VAR =$FAST_CLOCK not loaded
+[VMLOAD] NO SAVE VAR =$FILECONFIG not loaded
+[VMLOAD] NO SAVE VAR =$FILE_MAXSEC not loaded
+[vmiloadf] $GROUP created by PRODUCT\H510\SYSDEF.SV
+[VMLOAD] NO SAVE VAR =$NULL_CYCLE not loaded
+[VMLOAD] NO SAVE VAR =$STARTUP_DBG not loaded
+[VMLOAD] NO SAVE VAR =$SYS_CONFIG not loaded
+[VMLOAD] NO SAVE VAR =$TICK_RATE not loaded
+[VMLOAD] NO SAVE VAR =VPR not loaded
+"Loading J517 (Program Adjust, Part I) "
+"Loading J539 (KAREL Run-Time Env, Part I) "
+"Conditionally Loading CLIO (Cell I/O, Part I) "
+"Loading ATUI (ZDT EOAT Setup, Part I) "
+"Loading CNRE (Control Reliable, Part I) "
+"Loading MDSW (Mode Switch, Part I) "
+"Loading J513 (Hour Meter, Part I) "
+"Loading R631 (Data Acquisition, Part I) "
+"Loading J503 (MACROs, Skip/Offset, Part I) "
+"Loading J616 (Background Editing, Part I) "
+"Loading UFRM (User Frame, Part I) "
+"Loading J716 (FTP Interface, Part I) "
+"Loading HOCO (Host Communications, Part I) "
+"Loading FRDM (RDM Robot Discovery, Part I) "
+"Loading TELN (Telnet Interface, Part I) "
+"Loading HTTP (Web Server, Part I) "
+"Loading TPTX (TPTX, Part I) "
+"Loading ESET (External DI BWD, Part I) "
+"Loading J627 (High-Speed Skip, Part I) "
+"Loading J628 (Condition Monitor, Part I) "
+"Loading OPLG (LogBook(System), Part I) "
+"Loading R637 (Motion logger, Part I) "
+"Loading PSLG (MMR Motion log, Part I) "
+"Loading CRIM (CnrRndImp, Part I) "
+"Loading DCSU (Dual Check Safety UIF, Part I) "
+"Loading J545 (Automatic Backup, Part I) "
+"Loading SNBA (SNPX basic, Part I) "
+"Loading LCHK (License Checker, Part I) "
+"Loading UECK (Unexcepted motn Check, Part I) "
+"Loading J554 (Mixed logic, Part I) "
+"Loading J515 (Prog Num Selection, Part I) "
+"Loading R542 (Extended Error Log, Part I) "
+"Loading VIPL (Vision Library, Part I) "
+"Loading IRCL (iRCalib. Standard, Part I) "
+"Loading VCOR (Vision Core, Part I) "
+"Loading FVRC (Virtual Robot, Part I) "
+"Loading VCCM (VCalibration Common, Part I) "
+"Loading WEBP (Web Plus, Part I) "
+"Loading R681 (GigE Interface, Part I) "
+"Loading MCSP (MechStop Protection, Part I) "
+"Loading RSCH (Diagnostic log, Part I) "
+"Loading J697 (Program Viewer, Part I) "
+"Loading MDCO (Motion Diag. Core, Part I) "
+"Loading J958 (Trouble Diag. & Prev., Part I) "
+"Loading OPCO (Motion Optm. Core, Part I) "
+"Loading J882 (Torque Simulator I/F, Part I) "
+"Loading MPRO (Motion Profiler, Part I) "
+"Loading R000 (Position Checking, Part I) "
+"Loading R882 (ZDT Application, Part I) "
+"Loading R610 (SNTP Client, Part I) "
+"Loading MRST (MR Standard, Part I) "
+"Loading FREQ (Realtime Freq Anlys, Part I) "
+"Loading J637 (Incremental Jog, Part I) "
+"Loading JNN7 (Email Client, Part I) "
+"Loading J618 (CE Mark, Part I) "
+"Loading J601 (Multi-Group Motion, Part I) "
+"Loading R663 (Constant Path, Part I) "
+"Loading FCSP (Func stup, Part I) "
+"Loading MHCR (MH Core, Part I) "
+"Loading J609 (Space Check, Part I) "
+"Loading R680 (Enhanced T1 Mode, Part I) "
+"Loading TCPE (TCPP Extention, Part I) "
+"Loading R535 (EGD Ethernet I/O, Part I) "
+"Loading R603 (ROS Ethernet Packets, Part I) "
+"Loading J568 (DCS Safe I/O connect, Part I) "
+"Loading PRXY (HTTP Proxy Svr, Part I) "
+"Loading J755 (Domain Name Serv., Part I) "
+"Loading R526 (DHCP, Part I) "
+"Loading JNN8 (EMAIL Enhancements, Part I) "
+"Loading R677 (SMB Client, Part I) "
+"Loading R782 (4D Standard, Part I) "
+"Loading R834 (Dual Chan. Profinet, Part I) "
+"Loading MOBO (Motherboard driver, Part I) "
+"Loading J931 (PROFINET Safety, Part I) "
+"Loading R534 (Collision Guard, Part I) "
+"Loading J611 (Torque Limit, Part I) "
+"Loading SMSC (Smooth Stop common, Part I) "
+"Loading DCSC (DCS Pos./speed common, Part I) "
+"Loading J523 (Cycle Time Priority, Part I) "
+"Loading R675 (Servo Tool, Part I) "
+"Loading RMCN (Remote Conn Standard, Part I) "
+"Loading R868 (Prod Status Display, Part I) "
+"Loading J508 (Customer Reg, Part I) "
+"Loading R869 (Enhanced UIF, Part I) "
+[VMGR] do not check $BIGALLOW during initial start 
+"Loading TUTO (Tutorial, Part I) "
+"Loading UEVT (USR EVNT, Part I) "
+"Conditionally Loading CMSC (Common shell core, Part I) "
+"Conditionally Loading STYL (Common style select, Part I) "
+"Conditionally Loading ORSR (Enhanced Rob Serv Req, Part I) "
+"Loading CTOP (Cycle time Opt., Part I) "
+"Loading H510 (Kernel + Basic S/W, Part II) "
+[PGPCLOAD] Creating system variable $UMR from PATH:\PRODUCT\H510\TPCTRLMN.PC!!
+[VMGR] do not check $BIGALLOW during initial start 
+"Conditionally Loading CMSP (Common softpanel, Part II) "
+"Loading J517 (Program Adjust, Part II) "
+"Loading J539 (KAREL Run-Time Env, Part II) "
+"Loading PRST (Program Status, Part II) "
+"Conditionally Loading CLIO (Cell I/O, Part II) "
+"Loading MASK (Group Mask Exchange, Part II) "
+"Loading J921 (Touch Skip, Part II) "
+"Loading ATUI (ZDT EOAT Setup, Part II) "
+"Loading J520 (TCP Auto Set, Part II) "
+"Loading CNRE (Control Reliable, Part II) "
+"Loading R651 (FRL Params, Part II) "
+"Loading J507 (Print Function, Part II) "
+"Loading J510 (Incr Instruction, Part II) "
+"Loading J513 (Hour Meter, Part II) "
+"Loading J514 (Position Registers, Part II) "
+"Loading J516 (FCTN Menu Save, Part II) "
+"Loading SEND (PC Send Macros, Part II) "
+"Loading R631 (Data Acquisition, Part II) "
+"Loading J503 (MACROs, Skip/Offset, Part II) "
+"Loading J505 (Program Shift, Part II) "
+"Loading SHLB (Shift Library, Part II) "
+"Loading J506 (Mirror Shift, Part II) "
+"Loading J509 (Tool Offset, Part II) "
+"Loading J604 (Enhanced User Frame, Part II) "
+"Loading J716 (FTP Interface, Part II) "
+"Loading HTCP (TCP/IP Interface, Part II) "
+"Loading HOCO (Host Communications, Part II) "
+"Loading TELN (Telnet Interface, Part II) "
+"Loading HTTP (Web Server, Part II) "
+"Loading J650 (KAREL Cmd. Language, Part II) "
+"Loading CGTP (iPendant, Part II) "
+"Loading TPTX (TPTX, Part II) "
+"Loading IPGS (iPendant Setup, Part II) "
+"Loading J627 (High-Speed Skip, Part II) "
+"Loading J628 (Condition Monitor, Part II) "
+"Loading OPLG (LogBook(System), Part II) "
+"Loading PSLG (MMR Motion log, Part II) "
+"Loading DCSU (Dual Check Safety UIF, Part II) "
+"Loading J545 (Automatic Backup, Part II) "
+"Loading LCHK (License Checker, Part II) "
+"Loading H550 (Analog I/O, Part II) "
+"Loading J600 (Multi-Tasking, Part II) "
+"Loading J554 (Mixed logic, Part II) "
+"Loading R542 (Extended Error Log, Part II) "
+"Loading VIPL (Vision Library, Part II) "
+"Loading IRCL (iRCalib. Standard, Part II) "
+[pgpcload] [Z_VCLIB1].VCAL_VD_T not referenced, creating var [VSFLIVE]$VCAL_VD_T
+[pgpcload] [Z_VCLIB1].VCAL_VF_T not referenced, creating var [VSFLIVE]$VCAL_VF_T
+[pgpcload] [Z_VCLIB1].VCAL_MV_T not referenced, creating var [VSFLIVE]$VCAL_MV_T
+[pgpcload] [Z_VCLIB1].VTCPSET_T not referenced, creating var [VSFLIVE]$VTCPSET_T
+[pgpcload] [IRVTYPE].PIXEL not referenced, creating var [IRVGETTP]$PIXEL
+[pgpcload] [IRVTYPE].VECTOR2 not referenced, creating var [IRVGETTP]$VECTOR2
+[pgpcload] [IRVTYPE].AFFPOSE not referenced, creating var [IRVGETTP]$AFFPOSE
+"Loading VCOR (Vision Core, Part II) "
+"Loading FVRC (Virtual Robot, Part II) "
+"Loading VCCM (VCalibration Common, Part II) "
+[pgpcload] [VC_F_EACHDOT].F_EACH_DOT_T not referenced, creating var [VC_F_EACHDOT]$F_EACH_DOT_T
+[pgpcload] [VC_COARSE].VCCO_SETU_T not referenced, creating var [VC_COARSE]$VCCO_SETU_T
+[pgpcload] [VC_COARSE].VCCO_RSLT_T not referenced, creating var [VC_COARSE]$VCCO_RSLT_T
+[pgpcload] [VC_FINE].VCFI_SETU_T not referenced, creating var [VC_FINE]$VCFI_SETU_T
+[pgpcload] [SFVCCM].VCFINE_DATA not referenced, creating var [VC_FINE]$VCFINE_DATA
+"Loading WEBP (Web Plus, Part II) "
+"Loading VCAM (Camera I/F, Part II) "
+"Loading CUIF (Common calib UIF, Part II) "
+"Loading J697 (Program Viewer, Part II) "
+"Loading MDCO (Motion Diag. Core, Part II) "
+"Loading R636 (Socket Messaging, Part II) "
+"Loading J958 (Trouble Diag. & Prev., Part II) "
+"Loading OPCO (Motion Optm. Core, Part II) "
+[PGPCLOAD] Creating system variable $AC_UPDATE from PATH:\PRODUCT\OPTMSTND\ACSET.PC!!
+"Loading PCMF (PCM function, Part II) "
+"Loading MPRO (Motion Profiler, Part II) "
+"Loading J614 (Angle Shift, Part II) "
+"Loading R882 (ZDT Application, Part II) "
+"Loading MRST (MR Standard, Part II) "
+"Loading J771 (Maintenance Reminder, Part II) "
+"Loading DGCO (iRDiag Core, Part II) "
+"Loading JNN7 (Email Client, Part II) "
+"Loading SVMO (Aux Servo Code, Part II) "
+"Loading J601 (Multi-Group Motion, Part II) "
+"Loading R663 (Constant Path, Part II) "
+"Loading H552 (HandlingTool, Part II) "
+"Loading MHCR (MH Core, Part II) "
+"Loading J609 (Space Check, Part II) "
+"Loading ETSS (SSPC error text, Part II) "
+"Loading R641 (PC Interface, Part II) "
+"Loading IPNL (istdpnl, Part II) "
+"Loading OPIS (OPT TP Ins, Part II) "
+"Loading R535 (EGD Ethernet I/O, Part II) "
+"Loading R603 (ROS Ethernet Packets, Part II) "
+"Loading R694 (Jog in Auto Mode, Part II) "
+"Loading PRXY (HTTP Proxy Svr, Part II) "
+"Loading J755 (Domain Name Serv., Part II) "
+"Loading R526 (DHCP, Part II) "
+"Loading JNN8 (EMAIL Enhancements, Part II) "
+"Loading R677 (SMB Client, Part II) "
+"Loading R782 (4D Standard, Part II) "
+"Loading DOCV (Document Viewer, Part II) "
+"Loading H632 (M-410iC/315, Part II) "
+"Loading R834 (Dual Chan. Profinet, Part II) "
+"Loading R534 (Collision Guard, Part II) "
+"Loading J611 (Torque Limit, Part II) "
+"Loading J684 (Collision Guard Pack, Part II) "
+"Loading J523 (Cycle Time Priority, Part II) "
+"Loading R640 (MROT Instruction, Part II) "
+"Loading R675 (Servo Tool, Part II) "
+"Loading RMCN (Remote Conn Standard, Part II) "
+"Loading R868 (Prod Status Display, Part II) "
+"Loading J508 (Customer Reg, Part II) "
+"Loading R869 (Enhanced UIF, Part II) "
+"Loading UEVT (USR EVNT, Part II) "
+"Conditionally Loading CMSC (Common shell core, Part II) "
+"Conditionally Loading STYL (Common style select, Part II) "
+"Conditionally Loading SRSR (Robot Service Request, Part II) "
+"Loading N100 (Positioner Utilities, Part II) "
+"init2cus.com complete"
+"init2.com complete"
+[NTSYIN_STEP] Startup Step #15
+[NTSYIN_STEP] Startup Step #16
+[vmfndvar] [*SYSTEM*]$AUTOMODE_OV  truncated to $AUTOMODE_OV
+[vmfndvar] [*SYSTEM*]$AP_AUTOMODE_DO truncated to $AP_AUTOMODE
+[NTSYIN_STEP] Startup Step #17
+[syinit] mosetvpr status <0>
+[NTSYIN_STEP] Startup Step #18
+[NTSYIN_STEP] Startup Step #19
+[ERLOG] continue stat = 0x0
+[rcmplg] RCMCFG_BASE $5BC98D8, rcmcfg_p $33B5A890
+[rcmplg] iRConnect only works in COLDSTART
+[NTSYIN_STEP] Startup Step #20
+[syinisub] VMGR called to register program with MEMO
+  [load_safety_param(MAIN)]load_address:0x11FE8000, size:0x13590
+[NTSYIN_STEP] Startup Step #21
+[NTSYIN_STEP] Startup Step #22
+[NTSYIN_STEP] Startup Step #23
+[NTSYIN_STEP] Startup Step #24
+[NTSYIN_STEP] Startup Step #25
+[NTSYIN_STEP] Startup Step #26
+[sytimque]: trigger loaded 0
+[NTSYIN_STEP] Startup Step #27
+[CHND] init done. starting scanning
+syopinsp-Jog in Auto used: 1
+[NTSYIN_STEP] Startup Step #28
+[NTSYIN_STEP] Startup Step #29
+[NTSYIN_STEP] Startup Step #30
+[NTSYIN_STEP] Startup Step #31
+[NTSYIN_STEP] Startup Step #32
+[sysinisub] Disabling dictionary cache Temp = 92EA7F8
+[syinisub] tpid $31
+[syinisub] support for NetFront iPendant
+[vminit_restart] sending packet to UTIL
+[vminit_restart] Saving variable context
+[vminit_restart] complete
+[SYRESTART] switching modes from 0 to 1
+[pal_reset] Restarting system
+Switching states: old = STARTUP   new = RESTART 
+Tick            Avg: 1.694 ms, Min: 0.001 ms, Max: 5002.415 ms, ticks: 9411
+Execution times Avg: 0.005 ms, Min: 0.001 ms, Max: 0.209 ms
+Switching states: old = RESTART   new = STARTUP 
+[ntinit] TmpWrk  BaseAddress: 0x08C50000 RegionSize:  27648KB Protections: 0x00000004
+[ntinit] TmpWrk2 BaseAddress: 0x34200000 RegionSize: 122880KB Protections: 0x00000004
+[ntinit] TmpWrk3 BaseAddress: 0x1D000000 RegionSize: 378880KB Protections: 0x00000004
+[NTINIT] Frequency 10000000, Ticks/ms 10000 BusClock 40000000
+[IEWTQ] Count = 0 add to head/tail task: 199  cnt: 24  pri: 10
+[osppc] Virtual Clock timer device resolution discovery suceeded, min res: 1 ms
+[NTPORT] Ready for connections at 9100
+[NTPORT] Ready for connections at 9101
+[NTPORT] Ready for connections at 9102
+[NTPORT] Ready for connections at 9103
+[OSSERV] VIRTUAL not doing multi-processing service
+[mktskmem] use static 1024 pages for tid: 159
+main bus clock 40
+main PCB version 4
+[ostkinit] TPWDOG_CHK $0
+[DSFL] MAIN V8.90 PCMCIA-ATA USB RD@0x0 (-128) dfdevtbl@0x4CB5EA69
+[ksinitsk] syin continues
+Updated $MC_PATH = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\MC
+Updated $MED_PATH to = C:\ProgramData\FANUC\FRVRC Media\V9.30
+Updated $UD1_PATH to = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UD1
+Updated $UD2_PATH to = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UD2
+Updated $UT1_PATH to = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UT1
+[syinit] bootrom time: 89186 ms
+[syinit] ** CONTROLLED START **
+[syinit] System Version V9.30259      9/14/2023
+[ERLOG] Waiting for UIF to start up
+[syinisb0]VIRTUAL case,setting master_p->initializing to FALSE
+[syinisb0] Load table id=0x31 typ=0x1D baud=0x31
+[syinisb0] osxsndpkt F_INIT packet 0x0
+[ostkinit] ID $31 type 1D baud 31 version P
+[ostkinit] TP Baud Rate 19200
+[NTPORT] accept connection
+[syinisb0] F_INIT complete 0x0
+[syinit] ** CONTROLLED START **
+[spinit] featuremod ptrs
+[dpinit] setting cur lang to NULL
+[dpsetlng] setting cur lang to DEFAULT     
+[tppascon_config] wait for EVB_SPINITDONE
+[syinit] start at 04-JUN-25 14:03:58 
+[sycfgmen] cfgmenu_p 0x407C4CE4
+[ostkinit] sending F_WRIT to 201
+[ostkinit] TPWDOG_CHK+2 $1000
+[ostkinit] sending F_READ to 201
+[syinisb0] tpid check ltp = 0x5CB2C00, tpid = 49
+[NTSYIN_STEP] Startup Step #33
+VMGR for R-30iB V8.30
+[mktskmem] use static 2000 pages for tid:  52
+[mktskmem] use static 2405 pages for tid: 322
+[vmshadow_periodic] Normal power shutdown state = 0
+[vminit] Loading 2 temp 152997400 remaining of 154052600
+[vminit_loadctx] Loaded FRB:\S-SYSTEM.IRV only
+[vminit_loadctx] Done Loading Time = 49684us
+[vminit] after 2 temp 150833132 remaining of 154052600, took 0ms
+[NTSYIN_STEP] Startup Step #34
+[NTFRCPY] Did not load \TMILIB.DLL
+[NTSYIN_STEP] Startup Step #35
+[syinit] spmk2tsk(HTCG), status = $0
+[TX] Start
+[cmt_main] Comet server extension starting
+[PMON] PC Monitor Task
+[pmon] error read dblovrd_enb
+[rpcm] create TCP/IP RPC service
+[svctcp_create] RPCMAIN Server ready for connections on 3002
+[rpcm] call softparts to register service
+[rpcdaqs] register RPCDAQS service
+[rpcm] wait for connection
+[HTCG] CGTP WEB Server starting
+Web Enhancements installed
+[HTCG]: Binding to tcp port number 3080
+[HTCG] ready for connections, calling HCFC_STARTUP_C
+[PMON] Connecting to COMET
+[PMON] Connect ID is 2F9DCAF4
+[cmt_main_init] PMON connected $2F9DCAF4
+[syinit] spmk2tsk(HTTP), status = $0
+[HTTP] WEB Server starting
+Web Enhancements installed
+[HTTP]: Binding to tcp port number 9000
+[HTTP] ready for connections
+[syinisb0] Legacy 2, tpid = 49
+[dpsetlng] setting cur lang to DEFAULT     
+[tppascon_config] wait for EVB_SPINITDONE
+[dpimage_restctx] Loading DEFAULT      dictionaries pool_avail = 150357296
+[dpimage_restctx] Ref time cached:120ms nocache:620ms, Numfiles = 288 Time 0ms
+[dpimage_restctx] Dictionaries loaded pool_avail = 149085632
+[dpsetlng] setting cur lang to DEFAULT     
+[tppascon_config] wait for EVB_SPINITDONE
+[NTSYIN_STEP] Startup Step #36
+[SYINISB0] Loading main system softparts please wait ...
+[NTFRCPY] Did not load \DCSTSK.DLL
+[NTFRCPY] Did not load \DHCP.DLL
+[NTFRCPY] Did not load \DNS.DLL
+[NTFRCPY] Did not load \IOSLCTSK.DLL
+[NTFRCPY] Did not load \MBCASESP.DLL
+[NTFRCPY] Did not load \MBSMONSP.DLL
+[NTFRCPY] Did not load \MBTASKSP.DLL
+[NTFRCPY] Did not load \PBCTLRUN.DLL
+[NTFRCPY] Did not load \PBMPMIO.DLL
+[NTFRCPY] Did not load \PWMAINSP.DLL
+[NTFRCPY] Did not load \SFCUMON.DLL
+[NTFRCPY] Did not load \SNTP.DLL
+[NTFRCPY] Did not load \SYUSRCPY.DLL
+[NTFRCPY] Did not load \TPFICD.DLL
+[NTFRCPY] Did not load \UECK.DLL
+[SYSINISB0] spspload reference time 44355 ms, This Time 52ms
+[vminit] Loading 3 temp 148997140 remaining of 154052600
+[vminit_loadctx] Loading all files (VMGR/PVAR Suspended)
+[vminit_loadctx] Done Loading Time = 83089us
+[vmshadow_cleanup] Redirected from task 187 to TID_VMSC
+[vminit] after 3 temp 145887016 remaining of 154052600, took 0ms
+[Syin] Mobo start 0xFFFFFFFF
+[NTSYIN_STEP] Startup Step #37
+[SYINISB)] total time 486
+[NTSYIN_STEP] Startup Step #38
+[NTSYIN_STEP] Startup Step #39
+[SYINISUB] Saving user device PATH:
+[vmicrepg_init] cacheing *pipe* 0x33C4C2E8  0x0
+[syporti]pkt send to TLNT fails 10C
+[SNPX] Client_Type 1, Port 18245
+[SNPX] Client_Type 2, Port 60008
+[NTSYIN_STEP] Startup Step #40
+[ostksock_timeout] g_ce_mode 0
+[ostksock_create] Socket 1696 binding to IP port # 60004
+[ostksock_create] T-X IP address <001.001.001.011>
+[NTSYIN_STEP] Startup Step #41
+[syinit] : calling iosetup
+[EGDMN] EGD Producer Task V6.2012 @0x4D1D1000
+[PMUIXML] Loading FRS:\PMCFG.XML......done!!!
+[ntsyin] VIRTUAL enabling all web options
+[SKMG] Socket Messaging Interface V5.22 @0x4CEF1320
+[TELNET] start
+[TELNET] debug address 4D02204C
+[TELNET] Ethernet event flag received.
+[SMB] SMB Interface V7.50
+[SMB] Ethernet event flag received.
+[ntsyin] VIRTUAL setting $MSKSIGN=0
+[ntsyin] VIRTUAL setting $MSKCONREL=0
+[SMB] wins server is 0x0
+[pmtkmain] cpreadvr 00000000 : FwVers 01000000
+[pmtkmain] pmsetsysv 00000000 
+[ripini] Initializing
+[rosip] Entering baseinit, waiting on packet rate =2
+[ripini] Sending init packet 1, 392, 0xA586B98
+[rosip] Initialization not successful
+[NTSYIN_STEP] Startup Step #42
+[NTSYIN_STEP] Startup Step #43
+[syinisub] Memory manager started
+[NTSYIN_STEP] Startup Step #44
+[NTSYIN_STEP] Startup Step #45
+[NTSYIN_STEP] Startup Step #46
+[NTSYIN_STEP] Startup Step #47
+[syinit] mosetvpr status #2<0>
+
+[syinisub] status after vmgetvar #2 = $0
+[NTSYIN_STEP] Startup Step #48
+[vmfndvar] [*SYSTEM*]$AUTOMODE_OV  truncated to $AUTOMODE_OV
+[vmfndvar] [*SYSTEM*]$AP_AUTOMODE_DO truncated to $AP_AUTOMODE
+[NTSYIN_STEP] Startup Step #49
+[syinit] mosetvpr status <0>
+[NTSYIN_STEP] Startup Step #50
+[EMAIL] File frs:email.dg does not exist
+[SMTPXML] DRC option not loaded
+[NTSYIN_STEP] Startup Step #51
+[ERLOG] continue stat = 0x0
+[rcmplg] RCMCFG_BASE $5BC98D8, rcmcfg_p $A57FFA8
+[rcmplg] iRConnect only works in COLDSTART
+PRIO-370 PMIO No Board Found
+[NTSYIN_STEP] Startup Step #52
+[syinisub] VMGR called to register program with MEMO
+[NTSYIN_STEP] Startup Step #53
+[NTSYIN_STEP] Startup Step #54
+[NTSYIN_STEP] Startup Step #55
+[NTSYIN_STEP] Startup Step #56
+[NTSYIN_STEP] Startup Step #57
+[pibefini] MOSPV_P is NULL!!
+[TPGL_InstID] allocated instance 0 1 0 255 
+[TPGL_InstID] allocated instance 1 2 0 255 
+[TPGL_InstID] allocated instance 2 3 0 255 
+[vmshadow_cleanup] Redirected from task 72 to TID_VMSC
+[NTSYIN_STEP] Startup Step #58
+[sytimque]: trigger loaded 0
+[CHND] Low Priority Condition Handler started.
+[CHND] init done. starting scanning
+[tpmains_start] executing legacy mode case
+[NTSYIN_STEP] Startup Step #59
+syopinsp-Jog in Auto used: 1
+[SYINIT] OCTK started 380001
+[NTSYIN_STEP] Startup Step #60
+[NTSYIN_STEP] Startup Step #61
+[sycgtp] LED time = 0 ms
+[sycgtp] EXT time = 0 ms
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:00  (322)
+[NTSYIN_STEP] Startup Step #62
+"control1.com for V9.30P/32 (FD V9.30216)"
+"menu.com for V9.30P/32 (FD V9.30216)"
+"menucus.com complete"
+"menu.com complete"
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:00  (322)
+[SPRUNCMDF] status = 10B; "RUNTSK SID_HTTP" : CONTROL1.COM
+[ASBN] started
+[spruncmdf] +++ no abort
+[vdat] wake up
+[vdat] oschggrp(112, 4, 0) 0x00000000
+[vdat] $vis_homing vmsetlim error $100006
+[vdat] $vp2n_cfg vmsetlim error $100006
+[KCL] failed to locate DEV_KCL_C but continuing
+[vtrn] wake up
+[vtrn] oschggrp(136, 4, 0) 0x00000000
+[vmimage_bakfile] FRB:rlsvext.PRV at 04-JUN-25 14:04:02  (322)
+[vmimage_bakfile] FRB:svparam.PRV at 04-JUN-25 14:04:02  (322)
+[vmimage_bakfile] FRB:piparam.PRV at 04-JUN-25 14:04:02  (322)
+[vmimage_bakfile] FRB:cpparam.PRV at 04-JUN-25 14:04:02  (322)
+[vmimage_bakfile] FRB:mtparam.PRV at 04-JUN-25 14:04:02  (322)
+[vmimage_bakfile] FRB:dnparam.PRV at 04-JUN-25 14:04:02  (322)
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:02  (322)
+"ctrl1cus.com complete"
+"control1.com complete"
+[NTSYIN] userctrl.com file not found
+[NTSYIN_STEP] Startup Step #63
+[VMGR] program name:*SYSTEM* = $BIGALLOW[1].$PROG_NAME:*SYSTEM*; ($BIGALLOW[1].$INDEX:0)
+[VMGR] program name:*SYSTEM* = $BIGALLOW[15].$PROG_NAME:*SYSTEM*; ($BIGALLOW[15].$INDEX:0)
+[VMGR] variablename:$FLUI_RESULT = $BIGALLOW[15].$VAR_NAME:$FLUI_RESULT
+[syinit]CONTROL2 gp_made = 1, group = 2, rlibsoc=0
+[syinit]CONTROL2 deferred (group sysvars to init)
+[NTSYIN_STEP] Startup Step #64
+[syinit] Restart CTRL sequence
+[FTP] FTP Interface V5.10
+[FTP] FTP debug addr = 4CFACB48
+[FTP] Ethernet event flag received.
+[syrestart] ID $31 type 1D baud 31 version P
+[SYRESTART] Running volatil and control3
+"control3.com for V9.30P/32 (FD V9.30216)"
+[SPRUNCMDF] status = 10001B; "VRCLEAR swiupdt" : SWIUPDT
+[spruncmdf] +++ no abort
+"ctrl3cus.com complete"
+"control3.com complete"
+[vminit_restart] sending packet to UTIL
+[vminit_restart] Saving variable context
+[vmshadow_cleanup] Redirected from task 170 to TID_VMSC
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:02  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:02  (322)
+[vmimage_bakfile] FRB:swiupdt.PRV at 04-JUN-25 14:04:02  (322)
+[vminit_restart] complete
+[SYRESTART] switching modes from 1 to 1
+[pal_reset] Restarting system
+Switching states: old = STARTUP   new = RESTART 
+Tick            Avg: 1.000 ms, Min: 0.001 ms, Max: 5002.415 ms, ticks: 20547
+Execution times Avg: 0.007 ms, Min: 0.001 ms, Max: 0.232 ms
+Switching states: old = RESTART   new = STARTUP 
+[ntinit] TmpWrk  BaseAddress: 0x08C50000 RegionSize:  27648KB Protections: 0x00000004
+[ntinit] TmpWrk2 BaseAddress: 0x34200000 RegionSize: 122880KB Protections: 0x00000004
+[ntinit] TmpWrk3 BaseAddress: 0x1D000000 RegionSize: 378880KB Protections: 0x00000004
+[NTINIT] Frequency 10000000, Ticks/ms 10000 BusClock 40000000
+[IEWTQ] Count = 0 add to head/tail task: 199  cnt: 24  pri: 10
+[osppc] Virtual Clock timer device resolution discovery suceeded, min res: 1 ms
+[NTPORT] Ready for connections at 9100
+[NTPORT] Ready for connections at 9101
+[NTPORT] Ready for connections at 9102
+[NTPORT] Ready for connections at 9103
+[OSSERV] VIRTUAL not doing multi-processing service
+[mktskmem] use static 1024 pages for tid: 159
+Console Monitor (main)
+main bus clock 40
+main PCB version 4
+[ostkinit] TPWDOG_CHK $0
+[DSFL] MAIN V8.90 PCMCIA-ATA USB RD@0x0 (-128) dfdevtbl@0x4CB5EA69
+[ksinitsk] syin continues
+Updated $MC_PATH = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\MC
+Updated $MED_PATH to = C:\ProgramData\FANUC\FRVRC Media\V9.30
+Updated $UD1_PATH to = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UD1
+Updated $UD2_PATH to = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UD2
+Updated $UT1_PATH to = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UT1
+[syinit] bootrom time: 93924 ms
+[syinit] ** CONTROLLED START **
+[syinit] System Version V9.30259      9/14/2023
+[ERLOG] Waiting for UIF to start up
+[syinisb0]VIRTUAL case,setting master_p->initializing to FALSE
+[syinisb0] Load table id=0x31 typ=0x1D baud=0x31
+[syinisb0] osxsndpkt F_INIT packet 0x0
+[ostkinit] ID $31 type 1D baud 31 version P
+[ostkinit] TP Baud Rate 19200
+[ostkinit] sending F_WRIT to 201
+[ostkinit] TPWDOG_CHK+2 $1000
+[ostkinit] sending F_READ to 201
+[syinisb0] F_INIT complete 0x0
+[syinit] ** CONTROLLED START **
+[spinit] featuremod ptrs
+[dpinit] setting cur lang to NULL
+[dpsetlng] setting cur lang to DEFAULT     
+[tppascon_config] wait for EVB_SPINITDONE
+[syinit] start at 04-JUN-25 14:04:02 
+[sycfgmen] cfgmenu_p 0x407C4CE4
+[syinisb0] tpid check ltp = 0x5CB2C00, tpid = 49
+[NTSYIN_STEP] Startup Step #65
+VMGR for R-30iB V8.30
+[mktskmem] use static 2000 pages for tid:  52
+[mktskmem] use static 2405 pages for tid: 322
+[vmshadow_periodic] Normal power shutdown state = 0
+[vminit] Loading 2 temp 153007992 remaining of 154052600
+[vminit_loadctx] Loaded FRB:\S-SYSTEM.PRV only
+[vminit_loadctx] Done Loading Time = 45899us
+[vminit] after 2 temp 150822888 remaining of 154052600, took 0ms
+[NTSYIN_STEP] Startup Step #66
+[NTFRCPY] Did not load \TMILIB.DLL
+[NTSYIN_STEP] Startup Step #67
+[syinit] spmk2tsk(HTCG), status = $0
+[TX] Start
+[cmt_main] Comet server extension starting
+[PMON] PC Monitor Task
+[pmon] error read dblovrd_enb
+[rpcm] create TCP/IP RPC service
+[svctcp_create] RPCMAIN Server ready for connections on 3002
+[rpcm] call softparts to register service
+[rpcdaqs] register RPCDAQS service
+[rpcm] wait for connection
+[HTCG] CGTP WEB Server starting
+Web Enhancements installed
+[HTCG]: Binding to tcp port number 3080
+[HTCG] ready for connections, calling HCFC_STARTUP_C
+[PMON] Connecting to COMET
+[PMON] Connect ID is 2F9C8AEC
+[cmt_main_init] PMON connected $2F9C8AEC
+[syinit] spmk2tsk(HTTP), status = $0
+[HTTP] WEB Server starting
+Web Enhancements installed
+[HTTP]: Binding to tcp port number 9000
+[HTTP] ready for connections
+[syinisb0] Legacy 2, tpid = 49
+[dpsetlng] setting cur lang to DEFAULT     
+[tppascon_config] wait for EVB_SPINITDONE
+[dpimage_restctx] Loading DEFAULT      dictionaries pool_avail = 150347060
+[dpimage_restctx] Ref time cached:120ms nocache:620ms, Numfiles = 288 Time 0ms
+[dpimage_restctx] Dictionaries loaded pool_avail = 149075548
+[dpsetlng] setting cur lang to DEFAULT     
+[tppascon_config] wait for EVB_SPINITDONE
+[NTSYIN_STEP] Startup Step #68
+[SYINISB0] Loading main system softparts please wait ...
+[NTFRCPY] Did not load \DCSTSK.DLL
+[NTFRCPY] Did not load \DHCP.DLL
+[NTFRCPY] Did not load \DNS.DLL
+[NTFRCPY] Did not load \IOSLCTSK.DLL
+[NTFRCPY] Did not load \MBCASESP.DLL
+[NTFRCPY] Did not load \MBSMONSP.DLL
+[NTFRCPY] Did not load \MBTASKSP.DLL
+[NTFRCPY] Did not load \PBCTLRUN.DLL
+[NTFRCPY] Did not load \PBMPMIO.DLL
+[NTFRCPY] Did not load \PWMAINSP.DLL
+[NTFRCPY] Did not load \SFCUMON.DLL
+[NTFRCPY] Did not load \SNTP.DLL
+[NTFRCPY] Did not load \SYUSRCPY.DLL
+[NTFRCPY] Did not load \TPFICD.DLL
+[NTFRCPY] Did not load \UECK.DLL
+[SYSINISB0] spspload reference time 44355 ms, This Time 47ms
+[vminit] Loading 3 temp 148987064 remaining of 154052600
+[vminit_loadctx] Loading all files (VMGR/PVAR Suspended)
+[vminit_loadctx] Done Loading Time = 87035us
+[vmshadow_cleanup] Redirected from task 187 to TID_VMSC
+[vminit] after 3 temp 144675568 remaining of 154052600, took 0ms
+[Syin] Mobo start 0xFFFFFFFF
+[NTSYIN_STEP] Startup Step #69
+[SYINISB)] total time 398
+[NTSYIN_STEP] Startup Step #70
+[NTSYIN_STEP] Startup Step #71
+[SYINISUB] Saving user device PATH:\
+[syporti]pkt send to TLNT fails 10C
+[SNPX] Client_Type 1, Port 18245
+[SNPX] Client_Type 2, Port 60008
+[NTSYIN_STEP] Startup Step #72
+[NTPORT] accept connection
+[ostksock_timeout] g_ce_mode 0
+[ostksock_create] Socket 1760 binding to IP port # 60004
+[ostksock_create] T-X IP address <001.001.001.011>
+[NTSYIN_STEP] Startup Step #73
+[syinit] : calling iosetup
+[EGDMN] EGD Producer Task V6.2012 @0x4D1D1000
+[PMUIXML] Loading FRS:\PMCFG.XML......done!!!
+[ntsyin] VIRTUAL enabling all web options
+[SKMG] Socket Messaging Interface V5.22 @0x4CEF1320
+[TELNET] start
+[TELNET] debug address 4D02204C
+[TELNET] Ethernet event flag received.
+[SMB] SMB Interface V7.50
+[SMB] Ethernet event flag received.
+[ntsyin] VIRTUAL setting $MSKSIGN=0
+[ntsyin] VIRTUAL setting $MSKCONREL=0
+[SMB] wins server is 0x0
+[pmtkmain] cpreadvr 00000000 : FwVers 01030302
+[ripini] Initializing
+[rosip] Entering baseinit, waiting on packet rate =2
+[ripini] Sending init packet 1, 392, 0x3B479768
+[rosip] Initialization not successful
+[NTSYIN_STEP] Startup Step #74
+[NTSYIN_STEP] Startup Step #75
+[syinisub] Memory manager started
+[NTSYIN_STEP] Startup Step #76
+[NTSYIN_STEP] Startup Step #77
+[NTSYIN_STEP] Startup Step #78
+[NTSYIN_STEP] Startup Step #79
+[syinit] mosetvpr status #2<0>
+
+[syinisub] status after vmgetvar #2 = $0
+[NTSYIN_STEP] Startup Step #80
+[syinit]$NUM_GROUP(2)!=$NUM_GP_MADE(1),add/delete grp sysvar
+[vmfndvar] [*SYSTEM*]$AUTOMODE_OV  truncated to $AUTOMODE_OV
+[vmfndvar] [*SYSTEM*]$AP_AUTOMODE_DO truncated to $AP_AUTOMODE
+[NTSYIN_STEP] Startup Step #81
+[syinit] mosetvpr status <0>
+[NTSYIN_STEP] Startup Step #82
+[SMTPXML] DRC option not loaded
+[NTSYIN_STEP] Startup Step #83
+[ERLOG] continue stat = 0x0
+[rcmplg] RCMCFG_BASE $5BC98D8, rcmcfg_p $A691EFC
+[rcmplg] iRConnect only works in COLDSTART
+PRIO-370 PMIO No Board Found
+[NTSYIN_STEP] Startup Step #84
+[syinisub] VMGR called to register program with MEMO
+[NTSYIN_STEP] Startup Step #85
+[NTSYIN_STEP] Startup Step #86
+[NTSYIN_STEP] Startup Step #87
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:06  (322)
+[NTSYIN_STEP] Startup Step #88
+[NTSYIN_STEP] Startup Step #89
+[pibefini] MOSPV_P is NULL!!
+[vmfndvar] [*SYSTEM*]$SYSTEM_TIMER truncated to $SYSTEM_TIME
+[TPGL_InstID] allocated instance 0 1 0 255 
+[TPGL_InstID] allocated instance 1 2 0 255 
+[TPGL_InstID] allocated instance 2 3 0 255 
+[vmshadow_cleanup] Redirected from task 72 to TID_VMSC
+[NTSYIN_STEP] Startup Step #90
+[sytimque]: trigger loaded 0
+[CHND] Low Priority Condition Handler started.
+[CHND] init done. starting scanning
+[tpmains_start] executing legacy mode case
+[NTSYIN_STEP] Startup Step #91
+syopinsp-Jog in Auto used: 1
+[SYINIT] OCTK started 380001
+[NTSYIN_STEP] Startup Step #92
+[NTSYIN_STEP] Startup Step #93
+[sycgtp] LED time = 0 ms
+[sycgtp] EXT time = 0 ms
+[vmimage_bakfile] FRB:s-posreg.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:06  (322)
+[NTSYIN_STEP] Startup Step #94
+"control1.com for V9.30P/32 (FD V9.30216)"
+"menu.com for V9.30P/32 (FD V9.30216)"
+"menucus.com complete"
+"menu.com complete"
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:06  (322)
+[vmimage_bakfile] FRB:swiupdt.PRV at 04-JUN-25 14:04:08  (322)
+[SPRUNCMDF] status = 10B; "RUNTSK SID_HTTP" : CONTROL1.COM
+[ASBN] started
+[spruncmdf] +++ no abort
+[vdat] wake up
+[vdat] oschggrp(112, 4, 0) 0x00000000
+[vdat] $vis_homing vmsetlim error $100006
+[vdat] $vp2n_cfg vmsetlim error $100006
+[KCL] failed to locate DEV_KCL_C but continuing
+[vtrn] wake up
+[vtrn] oschggrp(136, 4, 0) 0x00000000
+[vmimage_bakfile] FRB:rlsvext.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:svparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:piparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:cpparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:mtparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:dnparam.PRV at 04-JUN-25 14:04:08  (322)
+"ctrl1cus.com complete"
+"control1.com complete"
+[NTSYIN] userctrl.com file not found
+[NTSYIN_STEP] Startup Step #95
+[vmcopy_prg2] copy var: [*DEFAULT*]$AAVM_GRP failed: 0x10000D!
+[syinit]CONTROL2 gp_made = 2, group = 2, rlibsoc=0
+"control2.com for V9.30P/32 (FD V9.30216)"
+[vmimage_bakfile] FRB:muparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:smparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:tlparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:tjparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:piparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:cpparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:dcparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:iaparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:dnparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:mtparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:svparam.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:08  (322)
+[vmimage_bakfile] FRB:dgparam.PRV at 04-JUN-25 14:04:08  (322)
+"[swilib] Near beginning
+"[swilib] Near end
+"[swimest] Near beginning
+"[swioptn] Meas : (683       )"
+"[swioptn] LACs match, License is Authorized"
+"[swimest] Add Application"
+"[swimest] Add Language Features"
+"[swimest] Add Std Features"
+"[swimest] Add Robot Features"
+"[swimest] Add Demos"
+"[swimest] Add Options"
+"[swimest] Add Dependent Features"
+"[swimest] Check Orderfil Passed "
+"[swioptn] Meas : (683       )"
+"[swioptn] LACs match, License is Authorized"
+"[swioptn] license loaded"
+"[swimest] crunching pecs"
+"[swiserl] saving demo file"
+"[swiserl] DEMOFILE saved"
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:08  (322)
+"[swimest] Near end
+"[swilib] Done with frs:init2.com"
+OPTN-018 No Language additions on this media
+[vmimage_bakfile] FRB:dnparam.PRV at 04-JUN-25 14:04:10  (322)
+"ctrl2cus.com complete"
+"Install Customization"
+"[SWICUST] Loading MED:CUSTOM.TX (virtual)"
+OPTN-018 No CUSTO additions on this media
+"control2.com complete"
+"init3.com for V9.30P/32 (FD V9.30216)"
+"Loading J921 (Touch Skip, Part I) "
+"Loading SEND (PC Send Macros, Part I) "
+"Conditionally Loading CMSC (Common shell core, Part I) "
+"Loading H510 (Kernel + Basic S/W, Part II) "
+"Loading SEND (PC Send Macros, Part II) "
+"Loading J716 (FTP Interface, Part II) "
+"Loading OPCO (Motion Optm. Core, Part II) "
+"Loading J882 (Torque Simulator I/F, Part II) "
+"Loading SVMO (Aux Servo Code, Part II) "
+"Loading R663 (Constant Path, Part II) "
+"Conditionally Loading CMSC (Common shell core, Part II) "
+"Conditionally Loading STYL (Common style select, Part II) "
+"init3cus.com complete"
+"init3.com complete"
+[syinit]CONTROL2 command status  0
+[NTSYIN_STEP] Startup Step #96
+[SYINISUB] forcing user device UD1: was PATH:
+[FTP] FTP Interface V5.10
+[FTP] FTP debug addr = 4CFACB48
+[FTP] Ethernet event flag received.
+[syinit] Setting VMGR for in-line calls
+[TPMAINS] Running volatil
+[NTSYIN_STEP] Startup Step #97
+[tpnvdt] Formating persistent storage
+[TPSPART] Found KAREL ATMSKCHG 200
+[TPSPART] Found KAREL ROBMAINT 201
+[TPSPART] Found KAREL CLSKMAIN 207
+[TPSPART] Found KAREL EOATMENU 216
+[TPSPART] Found KAREL ATPRGADJ 930
+[TPSPART] Found KAREL ATWAITRL 931
+[TPSPART] Found KAREL ATPRSCRN 932
+[TPSPART] Found KAREL ATPASWRD 935
+[TPSPART] Found KAREL ATINSTAL 936
+[TPKSINIT] dname -K943- not found devstat = 0 cfg $A6C7868
+[TPSPART] Found KAREL ATCELLIO 955
+[TPSPART] Found KAREL HTSETUP 962
+[TPKSINIT] dname -K972- not found devstat = 0 cfg $A49560C
+[TPKSINIT] dname -K973- not found devstat = 0 cfg $A6724CC
+[TPSPART] Found KAREL ATSOFTPA 992
+Result size = 596
+[SPRUNCMDF] status = 10001B; "VRCLEAR MTSETUP" : MTSETUP
+[vmfndvar] [*SYSTEM*]$SYSTEM_TIMER truncated to $SYSTEM_TIME
+[FTP] getservbyname failed
+[FTP] getservbyname failed
+[hcnetupt] synetrd failed FFFFFFFF
+[TPHCCOMM] bad tp ver format ..
+[tphlplod] No help option
+[NTSYIN_STEP] Startup Step #98
+[TPMAIN] AUTOUPDT.DAT is removed
+[syinisub] running @FRS:autoctrl.com
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\CJSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\CJPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\CSFSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\CSFPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\DTSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\DTPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\PIPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\PLPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\RLRAIL.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\RLRAILT4.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\SVPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\TJPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\TLPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\VCSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\VCPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\IASETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\IAPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\DGSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\SVMOTOR.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\DGPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\WVSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\WVPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\SMSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\SMPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\MUSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\MUPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\RVSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\FCSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\FCPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\ICSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\ICPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\CPSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\CPPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\DCSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\DCPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\FSSBSET.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\SVMOTR2.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\RLKLCONS.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\RLSVEXT.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\AASETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\AAPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\MSSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\MSPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\SESETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\SEPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\RLSTHSCD.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\AXSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\AXPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\DNSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\DNPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\ABCSETUP.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 2000E; "DEL MED:\00\TEMP\ABCPARAM.VR" : FRS:autoctrl.com
+[spruncmdf] +++ no abort
+"[swioptn] Meas : (683       )"
+"[swioptn] LACs match, License is Authorized"
+"[swimest] Add Application"
+"[swimest] Add Language Features"
+"[swimest] Add Std Features"
+"[swimest] Add Robot Features"
+"[swimest] Add Demos"
+"[swimest] Add Options"
+"[swimest] Add Dependent Features"
+"[swiupdt] MED:\CUSTOM\UPDTCUSA.COM not found "
+OPTN-017 No UPDATES on this media
+[SPRUNCMDF]control restrore sequence start
+[osppc] Tick time changed -20000
+[VMGR] program name:*SYSTEM* = $BIGALLOW[1].$PROG_NAME:*SYSTEM*; ($BIGALLOW[1].$INDEX:0)
+[VMGR] program name:*SYSTEM* = $BIGALLOW[15].$PROG_NAME:*SYSTEM*; ($BIGALLOW[15].$INDEX:0)
+[VMGR] variablename:$FLUI_RESULT = $BIGALLOW[15].$VAR_NAME:$FLUI_RESULT
+[vmiloadf] $GROUP created by SYSVARS.SV
+VARS-005 $DB_RECORD PC array length ignored
+VARS-023 Array len creation mismatch
+VARS-005 $PGTRACECTL PC array length ignored
+VARS-023 Array len creation mismatch
+VARS-005 $PGTRACEDT PC array length ignored
+VARS-023 Array len creation mismatch
+VARS-005 $DB_RECORD PC array length ignored
+VARS-023 Array len creation mismatch
+VARS-005 $PGTRACECTL PC array length ignored
+VARS-023 Array len creation mismatch
+VARS-005 $PGTRACEDT PC array length ignored
+VARS-023 Array len creation mismatch
+[osppc] Timer sync timeout! tid: 170
+VARS-005 $VCMR_GRP PC array length ignored
+VARS-023 Array len creation mismatch
+[vmiloadf] multi-segment load 2 segments
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:24  (322)
+VARS-206 SYSVARS.SV will load at startup
+[vmimage_bakfile] FRB:s-posreg.PRV at 04-JUN-25 14:04:26  (322)
+FILE-063 (MED:\00\TEMP\SYSPASS.SV) is not loaded
+FILE-014 File not found
+[vmimage_bakfile] FRB:bicsetup.PRV at 04-JUN-25 14:04:28  (322)
+[vmimage_bakfile] FRB:tpfdef.PRV at 04-JUN-25 14:04:30  (322)
+[vmimage_bakfile] FRB:s-numreg.PRV at 04-JUN-25 14:04:30  (322)
+[vmimage_bakfile] FRB:s-posreg.PRV at 04-JUN-25 14:04:30  (322)
+[vmimage_bakfile] FRB:rlsvrlut.PRV at 04-JUN-25 14:04:30  (322)
+[vmimage_bakfile] FRB:s-strreg.PRV at 04-JUN-25 14:04:30  (322)
+[vmimage_bakfile] FRB:swiupdt.PRV at 04-JUN-25 14:04:30  (322)
+TPIF-218 MED:\00\TEMP\GETDATA.TP failed to load
+MEMO-006 Protection error occurred
+TPIF-218 MED:\00\TEMP\REQMENU.TP failed to load
+MEMO-006 Protection error occurred
+TPIF-218 MED:\00\TEMP\SENDDATA.TP failed to load
+MEMO-006 Protection error occurred
+TPIF-218 MED:\00\TEMP\SENDEVNT.TP failed to load
+MEMO-006 Protection error occurred
+TPIF-218 MED:\00\TEMP\SENDSYSV.TP failed to load
+MEMO-006 Protection error occurred
+[spruncmdf] Did xcopy, from: MED:\00\TEMP\FR\*.* to: FR:\*.*, with stat:0
+[spruncmdf] Did xcopy, from: MED:\00\TEMP\FRA\*.* to: FRA:\*.*, with stat:0
+Error - file MED:\IMGALL.COM is being opened for writing.
+Error - file \IMGALL.COM is being opened for writing.
+[sprun] Found 1008527480 files in initload
+[SPRUN] Restarting CTRL sequence
+[syrestart] ID $31 type 1D baud 31 version P
+[SYRESTART] Running volatil and control3
+"control3.com for V9.30P/32 (FD V9.30216)"
+[SPRUNCMDF] status = 10001B; "VRCLEAR swiupdt" : SWIUPDT
+[spruncmdf] +++ no abort
+"ctrl3cus.com complete"
+"control3.com complete"
+[vminit_restart] sending packet to UTIL
+[vminit_restart] Saving variable context
+[vmshadow_cleanup] Redirected from task 170 to TID_VMSC
+[vmimage_bakfile] FRB:atshell.PRV at 04-JUN-25 14:04:32  (322)
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:32  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:32  (322)
+[vmimage_bakfile] FRB:swiupdt.PRV at 04-JUN-25 14:04:32  (322)
+[vminit_restart] complete
+[SYRESTART] switching modes from 1 to 1
+[pal_reset] Restarting system
+Switching states: old = STARTUP   new = RESTART 
+Tick            Avg: 1.396 ms, Min: 0.001 ms, Max: 5002.882 ms, ticks: 35920
+Execution times Avg: 0.008 ms, Min: 0.001 ms, Max: 0.375 ms
+Switching states: old = RESTART   new = STARTUP 
+[ntinit] TmpWrk  BaseAddress: 0x08C50000 RegionSize:  27648KB Protections: 0x00000004
+[ntinit] TmpWrk2 BaseAddress: 0x34200000 RegionSize: 122880KB Protections: 0x00000004
+[ntinit] TmpWrk3 BaseAddress: 0x1D000000 RegionSize: 378880KB Protections: 0x00000004
+[NTINIT] Frequency 10000000, Ticks/ms 10000 BusClock 40000000
+[IEWTQ] Count = 0 add to head/tail task: 199  cnt: 24  pri: 10
+[osppc] Virtual Clock timer device resolution discovery suceeded, min res: 1 ms
+[NTPORT] Ready for connections at 9100
+[NTPORT] Ready for connections at 9101
+[NTPORT] Ready for connections at 9102
+[NTPORT] Ready for connections at 9103
+[OSSERV] VIRTUAL not doing multi-processing service
+[mktskmem] use static 1024 pages for tid: 159
+Console Monitor (main)
+main bus clock 40
+main PCB version 4
+[ostkinit] TPWDOG_CHK $0
+[DSFL] MAIN V8.90 PCMCIA-ATA USB RD@0x0 (-128) dfdevtbl@0x4CB5EA69
+[ksinitsk] syin continues
+Updated $MC_PATH = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\MC
+Updated $MED_PATH to = C:\ProgramData\FANUC\FRVRC Media\V9.30
+Updated $UD1_PATH to = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UD1
+Updated $UD2_PATH to = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UD2
+Updated $UT1_PATH to = C:\Users\94500062\DOCUME~1\MYWORK~1\HAA14F~1\Robot_1\UT1
+[syinit] bootrom time: 123778 ms
+[syinit] ** CONTROLLED START **
+[syinit] System Version V9.30259      9/14/2023
+[ERLOG] Waiting for UIF to start up
+[syinisb0]VIRTUAL case,setting master_p->initializing to FALSE
+[syinisb0] Load table id=0x31 typ=0x1D baud=0x31
+[syinisb0] osxsndpkt F_INIT packet 0x0
+[ostkinit] ID $31 type 1D baud 31 version P
+[ostkinit] TP Baud Rate 19200
+[NTPORT] accept connection
+[syinisb0] F_INIT complete 0x0
+[syinit] ** CONTROLLED START **
+[spinit] featuremod ptrs
+[dpinit] setting cur lang to NULL
+[dpsetlng] setting cur lang to DEFAULT     
+[tppascon_config] wait for EVB_SPINITDONE
+[syinit] start at 04-JUN-25 14:04:32 
+[sycfgmen] cfgmenu_p 0x407C4CE4
+[ostkinit] sending F_WRIT to 201
+[ostkinit] TPWDOG_CHK+2 $1000
+[ostkinit] sending F_READ to 201
+[syinisb0] tpid check ltp = 0x5CB2C00, tpid = 49
+[NTSYIN_STEP] Startup Step #99
+VMGR for R-30iB V8.30
+[mktskmem] use static 2000 pages for tid:  52
+[mktskmem] use static 2405 pages for tid: 322
+[vmshadow_periodic] Normal power shutdown state = 0
+[vminit] Loading 2 temp 153007992 remaining of 154052600
+[vminit_loadctx] Loaded FRB:\S-SYSTEM.PRV only
+[vminit_loadctx] Done Loading Time = 48383us
+[vminit] after 2 temp 150629456 remaining of 154052600, took 0ms
+[NTSYIN_STEP] Startup Step #100
+[NTFRCPY] Did not load \TMILIB.DLL
+[NTSYIN_STEP] Startup Step #101
+[syinit] spmk2tsk(HTCG), status = $0
+[TX] Start
+[cmt_main] Comet server extension starting
+[PMON] PC Monitor Task
+[pmon] error read dblovrd_enb
+[rpcm] create TCP/IP RPC service
+[svctcp_create] RPCMAIN Server ready for connections on 3002
+[rpcm] call softparts to register service
+[rpcdaqs] register RPCDAQS service
+[rpcm] wait for connection
+[HTCG] CGTP WEB Server starting
+Web Enhancements installed
+[HTCG]: Binding to tcp port number 3080
+[HTCG] ready for connections, calling HCFC_STARTUP_C
+[PMON] Connecting to COMET
+[PMON] Connect ID is 2F9C8AEC
+[cmt_main_init] PMON connected $2F9C8AEC
+[syinit] spmk2tsk(HTTP), status = $0
+[HTTP] WEB Server starting
+Web Enhancements installed
+[HTTP]: Binding to tcp port number 9000
+[HTTP] ready for connections
+[syinisb0] Legacy 2, tpid = 49
+[dpsetlng] setting cur lang to DEFAULT     
+[tppascon_config] wait for EVB_SPINITDONE
+[dpimage_restctx] Loading DEFAULT      dictionaries pool_avail = 150153620
+[dpimage_restctx] Ref time cached:120ms nocache:620ms, Numfiles = 289 Time 0ms
+[dpimage_restctx] Dictionaries loaded pool_avail = 148881236
+[dpsetlng] setting cur lang to DEFAULT     
+[tppascon_config] wait for EVB_SPINITDONE
+[NTSYIN_STEP] Startup Step #102
+[SYINISB0] Loading main system softparts please wait ...
+[NTFRCPY] Did not load \DCSTSK.DLL
+[NTFRCPY] Did not load \DHCP.DLL
+[NTFRCPY] Did not load \DNS.DLL
+[NTFRCPY] Did not load \IOSLCTSK.DLL
+[NTFRCPY] Did not load \MBCASESP.DLL
+[NTFRCPY] Did not load \MBSMONSP.DLL
+[NTFRCPY] Did not load \MBTASKSP.DLL
+[NTFRCPY] Did not load \PBCTLRUN.DLL
+[NTFRCPY] Did not load \PBMPMIO.DLL
+[NTFRCPY] Did not load \PWMAINSP.DLL
+[NTFRCPY] Did not load \SFCUMON.DLL
+[NTFRCPY] Did not load \SNTP.DLL
+[NTFRCPY] Did not load \SYUSRCPY.DLL
+[NTFRCPY] Did not load \TPFICD.DLL
+[NTFRCPY] Did not load \UECK.DLL
+[SYSINISB0] spspload reference time 44355 ms, This Time 55ms
+[vminit] Loading 3 temp 148792760 remaining of 154052600
+[vminit_loadctx] Loading all files (VMGR/PVAR Suspended)
+[vminit_loadctx] Done Loading Time = 106999us
+[vmshadow_cleanup] Redirected from task 187 to TID_VMSC
+[vminit] after 3 temp 144360720 remaining of 154052600, took 0ms
+[VMGR] program name:*SYSTEM* = $BIGALLOW[1].$PROG_NAME:*SYSTEM*; ($BIGALLOW[1].$INDEX:0)
+[VMGR] program name:*SYSTEM* = $BIGALLOW[15].$PROG_NAME:*SYSTEM*; ($BIGALLOW[15].$INDEX:0)
+[VMGR] variablename:$FLUI_RESULT = $BIGALLOW[15].$VAR_NAME:$FLUI_RESULT
+[vmiloadf] $GROUP created by SYSVARS.SV
+[osppc] Timer sync timeout! tid: 170
+[vmiloadf] multi-segment load 2 segments
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:40  (322)
+[Syin] Mobo start 0xFFFFFFFF
+[NTSYIN_STEP] Startup Step #103
+[SYINISB)] total time 7708
+[NTSYIN_STEP] Startup Step #104
+[NTSYIN_STEP] Startup Step #105
+[SYINISUB] Saving user device UD1:
+[syporti]pkt send to TLNT fails 10C
+[SNPX] Client_Type 1, Port 18245
+[SNPX] Client_Type 2, Port 60008
+[NTSYIN_STEP] Startup Step #106
+[ostksock_timeout] g_ce_mode 0
+[ostksock_create] Socket 1780 binding to IP port # 60004
+[ostksock_create] T-X IP address <001.001.001.011>
+[NTSYIN_STEP] Startup Step #107
+[syinit] : calling iosetup
+[EGDMN] EGD Producer Task V6.2012 @0x4D1D1000
+[PMUIXML] Loading FRS:\PMCFG.XML......done!!!
+[ntsyin] VIRTUAL enabling all web options
+[SKMG] Socket Messaging Interface V5.22 @0x4CEF1320
+[TELNET] start
+[TELNET] debug address 4D02204C
+[TELNET] Ethernet event flag received.
+[SMB] SMB Interface V7.50
+[SMB] Ethernet event flag received.
+[ntsyin] VIRTUAL setting $MSKSIGN=0
+[ntsyin] VIRTUAL setting $MSKCONREL=0
+[SMB] wins server is 0x0
+[pmtkmain] cpreadvr 00000000 : FwVers 01030302
+[ripini] Initializing
+[rosip] Entering baseinit, waiting on packet rate =2
+[ripini] Sending init packet 1, 392, 0x3B976B58
+[rosip] Initialization not successful
+[NTSYIN_STEP] Startup Step #108
+[NTSYIN_STEP] Startup Step #109
+[syinisub] Memory manager started
+[NTSYIN_STEP] Startup Step #110
+[NTSYIN_STEP] Startup Step #111
+[NTSYIN_STEP] Startup Step #112
+[NTSYIN_STEP] Startup Step #113
+[syinit] mosetvpr status #2<0>
+
+[syinisub] status after vmgetvar #2 = $0
+[NTSYIN_STEP] Startup Step #114
+[vmfndvar] [*SYSTEM*]$AUTOMODE_OV  truncated to $AUTOMODE_OV
+[vmfndvar] [*SYSTEM*]$AP_AUTOMODE_DO truncated to $AP_AUTOMODE
+[NTSYIN_STEP] Startup Step #115
+[syinit] mosetvpr status <0>
+[NTSYIN_STEP] Startup Step #116
+[SMTPXML] DRC option not loaded
+[NTSYIN_STEP] Startup Step #117
+[ERLOG] continue stat = 0x0
+[rcmplg] RCMCFG_BASE $5BC98D8, rcmcfg_p $A56342C
+[rcmplg] iRConnect only works in COLDSTART
+VARS-005 $DB_RECORD PC array length ignored
+VARS-023 Array len creation mismatch
+VARS-005 $PGTRACECTL PC array length ignored
+VARS-023 Array len creation mismatch
+VARS-005 $PGTRACEDT PC array length ignored
+VARS-023 Array len creation mismatch
+VARS-005 $DB_RECORD PC array length ignored
+VARS-023 Array len creation mismatch
+VARS-005 $PGTRACECTL PC array length ignored
+VARS-023 Array len creation mismatch
+VARS-005 $PGTRACEDT PC array length ignored
+VARS-023 Array len creation mismatch
+VARS-207 SYSVARS.SV loaded at startup
+SEC -001 Security Config Mismatch
+PRIO-370 PMIO No Board Found
+[NTSYIN_STEP] Startup Step #118
+[syinisub] VMGR called to register program with MEMO
+[NTSYIN_STEP] Startup Step #119
+[NTSYIN_STEP] Startup Step #120
+[NTSYIN_STEP] Startup Step #121
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:42  (322)
+[NTSYIN_STEP] Startup Step #122
+[NTSYIN_STEP] Startup Step #123
+[pibefini] MOSPV_P is NULL!!
+[TPGL_InstID] allocated instance 0 1 0 255 
+[TPGL_InstID] allocated instance 1 2 0 255 
+[TPGL_InstID] allocated instance 2 3 0 255 
+[vmshadow_cleanup] Redirected from task 72 to TID_VMSC
+[NTSYIN_STEP] Startup Step #124
+[sytimque]: trigger loaded 0
+[CHND] Low Priority Condition Handler started.
+[CHND] init done. starting scanning
+[tpmains_start] executing legacy mode case
+[NTSYIN_STEP] Startup Step #125
+syopinsp-Jog in Auto used: 1
+[SYINIT] OCTK started 380001
+[NTSYIN_STEP] Startup Step #126
+[NTSYIN_STEP] Startup Step #127
+[sycgtp] LED time = 0 ms
+[sycgtp] EXT time = 0 ms
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:42  (322)
+[NTSYIN_STEP] Startup Step #128
+"control1.com for V9.30P/32 (FD V9.30216)"
+"menu.com for V9.30P/32 (FD V9.30216)"
+"menucus.com complete"
+"menu.com complete"
+[vmimage_bakfile] FRB:swiupdt.PRV at 04-JUN-25 14:04:42  (322)
+[SPRUNCMDF] status = 10B; "RUNTSK SID_HTTP" : CONTROL1.COM
+[ASBN] started
+[spruncmdf] +++ no abort
+[vdat] wake up
+[vdat] oschggrp(112, 4, 0) 0x00000000
+[vdat] $vis_homing vmsetlim error $100006
+[vdat] $vp2n_cfg vmsetlim error $100006
+[KCL] failed to locate DEV_KCL_C but continuing
+[vtrn] wake up
+[vtrn] oschggrp(136, 4, 0) 0x00000000
+[vmimage_bakfile] FRB:rlsvext.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:svparam.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:piparam.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:cpparam.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:mtparam.PRV at 04-JUN-25 14:04:42  (322)
+[vmimage_bakfile] FRB:dnparam.PRV at 04-JUN-25 14:04:42  (322)
+"ctrl1cus.com complete"
+"control1.com complete"
+[NTSYIN] userctrl.com file not found
+[NTSYIN_STEP] Startup Step #129
+[NTSYIN_STEP] Startup Step #130
+[SYINISUB] restored user device UD1:
+[FTP] FTP Interface V5.10
+[FTP] FTP debug addr = 4CFACB48
+[FTP] Ethernet event flag received.
+[syinit] Setting VMGR for in-line calls
+[TPMAINS] Running volatil
+[osppc] Tick time changed -20000
+[NTSYIN_STEP] Startup Step #131
+[tpnvdt] Formating persistent storage
+[TPSPART] Found KAREL ATMSKCHG 200
+[TPSPART] Found KAREL ROBMAINT 201
+[TPSPART] Found KAREL CLSKMAIN 207
+[TPSPART] Found KAREL EOATMENU 216
+[TPSPART] Found KAREL ATPRGADJ 930
+[TPSPART] Found KAREL ATWAITRL 931
+[TPSPART] Found KAREL ATPRSCRN 932
+[TPSPART] Found KAREL ATPASWRD 935
+[TPSPART] Found KAREL ATINSTAL 936
+[TPKSINIT] dname -K943- not found devstat = 0 cfg $3B946168
+[TPSPART] Found KAREL ATCELLIO 955
+[TPSPART] Found KAREL HTSETUP 962
+[TPKSINIT] dname -K972- not found devstat = 0 cfg $3B9251BC
+[TPKSINIT] dname -K973- not found devstat = 0 cfg $A6C1D10
+[TPSPART] Found KAREL ATSOFTPA 992
+Result size = 596
+[SPRUNCMDF] status = 10001B; "VRCLEAR MTSETUP" : MTSETUP
+[vmfndvar] [*SYSTEM*]$SYSTEM_TIMER truncated to $SYSTEM_TIME
+[FTP] getservbyname failed
+[FTP] getservbyname failed
+[TPHCCOMM] bad tp ver format ..
+[tphlplod] No help option
+[NTSYIN_STEP] Startup Step #132
+[NTSYIN_STEP] Startup Step #133
+[sfstpsl] init $SEL_HOTSTRT
+[tpmains] ready at 04-JUN-25 14:04:44 
+[NTPORT] accept connection
+[NTPORT] accept connection
+[syrestart] ID $31 type 1D baud 31 version P
+[SYRESTART] Running volatil and control3
+"control3.com for V9.30P/32 (FD V9.30216)"
+[SPRUNCMDF] status = 10001B; "VRCLEAR swiupdt" : SWIUPDT
+[spruncmdf] +++ no abort
+"ctrl3cus.com complete"
+"control3.com complete"
+[vminit_restart] sending packet to UTIL
+[vminit_restart] Saving variable context
+[vmshadow_cleanup] Redirected from task 170 to TID_VMSC
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:52  (322)
+[vmimage_bakfile] FRB:s-progra.PRV at 04-JUN-25 14:04:52  (322)
+[vmimage_bakfile] FRB:swiupdt.PRV at 04-JUN-25 14:04:52  (322)
+[vminit_restart] complete
+[NTSYIN] userctrl2.com file not found
+[SYRESTART] switching modes from 1 to 2
+[pal_reset] Restarting system
+Switching states: old = STARTUP   new = RESTART 
+Tick            Avg: 1.390 ms, Min: 0.001 ms, Max: 5002.882 ms, ticks: 50268
+Execution times Avg: 0.008 ms, Min: 0.001 ms, Max: 0.451 ms
+Switching states: old = RESTART   new = STARTUP 
+[ntinit] TmpWrk  BaseAddress: 0x08C50000 RegionSize:  27648KB Protections: 0x00000004
+[ntinit] TmpWrk2 BaseAddress: 0x34200000 RegionSize: 122880KB Protections: 0x00000004
+[ntinit] TmpWrk3 BaseAddress: 0x1D000000 RegionSize: 378880KB Protections: 0x00000004
+[NTINIT] Frequency 10000000, Ticks/ms 10000 BusClock 40000000
+[IEWTQ] Count = 0 add to head/tail task: 199  cnt: 24  pri: 10
+[osppc] Virtual Clock timer device resolution discovery suceeded, min res: 1 ms
+[NTPORT] Ready for connections at 9100
+[NTPORT] Ready for connections at 9101
+[NTPORT] Ready for connections at 9102
+[NTPORT] Ready for connections at 9103
+[OSSERV] VIRTUAL not doing multi-processing service
+[mktskmem] use static 1024 pages for tid: 159
+Console Monitor (main)
+main bus clock 40
+main PCB version 4
+[ostkinit] TPWDOG_CHK $0
+[DSFL] MAIN V8.90 PCMCIA-ATA USB RD@0x0 (-128) dfdevtbl@0x4CB5EA69
+[ksinitsk] syin continues
+Updated $MC_PATH = C:\Users\94500062\Documents\My Workcells\HandlingPRO34\Robot_1\MC
+Updated $MED_PATH to = C:\ProgramData\FANUC\FRVRC Media\V9.30
+Updated $UD1_PATH to = C:\Users\94500062\Documents\My Workcells\HandlingPRO34\Robot_1\UD1
+Updated $UD2_PATH to = C:\Users\94500062\Documents\My Workcells\HandlingPRO34\Robot_1\UD2
+Updated $UT1_PATH to = C:\Users\94500062\Documents\My Workcells\HandlingPRO34\Robot_1\UT1
+[syinit] bootrom time: 143711 ms
+[syinit] ** COLD START **
+[syinit] System Version V9.30259      9/14/2023
+[ERLOG] Waiting for UIF to start up
+[syinisb0]VIRTUAL case,setting master_p->initializing to FALSE
+[syinisb0] Load table id=0x31 typ=0x1D baud=0x31
+[syinisb0] osxsndpkt F_INIT packet 0x0
+[ostkinit] ID $31 type 1D baud 31 version P
+[ostkinit] TP Baud Rate 19200
+[NTPORT] accept connection
+[syinisb0] F_INIT complete 0x0
+[syinit] ** COLD START **
+[spinit] featuremod ptrs
+[dpinit] setting cur lang to NULL
+[dpsetlng] setting cur lang to DEFAULT     
+[tppascon_config] wait for EVB_SPINITDONE
+[syinit] start at 04-JUN-25 14:04:52 
+[sycfgmen] cfgmenu_p 0x407C4CE4
+[ostkinit] sending F_WRIT to 201
+[ostkinit] TPWDOG_CHK+2 $1000
+[ostkinit] sending F_READ to 201
+[syinisb0] tpid check ltp = 0x5CB2C00, tpid = 49
+[NTSYIN_STEP] Startup Step #134
+VMGR for R-30iB V8.30
+[mktskmem] use static 2000 pages for tid:  52
+[mktskmem] use static 2405 pages for tid: 322
+[vmshadow_periodic] Normal power shutdown state = 0
+[vminit] Loading 2 temp 153007992 remaining of 154052600
+[vminit_loadctx] Loaded FRB:\S-SYSTEM.PRV only
+[vminit_loadctx] Done Loading Time = 12390us
+[vminit] after 2 temp 150626900 remaining of 154052600, took 0ms
+[NTSYIN_STEP] Startup Step #135
+[NTFRCPY] Did not load \TMILIB.DLL
+[NTSYIN_STEP] Startup Step #136
+[syinit] spmk2tsk(HTCG), status = $0
+[TX] Start
+[cmt_main] Comet server extension starting
+[PMON] PC Monitor Task
+[pmon] error read dblovrd_enb
+[rpcm] create TCP/IP RPC service
+[svctcp_create] RPCMAIN Server ready for connections on 3002
+[rpcm] call softparts to register service
+[rpcdaqs] register RPCDAQS service
+[rpcm] wait for connection
+[HTCG] CGTP WEB Server starting
+Web Enhancements installed
+[HTCG]: Binding to tcp port number 3080
+[HTCG] ready for connections, calling HCFC_STARTUP_C
+[PMON] Connecting to COMET
+[PMON] Connect ID is 2F9C8AEC
+[cmt_main_init] PMON connected $2F9C8AEC
+[syinit] spmk2tsk(HTTP), status = $0
+[HTTP] WEB Server starting
+Web Enhancements installed
+[HTTP]: Binding to tcp port number 9000
+[HTTP] ready for connections
+[syinisb0] Legacy 2, tpid = 49
+[dpsetlng] setting cur lang to DEFAULT     
+[tppascon_config] wait for EVB_SPINITDONE
+[dpimage_restctx] Loading DEFAULT      dictionaries pool_avail = 150151064
+[dpimage_restctx] Ref time cached:120ms nocache:620ms, Numfiles = 289 Time 0ms
+[dpimage_restctx] Dictionaries loaded pool_avail = 148878680
+[dpsetlng] setting cur lang to DEFAULT     
+[tppascon_config] wait for EVB_SPINITDONE
+[NTSYIN_STEP] Startup Step #137
+[SYINISB0] Loading main system softparts please wait ...
+[NTFRCPY] Did not load \DCSTSK.DLL
+[NTFRCPY] Did not load \DHCP.DLL
+[NTFRCPY] Did not load \DNS.DLL
+[NTFRCPY] Did not load \IOSLCTSK.DLL
+[NTFRCPY] Did not load \MBCASESP.DLL
+[NTFRCPY] Did not load \MBSMONSP.DLL
+[NTFRCPY] Did not load \MBTASKSP.DLL
+[NTFRCPY] Did not load \PBCTLRUN.DLL
+[NTFRCPY] Did not load \PBMPMIO.DLL
+[NTFRCPY] Did not load \PWMAINSP.DLL
+[NTFRCPY] Did not load \SFCUMON.DLL
+[NTFRCPY] Did not load \SNTP.DLL
+[NTFRCPY] Did not load \SYUSRCPY.DLL
+[NTFRCPY] Did not load \TPFICD.DLL
+[NTFRCPY] Did not load \UECK.DLL
+[SYSINISB0] spspload reference time 44355 ms, This Time 31ms
+[vminit] Loading 3 temp 148790204 remaining of 154052600
+[vminit_loadctx] Loading all files (VMGR/PVAR Suspended)
+[vminit_loadctx] Done Loading Time = 58619us
+[vmshadow_cleanup] Redirected from task 187 to TID_VMSC
+[vminit] after 3 temp 145262748 remaining of 154052600, took 0ms
+[Syin] Mobo start 0xFFFFFFFF
+[NTSYIN_STEP] Startup Step #138
+[SYINISB)] total time 315
+[NTSYIN_STEP] Startup Step #139
+[NTSYIN_STEP] Startup Step #140
+[SYINISUB] Saving user device UD1:
+[vcam] wake up
+[vcam] oschggrp(111, 4, 0) 0x00000000
+[syporti]pkt send to TLNT fails 10C
+[SNPX] Client_Type 1, Port 18245
+[SNPX] Client_Type 2, Port 60008
+[NTSYIN_STEP] Startup Step #141
+[NTSYIN_STEP] Startup Step #142
+[syinit] : calling iosetup
+[EGDMN] EGD Producer Task V6.2012 @0x4D1D1000
+[PMUIXML] Loading FRS:\PMCFG.XML......done!!!
+[ostksock_timeout] g_ce_mode 0
+[ostksock_create] Socket 1648 binding to IP port # 60004
+[ostksock_create] T-X IP address <001.001.001.011>
+[SKMG] Socket Messaging Interface V5.22 @0x4CEF1320
+[TELNET] start
+[TELNET] debug address 4D02204C
+[TELNET] Ethernet event flag received.
+[SMB] SMB Interface V7.50
+[SMB] Ethernet event flag received.
+[SMB] wins server is 0x0
+[pmtkmain] cpreadvr 00000000 : FwVers 01030302
+[ripini] Initializing
+[rosip] Entering baseinit, waiting on packet rate =2
+[ripini] Sending init packet 1, 392, 0xA341FF8
+[rosip] Initialization not successful
+[NTSYIN_STEP] Startup Step #143
+pmgr-sector set 100
+[NTSYIN_STEP] Startup Step #144
+[syinisub] Memory manager started
+[NTSYIN_STEP] Startup Step #145
+[NTSYIN_STEP] Startup Step #146
+[NTSYIN_STEP] Startup Step #147
+[NTSYIN_STEP] Startup Step #148
+[NTSYIN_STEP] Startup Step #149
+[vmfndvar] [*SYSTEM*]$AUTOMODE_OV  truncated to $AUTOMODE_OV
+[vmfndvar] [*SYSTEM*]$AP_AUTOMODE_DO truncated to $AP_AUTOMODE
+[NTSYIN_STEP] Startup Step #150
+[syinit] mosetvpr status <0>
+[NTSYIN_STEP] Startup Step #151
+[SMTPXML] DRC option not loaded
+[NTSYIN_STEP] Startup Step #152
+[ERLOG] continue stat = 0x0
+[rcmplg] RCMCFG_BASE $5BC98D8, rcmcfg_p $3B8145A8
+SEC -001 Security Config Mismatch
+PRIO-370 PMIO No Board Found
+[rcmutl] Remote Connect Manager V1.2@0x4D765089
+[RMCN] Loading FR:\RCMCFG.XML
+[rcmlib_parseurl] Added forward slash
+[rcmlib_parseurl] Error not in format http://
+[NTSYIN_STEP] Startup Step #153
+[syinisub] VMGR called to register program with MEMO
+[NTSYIN_STEP] Startup Step #154
+[NTSYIN_STEP] Startup Step #155
+[NTSYIN_STEP] Startup Step #156
+[NTSYIN_STEP] Startup Step #157
+[NTSYIN_STEP] Startup Step #158
+FRS:\TPGLGRP1.XML File open error
+[VMotion_Oddbot] replacing FRS:\TPGLGRP1.XML because it changed
+[VMotion] Robot model frh:\tpgl\robots\position\position.xml does not exist
+[TPGL_InstID] allocated instance 0 1 0 255 
+[TPGL_InstID] allocated instance 1 2 0 255 
+[TPGL_InstID] allocated instance 2 3 0 255 
+[vmshadow_cleanup] Redirected from task 72 to TID_VMSC
+[NTSYIN_STEP] Startup Step #159
+[sytimque]: trigger loaded 0
+[CHND] Low Priority Condition Handler started.
+[CHND] init done. starting scanning
+[tpmains_start] executing legacy mode case
+[NTSYIN_STEP] Startup Step #160
+syopinsp-Jog in Auto used: 1
+sswrkset ****rspaceg_p is 406B1A10
+[sswrkset] cp installed and enabled = 1
+[SYINIT] OCTK started 380001
+[NTSYIN_STEP] Startup Step #161
+[NTSYIN_STEP] Startup Step #162
+[sycgtp] LED time = 0 ms
+[sycgtp] EXT time = 0 ms
+[NTSYIN_STEP] Startup Step #163
+"cold1.com for V9.30P/32 (FD V9.30216)"
+"menu.com for V9.30P/32 (FD V9.30216)"
+"menucus.com complete"
+"menu.com complete"
+[SPRUNCMDF] status = 10B; "RUNTSK SID_HTTP" : COLD1.COM
+[ASBN] started
+[spruncmdf] +++ no abort
+[SPRUNCMDF] status = 380001; "RUNTSK SID_UCPY" : COLD1.COM
+[vxmn] wake up
+[vexe] wake up
+[vxmn] VXMNPKT_T 132, PKT_SIZ7 272
+[vexe] oschggrp(113, 4, 0) 0x00000000
+[vxmn] oschggrp(114, 4, 0) 0x00000000
+[vdat] wake up
+[vdat] oschggrp(112, 4, 0) 0x00000000
+[vlog] oschggrp(115, 4, 0) $00000000
+[vzdt] oschggrp(341, 4, 0) $00000000
+[vdat] $vis_homing vmsetlim error $100006
+[vdat] $vp2n_cfg vmsetlim error $100006
+[vdat] vision pool size = 0
+[KCL] failed to locate DEV_KCL_C but continuing
+Failed to initialize Publisher (status 0x80340000).
+[OPC UA] Port 4880
+[vtrn] wake up
+[vtrn] oschggrp(136, 4, 0) 0x00000000
+[V:\ctlrvision\plugin\cscx\cscxmain.c] stat=750313
+[spruncmdf] +++ no abort
+"cold1cus.com complete"
+"cold1.com complete"
+[NTSYIN_STEP] Startup Step #164
+[NTSYIN_STEP] Startup Step #165
+[SYINISUB] restored user device UD1:
+[FTP] FTP Interface V5.10
+[FTP] FTP debug addr = 4CFACB48
+[FTP] Ethernet event flag received.
+[SYINISUB] Saving user device UD1:
+[NTSYIN_STEP] Startup Step #166
+[DEBUG] Entering moinit
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:54  (52)
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:54  (52)
+SYST-026 System normal power up
+[sfmdest] null_flg_p:3AD88570
+[PMPT] Not Required
+[SRIF] Not Need
+[miinit][1] posted init PKT <9DB030C> to task<72> (0)
+[miinit] Mount $SPL_MOR_GRP[1] fail. stat = 100006 
+ [miinit][2] posted init PKT <9DB030C> to task<72> (0)
+[miinit] Mount $SPL_MOR_GRP[2] fail. stat = 100006 
+ [miinit] done 
+[miinit] done 
+[mpinit] initialize mb_fp
+[mpinit] after mpdyinit
+[mpinit] Mount $SPL_MOR_GRP[1] fail. stat = 100006 
+[mpinit] ossndpkt <0>
+[mpinit] done mpinit
+[mpinit] initialize mb_fp
+[mpinit] after mpdyinit
+[mpinit] Mount $SPL_MOR_GRP[2] fail. stat = 100006 
+[mpinit] ossndpkt <0>
+[mpinit] done mpinit
+[mfinit] start
+  [load_safety_param(MAIN)]load_address:0x11FE8000, size:0x13590
+[ottask] eoat_p A6AB0BC
+[tbjtkini] finish wake up stat = 0
+[nectkini] finish wake up  stat = 0
+[moinit] done
+[mfinidsp] --- start ITP ---
+[mfinidsp] waiting for SSTB...
+[mfinidsp] all SSTB become 1
+[mfredampid] [d:1 da:1 g:1 ga:1] amp_svm: amp_psm:(ps:0) amp_svmsrl: amp_psmsrl: amp_svmver: amp_psmver:
+[mfredampid] [d:1 da:2 g:1 ga:2] amp_svm: amp_psm:(ps:0) amp_svmsrl: amp_psmsrl: amp_svmver: amp_psmver:
+[mfredampid] [d:1 da:3 g:1 ga:3] amp_svm: amp_psm:(ps:0) amp_svmsrl: amp_psmsrl: amp_svmver: amp_psmver:
+[mfredampid] [d:1 da:4 g:1 ga:4] amp_svm: amp_psm:(ps:0) amp_svmsrl: amp_psmsrl: amp_svmver: amp_psmver:
+[SYINISUB] Checking $repower.$flag
+[syinisub] TICK_OFFSET 5BC985C to 0
+[vmshadow_cleanup] Redirected from task 72 to TID_VMSC
+[NTSYIN_STEP] Startup Step #167
+[syinisub] TPID = 0x31 !!!!!!!!!!!!!!!!!!!!!!!!!
+[NTSYIN_STEP] Startup Step #168
+[syinit] waiting for EVF_ENB_PWF...
+[syinit] osconflg(EVF_ENB_PWF) $16A
+[SYINISUB] VIRTUAL not waiting on EVF_ENB_PWF
+[syinit] oswaiflg(EVF_ENB_PWF) $16A
+[syinit] oswaiflg(EVF_ENB_PWF) failed, status = $16A
+[NTSYIN_STEP] Startup Step #169
+[NTSYIN_STEP] Startup Step #170
+R E S E T
+SYST-305 System startup in progress
+[syinit] syrset(), status = $0
+[syinisub] VIRTUAL not waiting for servo on
+[NTSYIN_STEP] Startup Step #171
+[syinisub] Starting C shell 0x0
+[Shxsp] Ref positions in use
+[Shxsp] Initialize extension
+[syinisub]starting shell $0
+[NTSYIN_STEP] Startup Step #172
+"cold2.com for V9.30P/32 (FD V9.30216)"
+"cold2cus.com complete"
+"cold2.com complete"
+[syinisub] Ready to run ATSHELL
+Ready to run SHELL
+[syinisub] Start Karel shell 0x0
+[SYINISUB] restored user device UD1:
+[syinit] Setting VMGR for in-line calls
+[syinit] end
+[syinisub.c] spmk2tsk(HTTC), status = $0
+[RDM] Robot Discovery Method V6.2003 @0x4D031000
+[RDM]: Binding to udp port number 60008
+[RDM] Robot Discovery Method ready on port 60008
+[DNS Server] init err FFFFFFFF
+[PRXY] Proxy Server Starting
+[PXPMON] PMON Proxy Server ready for connections on 50005
+[PXRPCM] RPCM Proxy Server ready for connections on 60009
+[HTTC] COMM WEB Server starting
+[HTTC]: Binding to tcp port number 4080
+[COMM HTTC] ready for connections
+[SMTP] Ethernet event flag received.
+[symonutl] Getting data (3EA, 0)
+[symonutl] Fail to get mac from I2C (1)
+[vmshadow_cleanup] Redirected from task 72 to TID_VMSC
+SYINISUB TOTAL TIME 1882
+[SYINISUB] restored user device UD1:
+[NTSYIN_STEP] Startup Step #173
+[tpnvdt] Formating persistent storage
+[TPSPART] Found KAREL ATMSKCHG 200
+[TPSPART] Found KAREL CLSKMAIN 207
+[TPSPART] Found KAREL EOATMENU 216
+[TPSPART] Found KAREL ATPRGADJ 930
+[TPSPART] Found KAREL ATWAITRL 931
+[TPSPART] Found KAREL ATPRSCRN 932
+[TPSPART] Found KAREL ATPASWRD 935
+[TPSPART] Found KAREL ATINSTAL 936
+[TPKSINIT] dname -K943- not found devstat = 0 cfg $9D5A3C0
+[TPSPART] Found KAREL ATCELLIO 955
+[TPKSINIT] dname -K972- not found devstat = 0 cfg $9D5A248
+[TPKSINIT] dname -K973- not found devstat = 0 cfg $3AA6BC70
+[TPSPART] Found KAREL ATSOFTPA 992
+Result size = 596
+[vmimage_bakfile] FRB:s-system.PRV at 04-JUN-25 14:04:56  (322)
+[vmimage_bakfile] FRB:mtparam.PRV at 04-JUN-25 14:04:56  (322)
+[vmfndvar] [*SYSTEM*]$SYSTEM_TIMER truncated to $SYSTEM_TIME
+[FTP] getservbyname failed
+[FTP] getservbyname failed
+[TPHCCOMM] bad tp ver format ..
+[vmimage_bakfile] FRB:s-intern.PRV at 04-JUN-25 14:04:56  (322)
+[tphlplod] No help option
+[NTSYIN_STEP] Startup Step #174
+[syinisub] running @MED:\00\TEMP\IOSTATUS.CM
+[syinisub] running @FRS:autocold.com
+[SPRUNCMDF] status = 2000E; "DEL MED:\AUKEPDCS.DAT" : MODIFORD
+[spruncmdf] +++ no abort
+[osppc] Tick time changed -20000
+[SPRUNCMDF] status = 2000E; "FRREP UD1:\00\IGALBKUP.CM "REN UD1:\\00\\TEMP" "IGALBKUP -AU"" : MED:\00\TEMP\RENAME.COM
+[spruncmdf] +++ no abort
+ 
+SYST-176 Software was updated
+[NTSYIN_STEP] Startup Step #175
+[sfstpsl] init $SEL_HOTSTRT
+[tpmains] ready at 04-JUN-25 14:04:56 
+TPIF-157 Menu cannot be displayed

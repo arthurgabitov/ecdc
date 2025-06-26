@@ -25,12 +25,12 @@ class StationView:
         spots_count = app_settings["spots"]
         columns_count = app_settings["columns"]
 
-        # Remove station_dropdown from StationView
+     
         self.station_dropdown = None
 
         if self.selected_station_id is not None:
             selected_station = self.controller.get_station_by_id(self.selected_station_id)
-            # station_title = ft.Text(selected_station["name"], size=22, weight=ft.FontWeight.BOLD)  # Removed: do not display station name at the top
+         
             spots = [
                 Spot(f"Spot {i + 1}", str(self.selected_station_id), f"{self.selected_station_id}_{i + 1}", self.page, self.controller).build()
                 for i in range(spots_count)

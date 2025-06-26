@@ -30,7 +30,7 @@ async def main(page: ft.Page):
     #page.window.maximized = True
     page.bgcolor = BG_MAIN
     page.window.height = 760
-    page.window.width = 700
+    page.window.width = 760
 
 
     is_web = page.platform == "web"

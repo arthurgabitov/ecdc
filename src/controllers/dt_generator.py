@@ -6,8 +6,16 @@ import openpyxl
 import xlrd
 import xlwt
 from xlutils.copy import copy as xl_copy
+import sys
 
-KCONVARS_PATH = r"C:\Users\94500062\station-app\ecdc\src\Utils\WinOLPC\bin\kconvars.exe"
+\
+if getattr(sys, 'frozen', False):
+    BASE_DIR = os.path.dirname(sys.executable)
+else:
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+KCONVARS_PATH = os.path.join(BASE_DIR, '..', 'utils', 'WinOLPC', 'bin', 'kconvars.exe')
+KCONVARS_PATH = os.path.abspath(KCONVARS_PATH)
+
 DT_TARGET_DIR = r"J:\SC\SC_ALL\European Customisation Center\2.Robotics\ECC Internal\19_Data_Sheets_new"
 
 class DTGenerator:
@@ -30,13 +38,35 @@ class DTGenerator:
             return False, f"sysmast.sv not found in {folder_path}"
         
         # Convert sv to txt
-
         txt_path = os.path.splitext(sv_path)[0] + ".txt"
         try:
+            if not os.path.isfile(KCONVARS_PATH):
+                return False, f"kconvars.exe not found! Expected path: {KCONVARS_PATH}"
             command = [KCONVARS_PATH, sv_path, txt_path]
-            proc = subprocess.run(command, capture_output=True, text=True)
-            if not os.path.exists(txt_path):
-                return False, f"Failed to convert sysmast.sv: {proc.stderr or proc.stdout}"
+            # portable PATH
+            portable_dirs = [
+                os.path.join(BASE_DIR, '..', "utils", "WinOLPC", "bin"),
+                os.path.join(BASE_DIR, '..', "utils", "ROBOGUIDE", "bin"),
+                os.path.join(BASE_DIR, '..', "utils", "Shared", "Utilities"),
+            ]
+            env = os.environ.copy()
+            env["PATH"] = os.pathsep.join([os.path.abspath(p) for p in portable_dirs]) + os.pathsep + env.get("PATH", "")
+            proc = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                cwd=os.path.dirname(KCONVARS_PATH),
+                creationflags=getattr(subprocess, 'CREATE_NO_WINDOW', 0),
+                env=env
+            )
+            if os.path.exists(txt_path):
+                pass
+            else:
+                alt_out_path = os.path.join(os.path.dirname(KCONVARS_PATH), os.path.basename(txt_path))
+                if os.path.exists(alt_out_path):
+                    txt_path = alt_out_path
+                else:
+                    return False, f"Failed to convert sysmast.sv: {proc.stderr or proc.stdout or 'No txt file created.'}"
         except Exception as ex:
             return False, f"Error running kconvars: {ex}"
         

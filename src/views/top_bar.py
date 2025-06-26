@@ -1,45 +1,59 @@
 import flet as ft
 from styles import BG_TOP_BAR, BORDER_RADIUS_TOPBAR, PADDING_TOPBAR, FONT_WEIGHT_BOLD, FONT_SIZE_MEDIUM, TEXT_ACCENT, TEXT_DEFAULT, FONT_SIZE_NORMAL
+import ctypes
 
-def TopBar(title, user_sso, dropdown=None, right_controls=None):
-    
+def get_full_username():
+    GetUserNameEx = ctypes.windll.secur32.GetUserNameExW
+    NameDisplay = 3  # NameDisplay = полное имя
+    size = ctypes.pointer(ctypes.c_ulong(0))
+    GetUserNameEx(NameDisplay, None, size)
+    nameBuffer = ctypes.create_unicode_buffer(size.contents.value)
+    GetUserNameEx(NameDisplay, nameBuffer, size)
+    return nameBuffer.value
+
+
+def TopBar(title, user_sso=None, dropdown=None, right_controls=None):
     LEFT_BLOCK_WIDTH = 340  
     TOPBAR_HEIGHT = 65     
-    left_controls = [
-        ft.Text(title, weight=FONT_WEIGHT_BOLD, size=FONT_SIZE_MEDIUM, font_family="Roboto-Light"),
-    ]
+    # Получаем полное имя пользователя
+    full_name = get_full_username()
+    # Формируем левый блок
     if dropdown is not None:
-        left_controls.append(ft.Container(width=16))
-        left_controls.append(
-            ft.Container(
-                dropdown,
-                width=180,  
-                alignment=ft.alignment.center_left,
-            )
+        left_block = ft.Container(
+            ft.Row([
+                ft.Text(title, weight=FONT_WEIGHT_BOLD, size=FONT_SIZE_MEDIUM, font_family="Roboto-Light"),
+                dropdown
+            ], alignment=ft.MainAxisAlignment.START, spacing=16, expand=True),
+            width=LEFT_BLOCK_WIDTH,  
+            alignment=ft.alignment.center_left,
+            height=TOPBAR_HEIGHT,   
         )
     else:
-        left_controls.append(ft.Container(width=196))
+        left_block = ft.Container(
+            ft.Row([
+                ft.Text(title, weight=FONT_WEIGHT_BOLD, size=FONT_SIZE_MEDIUM, font_family="Roboto-Light")
+            ], alignment=ft.MainAxisAlignment.START, expand=True),
+            width=LEFT_BLOCK_WIDTH,  
+            alignment=ft.alignment.center_left,
+            height=TOPBAR_HEIGHT,   
+        )
+    right_row_controls = [
+        *(right_controls or []),
+        ft.Container(
+            ft.Icon(ft.Icons.PERSON, color=TEXT_ACCENT, size=24),
+            width=32,
+            height=32,
+            bgcolor=ft.Colors.ON_SURFACE_VARIANT,
+            border_radius=16,
+            alignment=ft.alignment.center,
+            margin=ft.margin.only(right=8)
+        ),
+        ft.Text(full_name, color=TEXT_DEFAULT, size=FONT_SIZE_NORMAL, font_family="Roboto-Light"),
+    ]
     row = ft.Row(
         [
-            ft.Container(
-                ft.Row(left_controls, alignment=ft.MainAxisAlignment.START, expand=True),
-                width=LEFT_BLOCK_WIDTH,  
-                alignment=ft.alignment.center_left,
-                height=TOPBAR_HEIGHT,   
-            ),
-            ft.Row([
-                *(right_controls or []),
-                ft.Container(
-                    ft.Icon(ft.Icons.PERSON, color=TEXT_ACCENT, size=24),
-                    width=32,
-                    height=32,
-                    bgcolor=ft.Colors.ON_SURFACE_VARIANT,
-                    border_radius=16,
-                    alignment=ft.alignment.center,
-                    margin=ft.margin.only(right=8)
-                ),
-                ft.Text(user_sso, color=TEXT_DEFAULT, size=FONT_SIZE_NORMAL, font_family="Roboto-Light"),
-            ], alignment=ft.MainAxisAlignment.END, height=TOPBAR_HEIGHT)
+            left_block,
+            ft.Row(right_row_controls, alignment=ft.MainAxisAlignment.END, height=TOPBAR_HEIGHT)
         ],
         alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
         vertical_alignment=ft.CrossAxisAlignment.CENTER,
