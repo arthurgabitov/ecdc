@@ -109,11 +109,13 @@ async def main(page: ft.Page):
 
     def update_topbar(selected_index, station_id=None):
         nonlocal station_dropdown
+        def handle_logout(e):
+            show_welcome_view()
         if selected_index == 0:
             station_dropdown = build_station_dropdown(station_id if station_id else stations[0])
-            topbar = TopBar("ECDC Station App", current_sso, dropdown=station_dropdown)
+            topbar = TopBar("ECDC Station App", current_sso, dropdown=station_dropdown, on_logout=handle_logout)
         else:
-            topbar = TopBar("ECDC Station App", current_sso)
+            topbar = TopBar("ECDC Station App", current_sso, on_logout=handle_logout)
             station_dropdown = None
         main_layout.controls[0] = topbar
         main_layout.update()

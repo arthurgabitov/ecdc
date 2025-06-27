@@ -4,7 +4,7 @@ import ctypes
 
 def get_full_username():
     GetUserNameEx = ctypes.windll.secur32.GetUserNameExW
-    NameDisplay = 3  # NameDisplay = полное имя
+    NameDisplay = 3  
     size = ctypes.pointer(ctypes.c_ulong(0))
     GetUserNameEx(NameDisplay, None, size)
     nameBuffer = ctypes.create_unicode_buffer(size.contents.value)
@@ -12,12 +12,34 @@ def get_full_username():
     return nameBuffer.value
 
 
-def TopBar(title, user_sso=None, dropdown=None, right_controls=None):
+def TopBar(title, user_sso=None, dropdown=None, right_controls=None, on_logout=None):
     LEFT_BLOCK_WIDTH = 340  
     TOPBAR_HEIGHT = 65     
-    # Получаем полное имя пользователя
+    
     full_name = get_full_username()
-    # Формируем левый блок
+    # Состояние для меню
+    def on_logout_click(e):
+        if on_logout:
+            on_logout(e)
+
+    user_menu = ft.PopupMenuButton(
+        items=[
+            ft.PopupMenuItem(text="Logout", on_click=on_logout_click)
+        ],
+        content=ft.Row([
+            ft.Container(
+                ft.Icon(ft.Icons.PERSON, color=TEXT_ACCENT, size=24),
+                width=32,
+                height=32,
+                bgcolor=ft.Colors.ON_SURFACE_VARIANT,
+                border_radius=16,
+                alignment=ft.alignment.center,
+                margin=ft.margin.only(right=8)
+            ),
+            ft.Text(full_name, color=TEXT_DEFAULT, size=FONT_SIZE_NORMAL, font_family="Roboto-Light"),
+        ], spacing=8),
+    )
+    
     if dropdown is not None:
         left_block = ft.Container(
             ft.Row([
@@ -39,16 +61,7 @@ def TopBar(title, user_sso=None, dropdown=None, right_controls=None):
         )
     right_row_controls = [
         *(right_controls or []),
-        ft.Container(
-            ft.Icon(ft.Icons.PERSON, color=TEXT_ACCENT, size=24),
-            width=32,
-            height=32,
-            bgcolor=ft.Colors.ON_SURFACE_VARIANT,
-            border_radius=16,
-            alignment=ft.alignment.center,
-            margin=ft.margin.only(right=8)
-        ),
-        ft.Text(full_name, color=TEXT_DEFAULT, size=FONT_SIZE_NORMAL, font_family="Roboto-Light"),
+        user_menu
     ]
     row = ft.Row(
         [
