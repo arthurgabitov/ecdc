@@ -179,3 +179,13 @@ class StationController:
         spot["wo_number"] = ""
         self._dirty_spots.add(spot_id)
         self.save_spots_state()
+
+    def set_timer_value(self, station_id: int, spot_id: str, seconds: int):
+        """Set the timer value (elapsed_time) for a spot manually."""
+        spot = self.get_spot_data(station_id, spot_id)
+        spot["elapsed_time"] = seconds
+        # If timer is running, reset start_time to now
+        if spot["running"]:
+            spot["start_time"] = time.time()
+        self._dirty_spots.add(spot_id)
+        self.save_spots_state()

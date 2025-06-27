@@ -82,6 +82,22 @@ class TimerComponent:
             tooltip="Stop"
         )
 
+        # Edit button for timer value
+        self.edit_button = ft.IconButton(
+            icon=ft.Icons.EDIT,
+            icon_color=ft.Colors.WHITE,
+            bgcolor=ft.Colors.BLUE_400,
+            icon_size=20,
+            width=32,
+            height=32,
+            on_click=self.show_edit_dialog,
+            style=ft.ButtonStyle(
+                shape=ft.RoundedRectangleBorder(radius=100),
+                padding=0,
+            ),
+            tooltip="Edit timer value"
+        )
+
         spot = self.controller.get_spot_data(int(station_id), spot_id)
         self.update_button_state(spot["running"], update=False)
         self.update_display(spot["elapsed_time"])
@@ -253,6 +269,44 @@ class TimerComponent:
         if self.on_state_change:
             self.on_state_change()
 
+    def show_edit_dialog(self, e):
+        spot = self.controller.get_spot_data(int(self.station_id), self.spot_id)
+        current_seconds = int(spot["elapsed_time"]) if spot else 0
+        current_h = current_seconds // 3600
+        current_m = (current_seconds % 3600) // 60
+        time_field = ft.TextField(label="Set time (hh:mm)", value=f"{current_h:02d}:{current_m:02d}", width=120)
+        def close_dialog(_):
+            dialog.open = False
+            self.page.update()
+        def ok_action(_):
+            self.apply_edit_time(time_field.value)
+            dialog.open = False
+            self.page.update()
+        dialog = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Edit Timer"),
+            content=time_field,
+            actions=[
+                ft.TextButton("Cancel", on_click=close_dialog),
+                ft.TextButton("OK", on_click=ok_action),
+            ],
+        )
+        if dialog not in self.page.overlay:
+            self.page.overlay.append(dialog)
+        dialog.open = True
+        self.page.update()
+
+    def apply_edit_time(self, value):
+        try:
+            h, m = map(int, value.strip().split(":"))
+            seconds = h * 3600 + m * 60
+            # TODO: implement set_timer_value in controller
+            if hasattr(self.controller, 'set_timer_value'):
+                self.controller.set_timer_value(int(self.station_id), self.spot_id, seconds)
+            self.update_display(seconds)
+        except Exception:
+            pass
+
     def build_buttons(self):
         # Synchronize mini-button icon and color with the main button
         self.mini_start_button.icon = self.start_button.icon
@@ -267,7 +321,8 @@ class TimerComponent:
                     padding=ft.padding.only(right=4)
                 ),
                 self.mini_start_button,
-                self.mini_stop_button
+                self.mini_stop_button,
+                self.edit_button
             ],
             alignment=ft.MainAxisAlignment.START,
             spacing=4,
