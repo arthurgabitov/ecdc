@@ -401,6 +401,27 @@ class Spot:
             content_padding=0
         )
 
+        self._wo_update_thread = threading.Thread(target=self._background_wo_updater, daemon=True)
+        self._wo_update_thread.start()
+
+    def _background_wo_updater(self):
+        user_model = UserModel()
+        current_sso = user_model.get_user_by_windows_login()
+        prev_wo_numbers = set(opt.key if hasattr(opt, 'key') else str(opt) for opt in (self.wo_number_dropdown.options or []))
+        while True:
+            time.sleep(120) 
+            try:
+                wo_numbers = get_user_wo_numbers(current_sso)
+                new_wo_set = set(str(wo) for wo in wo_numbers)
+                if new_wo_set != prev_wo_numbers:
+                    prev_wo_numbers = new_wo_set
+                    self.wo_number_dropdown.options = [ft.dropdown.Option(str(wo)) for wo in wo_numbers]
+                    if self.wo_number_dropdown.value not in new_wo_set:
+                        self.wo_number_dropdown.value = ""
+                    self.page.update()
+            except Exception as ex:
+                print(f"WO background update error: {ex}")
+
     def restore_ui_from_state(self):
         spot_data = self.controller.get_spot_data(int(self.station_id), self.spot_id)
         # Восстановить статус
