@@ -2,7 +2,6 @@ import sys
 import os
 
 from controllers.timer_component import TimerComponent
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import flet as ft
 from controllers.station_controller import StationController
@@ -31,7 +30,7 @@ async def main(page: ft.Page):
     page.bgcolor = BG_MAIN
     page.window.height = 760
     page.window.width = 760
-
+    page.theme_mode = ft.ThemeMode.LIGHT
 
     is_web = page.platform == "web"
     stations = controller.get_stations()
@@ -178,8 +177,18 @@ async def main(page: ft.Page):
     page.on_resized = adjust_module_width
     page.on_close = on_close
 
+    # Get the correct font path for both development and packaged modes
+    if getattr(sys, 'frozen', False):
+        # If packaged with PyInstaller, use the executable directory
+        font_base_path = os.path.dirname(sys.executable)
+    else:
+        # In development mode, use the project root
+        font_base_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    
+    font_path = os.path.join(font_base_path, "fonts", "ttf", "Roboto-Light.ttf")
+    
     page.fonts = {
-        "Roboto-Light": "src/fonts/ttf/Roboto-Light.ttf",
+        "Roboto-Light": font_path,
     }
    
     if show_nav_rail:

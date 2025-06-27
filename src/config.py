@@ -8,19 +8,24 @@ def get_app_data_path():
     """
     Get the correct path to the application data directory.
     Works both in development mode and in a packaged application.
+    Uses user's AppData directory to avoid admin privileges.
     """
     # Determine if the application is running as frozen (packaged with PyInstaller)
     if getattr(sys, 'frozen', False):
-        # If the application is packaged, use the directory where the executable is located
-        app_dir = os.path.dirname(sys.executable)
-        # Create a data directory next to the executable if it does not exist
-        data_dir = os.path.join(app_dir, 'data')
+        # If the application is packaged, use user's AppData directory
+        app_name = "ECDC_StationApp"
+        if os.name == 'nt':  # Windows
+            data_dir = os.path.join(os.environ.get('APPDATA', os.path.expanduser('~')), app_name)
+        else:  # Linux/Mac
+            data_dir = os.path.join(os.path.expanduser('~'), f'.{app_name.lower()}')
+        
+        # Create the data directory if it doesn't exist
         if not os.path.exists(data_dir):
             try:
                 os.makedirs(data_dir)
             except Exception:
-                # If unable to create the directory, use the executable directory
-                data_dir = app_dir
+                # Fallback to user's home directory
+                data_dir = os.path.expanduser('~')
     else:
         # In development mode, use the current script directory
         data_dir = os.path.dirname(os.path.abspath(__file__))
@@ -29,7 +34,34 @@ def get_app_data_path():
 
 class Config:
     def __init__(self):
-        config_path = os.path.join(get_app_data_path(), 'config.json')
+        # First try to load from user's data directory
+        data_dir = get_app_data_path()
+        config_path = os.path.join(data_dir, 'config.json')
+        
+        # If config doesn't exist in data directory, try to load from packaged/development location
+        if not os.path.exists(config_path):
+            source_config = None
+            
+            if getattr(sys, 'frozen', False):
+                # In packaged mode, look for config.json next to executable
+                packaged_config = os.path.join(os.path.dirname(sys.executable), 'config.json')
+                if os.path.exists(packaged_config):
+                    source_config = packaged_config
+            else:
+                # In development mode, look in src directory
+                dev_config = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json')
+                if os.path.exists(dev_config):
+                    source_config = dev_config
+            
+            # Copy config from source location to user data directory
+            if source_config:
+                try:
+                    import shutil
+                    os.makedirs(data_dir, exist_ok=True)
+                    shutil.copy2(source_config, config_path)
+                except Exception:
+                    # If copy fails, use source config directly
+                    config_path = source_config
         
         self.config_data = {}
         try:
@@ -44,10 +76,10 @@ class Config:
                     "stations": 1
                 },
                 "spot_statuses": [
-                    {"name": "Unblocked", "color": "WHITE60"},
-                    {"name": "Delievery request", "color": "YELLOW_300"},
-                    {"name": "In Progress", "color": "GREEN_100"},
-                    {"name": "Packing", "color": "RED_200"},
+                    {"name": "Unblocked", "color": "GREY"},
+                    {"name": "Delievery request", "color": "YELLOW_500"},
+                    {"name": "In Progress", "color": "GREEN_500"},
+                    {"name": "Packing", "color": "RED_500"},
                     {"name": "Pickup request", "color": "RED"}
                 ],
                 "customization_settings": {
@@ -57,9 +89,13 @@ class Config:
                     "columns": 2 
                 }
             }
-            # Save the default configuration if the file is not found
+            # Save the default configuration to user data directory
             try:
-                with open(config_path, 'w') as config_file:
+                # Ensure the data directory exists
+                os.makedirs(data_dir, exist_ok=True)
+                # Save to user's data directory
+                user_config_path = os.path.join(data_dir, 'config.json')
+                with open(user_config_path, 'w') as config_file:
                     json.dump(self.config_data, config_file, indent=4)
             except Exception:
                 # If unable to save, just continue
@@ -83,11 +119,11 @@ class Config:
     def get_spot_statuses(self):
         if self._cached_statuses is None:
             default_statuses = [
-                {"name": "Unblocked", "color": "WHITE60"},
-                {"name": "Delievery request", "color": "YELLOW_300"},
-                {"name": "In Progress", "color": "GREEN_100"},
-                {"name": "Packing", "color": "RED_200"},
-                {"name": "Pickup request", "color": "RED"}
+                    {"name": "Unblocked", "color": "GREY"},
+                    {"name": "Delievery request", "color": "YELLOW_500"},
+                    {"name": "In Progress", "color": "GREEN_500"},
+                    {"name": "Packing", "color": "RED_500"},
+                    {"name": "Pickup request", "color": "RED"}
             ]
             statuses = copy.deepcopy(self.config_data.get("spot_statuses", default_statuses))
             for status in statuses:

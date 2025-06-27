@@ -48,9 +48,24 @@ class StationController:
 
     def load_spots_state(self):
         """Load all spots' WO numbers, timer states, and status from a JSON file"""
-        path = "src/spots_state.json"
-        if not os.path.exists(path):
-            return
+        # First try to load from data directory
+        if os.path.exists(self.state_file):
+            path = self.state_file
+        else:
+            # If not found in data directory, try to load from src directory and copy to data
+            src_path = "src/spots_state.json"
+            if os.path.exists(src_path):
+                # Copy from src to data directory
+                try:
+                    import shutil
+                    os.makedirs(os.path.dirname(self.state_file), exist_ok=True)
+                    shutil.copy2(src_path, self.state_file)
+                    path = self.state_file
+                except Exception:
+                    path = src_path
+            else:
+                return
+                
         with open(path, "r", encoding="utf-8") as f:
             state = json.load(f)
         for station_id, spots in state.items():
@@ -103,7 +118,11 @@ class StationController:
                     "running": spot.get("running", False),
                     "status": spot.get("status", self.config.get_spot_statuses()[0]["name"])
                 }
-        with open("src/spots_state.json", "w", encoding="utf-8") as f:
+        
+        # Ensure the data directory exists
+        os.makedirs(os.path.dirname(self.state_file), exist_ok=True)
+        
+        with open(self.state_file, "w", encoding="utf-8") as f:
             json.dump(state, f)
 
     def get_spot_data(self, station_id: int, spot_id: str):

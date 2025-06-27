@@ -1,5 +1,6 @@
 import flet as ft
 import os
+import sys
 from models.user_model import UserModel
 from styles import FONT_SIZE_MEDIUM, FONT_SIZE_NORMAL
 
@@ -9,7 +10,14 @@ class SettingsView:
         self.user_sso = UserModel().get_user_by_windows_login() or "Unknown SSO"
         
     def get_version(self):
-        version_file_path = os.path.join(os.path.dirname(__file__), '..', '..', 'version.txt')
+        # Get the correct path to version.txt for both development and packaged modes
+        if getattr(sys, 'frozen', False):
+            # If packaged with PyInstaller, use the executable directory
+            version_file_path = os.path.join(os.path.dirname(sys.executable), 'version.txt')
+        else:
+            # In development mode, use the project root
+            version_file_path = os.path.join(os.path.dirname(__file__), '..', '..', 'version.txt')
+        
         try:
             with open(version_file_path, 'r') as f:
                 version = f.read().strip()

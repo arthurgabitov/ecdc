@@ -12,8 +12,8 @@ import sys
 if getattr(sys, 'frozen', False):
     BASE_DIR = os.path.dirname(sys.executable)
 else:
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-KCONVARS_PATH = os.path.join(BASE_DIR, '..', 'utils', 'WinOLPC', 'bin', 'kconvars.exe')
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+KCONVARS_PATH = os.path.join(BASE_DIR, 'utils', 'WinOLPC', 'bin', 'kconvars.exe')
 KCONVARS_PATH = os.path.abspath(KCONVARS_PATH)
 
 DT_TARGET_DIR = r"J:\SC\SC_ALL\European Customisation Center\2.Robotics\ECC Internal\19_Data_Sheets_new"
@@ -45,9 +45,9 @@ class DTGenerator:
             command = [KCONVARS_PATH, sv_path, txt_path]
             # portable PATH
             portable_dirs = [
-                os.path.join(BASE_DIR, '..', "utils", "WinOLPC", "bin"),
-                os.path.join(BASE_DIR, '..', "utils", "ROBOGUIDE", "bin"),
-                os.path.join(BASE_DIR, '..', "utils", "Shared", "Utilities"),
+                os.path.join(BASE_DIR, "utils", "WinOLPC", "bin"),
+                os.path.join(BASE_DIR, "utils", "ROBOGUIDE", "bin"),
+                os.path.join(BASE_DIR, "utils", "Shared", "Utilities"),
             ]
             env = os.environ.copy()
             env["PATH"] = os.pathsep.join([os.path.abspath(p) for p in portable_dirs]) + os.pathsep + env.get("PATH", "")
