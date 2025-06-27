@@ -26,7 +26,7 @@ class SettingsView:
         test_mode_enabled = config.is_dashboard_test_mode_enabled()
 
         dashboard_test_mode = ft.Checkbox(
-            label="Dashboard test mode",
+            label="Dashboard test mode (Not working, don't use it)",
             value=test_mode_enabled,
             on_change=lambda e: self.on_test_mode_change(e, config)
         )

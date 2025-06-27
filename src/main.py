@@ -36,7 +36,17 @@ async def main(page: ft.Page):
     is_web = page.platform == "web"
     stations = controller.get_stations()
     stations_count = len(stations)
-    show_nav_rail = stations_count > 1
+    # Navigation rail is always shown if stations exist, but dashboard button only if stations_count > 1
+    show_nav_rail = stations_count > 0
+    show_dashboard = stations_count > 1
+
+    # Build menu items for navigation rail
+    menu_items = [
+        {"label": "Station", "icon": ft.Icons.HOME, "selected_icon": ft.Icons.HOME_FILLED},
+    ]
+    if show_dashboard:
+        menu_items.append({"label": "Dashboard", "icon": ft.Icons.DASHBOARD, "selected_icon": ft.Icons.DASHBOARD_CUSTOMIZE})
+    menu_items.append({"label": "Settings", "icon": ft.Icons.SETTINGS, "selected_icon": ft.Icons.SETTINGS_APPLICATIONS})
 
     page.padding = 0
 
@@ -47,7 +57,7 @@ async def main(page: ft.Page):
         current_sso = os.getlogin() if hasattr(os, 'getlogin') else "Unknown SSO"
 
     main_container = ft.Container(expand=True, bgcolor=BG_CONTAINER)
-    nav_rail_view = NavigationRailView(page, stations_count, lambda idx: update_module(idx)) if show_nav_rail else None
+    nav_rail_view = NavigationRailView(page, menu_items, lambda idx: update_module(idx)) if show_nav_rail else None
     nav_rail = nav_rail_view.build() if nav_rail_view else None
 
     animated_switcher = ft.AnimatedSwitcher(
@@ -117,15 +127,16 @@ async def main(page: ft.Page):
         else:
             if nav_rail_view:
                 nav_rail_view.set_selected_index(selected_index)
+            # Map selected_index to content: 0 - Station, 1 - Dashboard (if present), last - Settings
             if selected_index == 0:
                 new_content = create_station_view(station_id)
                 update_topbar(0, station_id if station_id else stations[0])
-            elif selected_index == 1 and stations_count > 1:
+            elif show_dashboard and selected_index == 1:
                 new_content = create_dashboard_view()
                 update_topbar(1)
-            elif selected_index == 2:
+            elif (show_dashboard and selected_index == 2) or (not show_dashboard and selected_index == 1):
                 new_content = create_settings_view()
-                update_topbar(2)
+                update_topbar(2 if show_dashboard else 1)
             else:
                 new_content = ft.Container()
                 update_topbar(-1)
