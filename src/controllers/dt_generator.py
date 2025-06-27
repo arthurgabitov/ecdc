@@ -109,8 +109,15 @@ class DTGenerator:
             import win32com.client
             base_name = os.path.basename(dt_path)
             save_path = os.path.join(DT_TARGET_DIR, base_name)
+            # Remove the file if it already exists to avoid Excel dialog
+            if os.path.exists(save_path):
+                try:
+                    os.remove(save_path)
+                except Exception as ex:
+                    return False, f"Failed to remove existing file: {save_path}. Error: {ex}"
             excel = win32com.client.Dispatch("Excel.Application")
             excel.Visible = False
+            excel.DisplayAlerts = False  # Disable Excel alerts
             wb = excel.Workbooks.Open(dt_path)
             ws = wb.Worksheets(1)  # First sheet
             for idx, val in enumerate(arr_values):
