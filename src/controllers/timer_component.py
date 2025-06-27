@@ -121,6 +121,8 @@ class TimerComponent:
                 self.mini_start_button.visible = False
             if hasattr(self, 'mini_stop_button'):
                 self.mini_stop_button.visible = False
+            # Hide edit button
+            self.edit_button.visible = False
         else:
             self.timer_text.value = f"{hours:02d}:{minutes:02d}"
             self.timer_text.size = FONT_SIZE_LARGE  # Use normal font size for timer
@@ -130,12 +132,15 @@ class TimerComponent:
                 self.timer_text.color = TEXT_SECONDARY
             # Show main buttons
             self.start_button.visible = True
-            self.stop_button.visible = True
+            # Show stop button only if timer was started at least once (elapsed_time > 0 or running)
+            self.stop_button.visible = (spot and (spot["running"] or spot["elapsed_time"] > 0))
             # Show mini-buttons if they exist
             if hasattr(self, 'mini_start_button'):
                 self.mini_start_button.visible = True
             if hasattr(self, 'mini_stop_button'):
-                self.mini_stop_button.visible = True
+                self.mini_stop_button.visible = (spot and (spot["running"] or spot["elapsed_time"] > 0))
+            # Show edit button only if timer was started at least once (elapsed_time > 0 or running)
+            self.edit_button.visible = (spot and (spot["running"] or spot["elapsed_time"] > 0))
         if self.page:
             self.page.update()
 
@@ -223,11 +228,13 @@ class TimerComponent:
                 self.mini_stop_button.visible = False
                 if self.mini_stop_button.page:
                     self.mini_stop_button.update()
+            # Hide edit button
+            self.edit_button.visible = False
 
             self.controller.stop_timer(int(self.station_id), self.spot_id)
             self.update_button_state(False)
             self.page.update()
-            if self.on_state_change:
+            if hasattr(self, 'on_state_change') and self.on_state_change:
                 self.on_state_change()
 
     def pause_on_close(self):
